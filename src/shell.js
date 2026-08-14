@@ -20,6 +20,25 @@ const KOFI_URL = 'https://ko-fi.com/flavaa';
 const BMC_URL = 'https://buymeacoffee.com/dylanger254';
 const OG_DEFAULT_IMAGE = absoluteUrl('og-default.png');
 
+/**
+ * Shared social-link mark (a ring, a jagged upward line, a dot at the tip)
+ * recreated as inline SVG from the operator's own profile picture. Colors
+ * are the artist's fixed brand colors, not derived from this site's own
+ * token ramp, so the mark stays recognizable and identical across every
+ * property and the social profile itself -- same self-contained-asset
+ * exemption from the tokens-only rule as icon.js's ICON_SVG.
+ */
+const SOCIAL_ICON_SVG = '<svg width="18" height="18" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><circle cx="50" cy="50" r="47" fill="#0f2233"/><circle cx="50" cy="50" r="35" fill="none" stroke="#6f95a1" stroke-width="3"/><path d="M16 74 L38 58 L50 66 L83 27" fill="none" stroke="#c99a44" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="83" cy="27" r="9" fill="#f2e0a8"/></svg>';
+
+/**
+ * Portfolio-wide footer credit line -- identical wording/type role on all
+ * three properties, naming the operator and linking to the other two. See
+ * docs/DESIGN_PLAYBOOK.md's "What stays shared across the portfolio".
+ */
+function renderFooterCredit() {
+  return `<p class="footer-credit">Built by Dylan &mdash; also making <a href="https://repertoire-builder.com" rel="noopener noreferrer">Repertoire Builder</a> and <a href="https://lol-practice-system.com" rel="noopener noreferrer">Solo Queue Practice</a>. <a class="footer-social" href="https://x.com/builtittheycome" rel="noopener noreferrer">${SOCIAL_ICON_SVG}Follow @builtittheycome</a></p>`;
+}
+
 function escapeHtml(str) {
   return String(str)
     .replace(/&/g, '&amp;')
@@ -169,6 +188,7 @@ function renderFooter() {
       <a href="https://ko-fi.com/flavaa" target="_blank" rel="noopener noreferrer">Ko-fi</a>
       <a href="https://buymeacoffee.com/dylanger254" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a>
     </p>
+    ${renderFooterCredit()}
     ${renderNewsletterSignup()}
     ${adSlot('footer')}
     <p class="caption">&copy; ${new Date().getFullYear()} ${escapeHtml(SITE_NAME)}</p>

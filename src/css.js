@@ -639,6 +639,19 @@ ${designTokensCss(DESIGN_TOKENS)}
   .footer-group a:hover { color: var(--color-accent); }
   .footer-legal { max-width: none; }
   .footer-legal a { color: var(--color-muted); margin-right: var(--space-4); }
+  .footer-credit {
+    margin: var(--space-3) 0 0;
+    color: var(--color-muted);
+    font-size: var(--text-xs);
+  }
+  .footer-credit a { color: var(--color-muted); }
+  .footer-credit a:hover { color: var(--color-accent); }
+  .footer-social {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+  .footer-social svg { display: block; }
 
   .newsletter-signup {
     margin: var(--space-5) 0;

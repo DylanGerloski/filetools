@@ -53,6 +53,8 @@ function documentHead(opts) {
 
   return `<head>
   <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeHtml(description)}">
@@ -63,7 +65,7 @@ function documentHead(opts) {
   <link rel="apple-touch-icon" href="${escapeHtml(url('apple-touch-icon.png'))}">
   <style>${SITE_CSS}</style>${jsonLdBlock}
   ${adsScriptTag()}
-  <script data-goatcounter="${GOATCOUNTER_URL}" async src="//gc.zgo.at/count.js"></script>
+  <script data-goatcounter="${GOATCOUNTER_URL}" async src="https://gc.zgo.at/count.js"></script>
 </head>`;
 }
 

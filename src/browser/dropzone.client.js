@@ -37,6 +37,7 @@ if (toolSection) {
     statementToCsv: () => import('./statementToCsv.client.js'),
     htmlTableToCsv: () => import('./htmlTableToCsv.client.js'),
     dedupeLines: () => import('./dedupeLines.client.js'),
+    sortLines: () => import('./sortLines.client.js'),
   };
 
   // The synthetic File a "paste" submission is wrapped in (see the
@@ -47,6 +48,7 @@ if (toolSection) {
   const PASTE_FILE = {
     htmlTableToCsv: { name: 'pasted-table.html', type: 'text/html' },
     dedupeLines: { name: 'pasted-list.txt', type: 'text/plain' },
+    sortLines: { name: 'pasted-list.txt', type: 'text/plain' },
   };
 
   let processorPromise = null;

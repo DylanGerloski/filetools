@@ -394,6 +394,22 @@ ${designTokensCss(DESIGN_TOKENS)}
     font-size: var(--text-sm);
     color: var(--color-text);
   }
+  /* Sort-by-column controls (src/browser/sortLines.client.js) reuse this
+     same options-row pattern, adding <select> dropdowns alongside the
+     checkboxes every other table-block-head already uses. */
+  .table-block-head select {
+    min-height: 36px;
+    padding: var(--space-1) var(--space-2);
+    border: var(--border-hairline) solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: var(--text-sm);
+  }
+  .table-block-head select:focus-visible {
+    outline: var(--border-control) solid var(--color-accent);
+    outline-offset: 1px;
+  }
   /* Horizontally scrollable inside its OWN container so the page itself
      never scrolls horizontally at 360px, even for a wide extracted table. */
   .table-scroll {

@@ -38,3 +38,39 @@ test('rowsToCsv joins fields with commas and rows with CRLF, quoting as needed',
 test('an empty rows array produces just the trailing CRLF', () => {
   assert.equal(rowsToCsv([]), '\r\n');
 });
+
+test('a formula-injection payload starting with = gets a single-quote prefix', () => {
+  assert.equal(csvEscapeField('=cmd|"/c calc"!A1'), '"\'=cmd|""/c calc""!A1"');
+});
+
+test('a negative number is not treated as formula injection', () => {
+  assert.equal(csvEscapeField('-42.5'), '-42.5');
+});
+
+test('a negative number with thousands separators is not corrupted', () => {
+  assert.equal(csvEscapeField('-1,234.50'), '"-1,234.50"');
+});
+
+test('a leading minus that is not a valid number gets a single-quote prefix', () => {
+  assert.equal(csvEscapeField('-cmd|calc'), "'-cmd|calc");
+});
+
+test('a normal alphanumeric cell is untouched', () => {
+  assert.equal(csvEscapeField('Revenue Q3'), 'Revenue Q3');
+});
+
+test('a field starting with + gets a single-quote prefix', () => {
+  assert.equal(csvEscapeField('+1+1'), "'+1+1");
+});
+
+test('a field starting with @ gets a single-quote prefix', () => {
+  assert.equal(csvEscapeField('@SUM(1+1)'), "'@SUM(1+1)");
+});
+
+test('a field starting with a TAB gets a single-quote prefix', () => {
+  assert.equal(csvEscapeField('\t=1+1'), '\'\t=1+1');
+});
+
+test('a field starting with a CR gets a single-quote prefix', () => {
+  assert.equal(csvEscapeField('\r=1+1'), '"\'\r=1+1"');
+});

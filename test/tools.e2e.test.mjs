@@ -153,6 +153,63 @@ test('rotate-pdf: rotating one page writes that rotation into the saved file', a
   await page.close();
 });
 
+test('cold path: still works offline even when the drop zone was never hovered/focused first', async () => {
+  // This is the exact scenario the pre-deploy review found broken: load
+  // the page, do NOT hover or focus the drop zone (so the old
+  // pointerenter/focusin-only warming never fires), go offline, then
+  // choose files. The fix warms the processor unconditionally on idle
+  // after load, so this must now succeed instead of showing a raw
+  // "Failed to fetch dynamically imported module" error.
+  const page = await browser.newPage({ acceptDownloads: true });
+  const errors = [];
+  page.on('pageerror', (err) => errors.push(err.message));
+  page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+
+  await page.goto(`${baseUrl}pdf/merge-pdf/`, { waitUntil: 'networkidle' });
+  // Give the load-event/idle-callback warm a moment to actually fetch the
+  // processor and vendor modules before the connection drops -- this is
+  // real-world equivalent to "let it finish loading" from the site's own
+  // copy, not "hover the drop zone".
+  await page.waitForTimeout(1500);
+  await page.context().setOffline(true);
+
+  try {
+    await page.locator('#file-input').setInputFiles([path.join(TMP, 'a.pdf'), path.join(TMP, 'b.pdf')]);
+    await page.waitForSelector('.file-list .file-row', { timeout: 15000 });
+    assert.equal(await page.locator('.file-list .file-row').count(), 2);
+    assert.deepEqual(errors, []);
+  } finally {
+    await page.context().setOffline(false);
+    await page.close();
+  }
+});
+
+test('a dynamic-import failure surfaces a human-readable message, never a raw fetch error', async () => {
+  // Simulate the module genuinely never being reachable (not just "went
+  // offline after warming"): block the processor module at the network
+  // layer for the whole page lifetime, so both the idle-warm attempt and
+  // the on-selection await fail. The visitor should see one clear sentence,
+  // never the raw "Failed to fetch dynamically imported module" text.
+  const page = await browser.newPage({ acceptDownloads: true });
+  await page.route('**/js/pdfPages.client.js', (route) => route.abort());
+
+  await page.goto(`${baseUrl}pdf/merge-pdf/`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(1500); // let the idle-warm attempt run and fail first
+
+  await page.locator('#file-input').setInputFiles([path.join(TMP, 'a.pdf'), path.join(TMP, 'b.pdf')]);
+  await page.waitForFunction(() => {
+    const el = document.querySelector('.dz-status');
+    return el && el.textContent && el.textContent.trim().length > 0;
+  }, { timeout: 15000 });
+
+  const statusText = await page.locator('.dz-status').textContent();
+  assert.ok(statusText && statusText.length > 0, 'status line should show a message');
+  assert.doesNotMatch(statusText, /Failed to fetch|dynamically imported module|TypeError/i, `status text leaked a raw error: "${statusText}"`);
+  assert.match(statusText, /reconnect/i, `status text should be the human-readable backstop sentence, got: "${statusText}"`);
+
+  await page.close();
+});
+
 test('the word "upload" never appears inside the dropzone control itself (design-standard language rule)', async () => {
   // The rule scopes to control/status/error copy inside
   // the drop zone widget itself -- "choose", "add", "reading", etc. Plain

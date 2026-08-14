@@ -34,21 +34,55 @@ if (toolSection) {
   const PROCESSORS = {
     pdfPages: () => import('./pdfPages.client.js'),
     pdfTables: () => import('./pdfTables.client.js'),
+    statementToCsv: () => import('./statementToCsv.client.js'),
   };
 
   let processorPromise = null;
   function warmProcessor() {
     if (!processorPromise) {
       const loader = PROCESSORS[clientEntry];
-      processorPromise = loader ? loader() : Promise.reject(new Error(`Unknown tool client: ${clientEntry}`));
+      processorPromise = (loader ? loader() : Promise.reject(new Error(`Unknown tool client: ${clientEntry}`)))
+        .catch((err) => {
+          // A dynamic import can fail (module not cached yet and the
+          // network dropped mid-fetch, a bad deploy, etc). Never let the
+          // raw "Failed to fetch dynamically imported module: ..." string
+          // reach the visitor -- replace it with a sentence they can act
+          // on, and clear the cached promise so the next file selection
+          // gets a fresh attempt instead of the same stale rejection.
+          processorPromise = null;
+          throw new Error('The tool’s code hasn’t finished downloading yet — reconnect for a moment, then try again.');
+        });
     }
     return processorPromise;
   }
   // Warm the (larger) pdf.js/pdf-lib import as soon as the visitor shows
   // intent, so the perceived cost at actual file-selection time is near
-  // zero for anyone who uses the tool.
-  dropzone.addEventListener('pointerenter', warmProcessor, { once: true });
-  dropzone.addEventListener('focusin', warmProcessor, { once: true });
+  // zero for anyone who uses the tool. These two callers don't consume the
+  // result, so swallow a warm-time rejection here -- a real failure still
+  // surfaces normally from handleFileList's own await below.
+  dropzone.addEventListener('pointerenter', () => warmProcessor().catch(() => {}), { once: true });
+  dropzone.addEventListener('focusin', () => warmProcessor().catch(() => {}), { once: true });
+
+  // Also warm unconditionally once the page has finished loading and the
+  // browser is idle. This is what makes "turn off your Wi-Fi and this page
+  // still works" true for a visitor who never hovers or focuses the drop
+  // zone before going offline -- the scenario the pre-deploy review found
+  // broken. Deferred to idle time rather than fired immediately so it
+  // never competes with the initial paint: requestIdleCallback only runs
+  // once the browser has nothing more pressing to do, so this costs
+  // nothing against Lighthouse Performance.
+  function warmOnIdle() {
+    if (typeof requestIdleCallback === 'function') {
+      requestIdleCallback(() => warmProcessor().catch(() => {}), { timeout: 4000 });
+    } else {
+      setTimeout(() => warmProcessor().catch(() => {}), 1000);
+    }
+  }
+  if (document.readyState === 'complete') {
+    warmOnIdle();
+  } else {
+    window.addEventListener('load', warmOnIdle, { once: true });
+  }
 
   function setState(state) {
     dropzone.dataset.state = state;

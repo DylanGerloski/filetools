@@ -132,9 +132,9 @@ function visibleCsvRows(tableState, cellsForRow) {
 
 /**
  * Renders one table's DOM block: the correctable HTML table, the header
- * toggle, the column-boundary numeric-input editor (the spec's stated
- * fallback for a draggable ruler -- also the more directly keyboard- and
- * screen-reader-accessible of the two), per-row drop controls, and a
+ * toggle, the column-boundary numeric-input editor (used instead of a
+ * draggable ruler because it's more directly keyboard- and
+ * screen-reader-accessible), per-row drop controls, and a
  * per-table CSV download button. Re-invoked in place whenever the visitor
  * edits anything, so it always reflects current state.
  *
@@ -230,7 +230,8 @@ function renderTableBlock(container, tableState, cellsForRow, rowsToCsv, tableCo
   container.appendChild(scrollWrap);
 
   // Column-boundary editor -- numeric inputs (points from the page's left
-  // edge), the spec's explicitly acceptable fallback for a draggable ruler.
+  // edge) in place of a draggable ruler, chosen for keyboard and
+  // screen-reader accessibility.
   const editor = document.createElement('div');
   editor.className = 'boundary-editor';
   const editorLabel = document.createElement('p');

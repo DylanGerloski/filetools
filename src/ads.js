@@ -10,22 +10,18 @@ const adConfig = require('./adConfig.js');
 
 /**
  * @param {'inContent'|'footer'} slotName
- * @returns {string} an <aside class="ad-slot"> block. When adConfig.enabled
- *   is true and this slot has a real slot id, emits the standard responsive
- *   AdSense unit. Otherwise emits the same reserved-height placeholder with
- *   no <script> tag, so a disabled build is fully deterministic.
+ * @returns {string} an <aside class="ad-slot"> block when adConfig.enabled
+ *   is true and this slot has a real slot id, with the standard responsive
+ *   AdSense unit. Otherwise an empty string -- a disabled build renders no
+ *   ad markup at all rather than an empty placeholder box.
  */
 function adSlot(slotName) {
   const slotId = adConfig.slots[slotName];
-  if (adConfig.enabled && slotId) {
-    return `<aside class="ad-slot" aria-label="Advertisement">
+  if (!adConfig.enabled || !slotId) return '';
+  return `<aside class="ad-slot" aria-label="Advertisement">
   <span class="ad-slot-label">Advertisement</span>
   <ins class="adsbygoogle" style="display:block" data-ad-client="${adConfig.client}" data-ad-slot="${slotId}" data-ad-format="auto" data-full-width-responsive="true"></ins>
   <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-</aside>`;
-  }
-  return `<aside class="ad-slot" aria-label="Advertisement">
-  <span class="ad-slot-label">Advertisement</span>
 </aside>`;
 }
 

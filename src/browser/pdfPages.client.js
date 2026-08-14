@@ -192,8 +192,8 @@ async function runSplit(ctx) {
   resultEl.innerHTML = '';
   const rangeRow = document.createElement('div');
   rangeRow.innerHTML = `
-    <label for="page-range-input" class="dz-caption">Pages (e.g. "1-3, 7, 9-12")</label><br>
-    <input id="page-range-input" type="text" placeholder="all pages" style="width:100%;max-width:320px;padding:8px;margin:4px 0 12px;border:1px solid var(--color-border);border-radius:6px;">
+    <label for="page-range-input" class="dz-caption">Pages (e.g. “1-3, 7, 9-12”)</label><br>
+    <input id="page-range-input" type="text" placeholder="all pages" style="width:100%;max-width:320px;padding:var(--space-2);margin:var(--space-1) 0 var(--space-3);border:1px solid var(--color-border);border-radius:var(--radius-sm);">
     <div>
       <label><input type="radio" name="split-mode" value="one" checked> Selected pages as one PDF</label><br>
       <label><input type="radio" name="split-mode" value="each"> Each page as its own file</label>
@@ -246,7 +246,7 @@ async function runSplit(ctx) {
   const splitBtn = document.createElement('button');
   splitBtn.type = 'button';
   splitBtn.className = 'btn-primary';
-  splitBtn.style.marginTop = '16px';
+  splitBtn.style.marginTop = 'var(--space-4)';
   splitBtn.textContent = 'Split PDF';
   splitBtn.addEventListener('click', async () => {
     const indices = Array.from(selected).sort((a, b) => a - b);
@@ -371,7 +371,7 @@ async function runRotate(ctx) {
   const saveBtn = document.createElement('button');
   saveBtn.type = 'button';
   saveBtn.className = 'btn-primary';
-  saveBtn.style.marginTop = '16px';
+  saveBtn.style.marginTop = 'var(--space-4)';
   saveBtn.textContent = 'Save rotated PDF';
   saveBtn.addEventListener('click', async () => {
     setState('working');

@@ -42,5 +42,5 @@ module.exports = {
       answerHtml: 'Use the column boundary controls under the table to add, remove, or nudge a boundary — the table updates immediately so you can check the result before downloading.',
     },
   ],
-  relatedSlugs: ['merge-pdf', 'split-pdf', 'rotate-pdf'],
+  relatedSlugs: ['merge-pdf', 'split-pdf', 'bank-statement-to-csv'],
 };

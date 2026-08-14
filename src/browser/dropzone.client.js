@@ -40,6 +40,29 @@ if (toolSection) {
     sortLines: () => import('./sortLines.client.js'),
   };
 
+  // Per-tool file-size cap, checked before a file ever reaches its
+  // processor. Without this, a large-enough PDF (or a huge pasted/dropped
+  // text file) just hangs the tab -- there was no cap of any kind before
+  // this. Sizes are generous (these are legitimate client-side PDF/text
+  // operations, not something that should refuse ordinary real-world
+  // files) but bounded, keyed by clientEntry since a PDF and a plain-text
+  // list have very different realistic sizes. Kept here rather than per
+  // tool-registry entry so every file-accepting tool is covered by one
+  // change, matching PROCESSORS' key space above.
+  const MAX_BYTES_BY_CLIENT = {
+    pdfPages: 200 * 1024 * 1024, // merge/split/rotate -- can legitimately be a large scanned PDF
+    pdfTables: 100 * 1024 * 1024, // renders each page to extract tables -- more work per byte
+    statementToCsv: 100 * 1024 * 1024,
+    htmlTableToCsv: 20 * 1024 * 1024, // parsed HTML/text, held in the DOM for preview
+    dedupeLines: 20 * 1024 * 1024, // plain text lists
+    sortLines: 20 * 1024 * 1024,
+  };
+  const DEFAULT_MAX_BYTES = 20 * 1024 * 1024;
+
+  function formatMb(bytes) {
+    return `${Math.round(bytes / (1024 * 1024))}MB`;
+  }
+
   // The synthetic File a "paste" submission is wrapped in (see the
   // pasteButton handler below) needs a name/type each pasteInput-enabled
   // processor recognizes -- keyed by clientEntry, same key space as
@@ -135,6 +158,14 @@ if (toolSection) {
     if (bad) {
       setState('error');
       setStatus(`"${bad.name}" isn't a PDF — this tool reads PDF files.`, 'error');
+      return;
+    }
+
+    const maxBytes = MAX_BYTES_BY_CLIENT[clientEntry] || DEFAULT_MAX_BYTES;
+    const tooBig = files.find((f) => f.size > maxBytes);
+    if (tooBig) {
+      setState('error');
+      setStatus(`"${tooBig.name}" is too large (${formatMb(tooBig.size)}). This tool handles files up to ${formatMb(maxBytes)} — anything bigger risks freezing your browser tab.`, 'error');
       return;
     }
 

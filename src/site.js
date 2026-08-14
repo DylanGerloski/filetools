@@ -16,7 +16,7 @@
 const SITE_ORIGIN = 'https://dylangerloski.github.io';
 const BASE_PATH = '/filetools/';
 const SITE_NAME = 'filetools';
-const SITE_TAGLINE = 'Free file utilities that run entirely in your browser. No account, no upload, no file size limit.';
+const SITE_TAGLINE = 'Free file utilities that run entirely in your browser. No account, no upload, no sign-up.';
 const BUILD_DATE = new Date().toISOString().slice(0, 10);
 
 /** Tool categories, in the order they should appear in nav/footer/home. */

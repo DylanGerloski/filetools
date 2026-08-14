@@ -317,7 +317,7 @@ export async function run(ctx) {
   const bytes = await file.arrayBuffer();
   let pdfJsDoc;
   try {
-    pdfJsDoc = await pdfjs.getDocument({ data: bytes.slice(0) }).promise;
+    pdfJsDoc = await pdfjs.getDocument({ data: bytes.slice(0), isEvalSupported: false }).promise;
   } catch (err) {
     setState('error');
     if (err && String(err.name).toLowerCase().includes('password')) {

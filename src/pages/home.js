@@ -13,7 +13,7 @@ function renderHomePage() {
 
   const mainHtml = `    <div class="hero">
       <h1>File tools that never leave your browser</h1>
-      <p class="deck">No account. No file uploads. No file size limits. Every tool below runs entirely on your device — turn off your Wi-Fi and they still work.</p>
+      <p class="deck">No account. No file uploads. No sign-up. Every tool below runs entirely on your device — turn off your Wi-Fi and they still work.</p>
     </div>
     <h2>Every tool</h2>
     <div class="tool-grid">

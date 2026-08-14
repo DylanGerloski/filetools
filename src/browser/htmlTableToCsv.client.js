@@ -11,12 +11,30 @@
 // Parsing uses the browser's own DOMParser rather than a hand-rolled HTML
 // tokenizer -- far more robust against the real world's malformed/quirky
 // markup (unclosed tags, implied <tbody>, HTML entities, comments) than
-// anything reasonable to hand-write here. This is safe for untrusted
-// input: a document built by `new DOMParser().parseFromString(html,
-// 'text/html')` has no browsing context, so any <script> in it is parsed
-// but never executed (https://html.spec.whatwg.org/#dom-domparser-
-// parsefromstring -- "scripting is disabled"), and the parsed document is
-// never attached to (or its nodes inserted into) this page's own live DOM.
+// anything reasonable to hand-write here. The script-execution half of
+// this is safe for untrusted input: a document built by `new
+// DOMParser().parseFromString(html, 'text/html')` has no browsing context,
+// so any <script> in it is parsed but never executed
+// (https://html.spec.whatwg.org/#dom-domparser-parsefromstring --
+// "scripting is disabled"), and the parsed document is never attached to
+// (or its nodes inserted into) this page's own live DOM.
+//
+// The resource-loading half is more nuanced: MDN documents that a
+// DOMParser-parsed document "can download resources specified in <iframe>
+// and <img> elements" even while detached, and engine behavior here has
+// differed historically. Empirically, current Chromium does not fetch
+// those resources for a document that's never inserted into the live DOM
+// (see test/htmlTableToCsv.security.e2e.test.mjs, which pointed a full set
+// of resource-bearing elements at a logging server and recorded zero
+// requests) -- but stripDangerousElements() below removes
+// img/iframe/embed/object/video/audio/source/track/link/svg from the
+// parsed document before anything else touches it anyway, as defense in
+// depth against other engines or future engine changes, and because this
+// tool's entire pitch is "your file never leaves your device": an
+// unstripped <img src> leaking the visitor's IP/user-agent to an
+// attacker-chosen host would make that claim false regardless of whether
+// script execution is also blocked.
+//
 // The actual colspan/rowspan-to-rectangular-grid math is pure and lives in
 // ../pure/htmlTableExtract.mjs so it stays unit-testable without a DOM;
 // this file's job is only to (a) read parsed <table> elements into the
@@ -45,6 +63,21 @@ function csvBlob(csvText) {
 
 function jsonBlob(records) {
   return new Blob([JSON.stringify(records, null, 2)], { type: 'application/json;charset=utf-8' });
+}
+
+/**
+ * Every element type MDN documents (or has historically been observed) as
+ * able to trigger a resource fetch from a detached/inert document -- see
+ * this file's header comment. Removed from the parsed document before
+ * anything else touches it, regardless of the empirical Chromium result
+ * recorded in the header comment and test/htmlTableToCsv.security.e2e.test.mjs,
+ * as defense in depth.
+ */
+const DANGEROUS_SELECTOR = 'img, iframe, embed, object, video, audio, source, track, link, svg';
+
+/** @param {Document} doc a DOMParser-parsed, still-detached document */
+function stripDangerousElements(doc) {
+  doc.querySelectorAll(DANGEROUS_SELECTOR).forEach((el) => el.remove());
 }
 
 /**
@@ -219,6 +252,11 @@ export async function run(ctx) {
     setStatus('That doesn’t look like readable HTML markup.', 'error');
     return;
   }
+  // Before any other work touches the parsed document: strip
+  // resource-bearing elements, defense in depth against a detached
+  // document's <img>/<iframe>/etc leaking a request off-device -- see the
+  // header comment above.
+  stripDangerousElements(doc);
 
   const tableEls = Array.from(doc.querySelectorAll('table'));
 

@@ -5,6 +5,26 @@ const { breadcrumbJsonLd, softwareApplicationJsonLd, faqPageJsonLd } = require('
 const { toolBySlug } = require('../tools/index.js');
 const { url, absoluteUrl } = require('../site.js');
 
+// Kept in sync BY HAND with src/browser/dropzone.client.js's own
+// MAX_BYTES_BY_CLIENT/DEFAULT_MAX_BYTES (this file is Node/CommonJS
+// build-time code, that one is a browser ES module copied verbatim into
+// dist/ -- see src/build.js -- so there's no single runtime-shared module
+// today). Only used here to render an honest per-tool caption; the actual
+// enforcement is dropzone.client.js's job. If you change one, change both.
+const MAX_BYTES_BY_CLIENT = {
+  pdfPages: 200 * 1024 * 1024,
+  pdfTables: 100 * 1024 * 1024,
+  statementToCsv: 100 * 1024 * 1024,
+  htmlTableToCsv: 20 * 1024 * 1024,
+  dedupeLines: 20 * 1024 * 1024,
+  sortLines: 20 * 1024 * 1024,
+};
+const DEFAULT_MAX_BYTES = 20 * 1024 * 1024;
+
+function formatMb(bytes) {
+  return `${Math.round(bytes / (1024 * 1024))}MB`;
+}
+
 /**
  * @param {object} tool one entry from src/tools/index.js.
  * @returns {string} the complete standalone HTML document for that tool's
@@ -53,7 +73,7 @@ function renderToolPage(tool) {
         <p class="dz-title">${escapeHtml(dzTitle)}</p>
         <label class="btn-primary" for="file-input">${escapeHtml(chooseLabel)}</label>
         <input id="file-input" type="file" class="sr-only" accept="${escapeHtml(tool.accepts)}"${tool.multiple ? ' multiple' : ''}>
-        <p class="dz-caption">Any size. Stays on this device.</p>
+        <p class="dz-caption">Up to ${formatMb(MAX_BYTES_BY_CLIENT[tool.clientEntry] || DEFAULT_MAX_BYTES)} per file. Stays on this device.</p>
       </div>
       <p class="dz-proof">Nothing is sent anywhere. Turn off your Wi-Fi and this page still works — try it.</p>
       ${pasteHtml}

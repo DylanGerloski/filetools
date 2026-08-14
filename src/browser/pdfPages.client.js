@@ -178,7 +178,7 @@ async function runSplit(ctx) {
   const bytes = await file.arrayBuffer();
   let pdfJsDoc;
   try {
-    pdfJsDoc = await pdfjs.getDocument({ data: bytes.slice(0) }).promise;
+    pdfJsDoc = await pdfjs.getDocument({ data: bytes.slice(0), isEvalSupported: false }).promise;
   } catch (err) {
     setState('error');
     setStatus(`"${file.name}" doesn’t look like a valid PDF.`, 'error');
@@ -307,7 +307,7 @@ async function runRotate(ctx) {
   const bytes = await file.arrayBuffer();
   let pdfJsDoc;
   try {
-    pdfJsDoc = await pdfjs.getDocument({ data: bytes.slice(0) }).promise;
+    pdfJsDoc = await pdfjs.getDocument({ data: bytes.slice(0), isEvalSupported: false }).promise;
   } catch (err) {
     setState('error');
     setStatus(`"${file.name}" doesn’t look like a valid PDF.`, 'error');

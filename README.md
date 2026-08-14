@@ -1,8 +1,8 @@
 # filetools
 
 Free file utilities that run entirely in your browser. No account, no file
-uploads, no file size limits — every tool works by processing your file
-locally, on your own device.
+uploads, no sign-up — every tool works by processing your file locally, on
+your own device.
 
 Live tools:
 

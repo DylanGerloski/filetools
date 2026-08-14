@@ -395,7 +395,7 @@ ${designTokensCss(DESIGN_TOKENS)}
     color: var(--color-text);
   }
   /* Horizontally scrollable inside its OWN container so the page itself
-     never scrolls horizontally at 360px, per design-standards. */
+     never scrolls horizontally at 360px, even for a wide extracted table. */
   .table-scroll {
     overflow-x: auto;
     border: var(--border-hairline) solid var(--color-border);
@@ -572,6 +572,54 @@ ${designTokensCss(DESIGN_TOKENS)}
   .footer-group a:hover { color: var(--color-accent); }
   .footer-legal { max-width: none; }
   .footer-legal a { color: var(--color-muted); margin-right: var(--space-4); }
+
+  .newsletter-signup {
+    margin: var(--space-5) 0;
+    padding: var(--space-4);
+    background: var(--color-surface);
+    border: var(--border-hairline) solid var(--color-border);
+    border-radius: var(--radius-md);
+    max-width: 60ch;
+  }
+  .newsletter-heading {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 var(--space-2);
+  }
+  .newsletter-description {
+    color: var(--color-muted);
+    font-size: var(--text-xs);
+    margin: 0 0 var(--space-3);
+  }
+  .newsletter-signup--pending .newsletter-description { margin-bottom: 0; }
+  .newsletter-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .newsletter-fields input[type="email"] {
+    flex: 1 1 220px;
+    min-height: 44px;
+    padding: var(--space-2) var(--space-3);
+    border: var(--border-hairline) solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+  .newsletter-fields button {
+    min-height: 44px;
+    padding: var(--space-2) var(--space-4);
+    border: var(--border-hairline) solid var(--color-accent);
+    border-radius: var(--radius-sm);
+    background: var(--color-accent);
+    color: var(--color-surface);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .newsletter-fields button:hover { background: var(--color-accent-hover); }
 
   /* -------------------------------------------------------------------
      404

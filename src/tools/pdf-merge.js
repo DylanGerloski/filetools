@@ -3,6 +3,11 @@
 module.exports = {
   slug: 'merge-pdf',
   category: 'pdf',
+  // First shipped this date (matches this file's first commit) -- read by
+  // scripts/announce.js to detect new tool launches and by
+  // buildFeed.js for feed.xml's per-item pubDate. Set once at launch;
+  // don't bump it on later edits to this file.
+  launchDate: '2026-08-13',
   navLabel: 'Merge PDF',
   h1: 'Merge PDF Files',
   title: 'Merge PDF Files Free — In Your Browser | filetools',
@@ -15,7 +20,7 @@ module.exports = {
   howSteps: [
     'Choose or drop two or more PDF files.',
     'Drag the files (or use the up/down buttons) to set the order they should appear in the merged file.',
-    'Select "Merge PDFs" and the combined file downloads straight to your device.',
+    'Select “Merge PDFs” and the combined file downloads straight to your device.',
   ],
   faqs: [
     {

@@ -34,9 +34,12 @@ function escapeHtml(str) {
  * @returns {string} a full <head>...</head> block.
  */
 function documentHead(opts) {
-  const { title, description, canonical, ogType = 'website', jsonLd = [], noindex } = opts;
+  const { title, description, canonical, ogType = 'website', jsonLd = [], noindex, feedUrl } = opts;
 
   const robotsMeta = noindex ? '\n  <meta name="robots" content="noindex">' : '';
+  const feedLink = feedUrl
+    ? `\n  <link rel="alternate" type="application/rss+xml" title="${escapeHtml(SITE_NAME)} — new tools" href="${escapeHtml(feedUrl)}">`
+    : '';
   const og = `\n  <meta property="og:title" content="${escapeHtml(title)}">` +
     `\n  <meta property="og:description" content="${escapeHtml(description)}">` +
     `\n  <meta property="og:url" content="${escapeHtml(canonical)}">` +
@@ -53,7 +56,7 @@ function documentHead(opts) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeHtml(description)}">
-  <link rel="canonical" href="${escapeHtml(canonical)}">${robotsMeta}${og}
+  <link rel="canonical" href="${escapeHtml(canonical)}">${robotsMeta}${og}${feedLink}
   <meta name="google-adsense-account" content="${escapeHtml(adConfig.client)}">
   <link rel="icon" href="${FAVICON_DATA_URI}">
   <link rel="icon" type="image/svg+xml" href="${escapeHtml(url('favicon.svg'))}">
@@ -100,6 +103,38 @@ function renderBreadcrumb(crumbs) {
   return `<nav class="breadcrumb" aria-label="Breadcrumb">${items}</nav>`;
 }
 
+// Newsletter signup: no email provider is connected yet. This constant is
+// the ONE place to enable real capture later -- once a provider is chosen,
+// set NEWSLETTER_FORM_ACTION to that provider's real hosted-form action URL
+// (e.g. a Buttondown/ConvertKit "plain HTML form" embed action) -- that one
+// edit is the entire wiring change, no rebuild of renderNewsletterSignup()
+// itself. Left null (the current state) renders an honest "not live yet"
+// placeholder instead of a form with nowhere real to submit to.
+const NEWSLETTER_FORM_ACTION = null;
+const NEWSLETTER_FORM_METHOD = 'POST';
+
+/**
+ * Sitewide newsletter signup, rendered inside the shared footer so it
+ * appears on every page.
+ */
+function renderNewsletterSignup() {
+  if (!NEWSLETTER_FORM_ACTION) {
+    return `<div class="newsletter-signup newsletter-signup--pending">
+      <h2 class="newsletter-heading">Hear about new tools</h2>
+      <p class="newsletter-description">Email sign-up isn&rsquo;t live yet &mdash; check back soon, or follow the <a href="${escapeHtml(url('feed.xml'))}">RSS feed</a> in the meantime.</p>
+    </div>`;
+  }
+  return `<form class="newsletter-signup" action="${escapeHtml(NEWSLETTER_FORM_ACTION)}" method="${escapeHtml(NEWSLETTER_FORM_METHOD)}">
+      <h2 class="newsletter-heading">Hear about new tools</h2>
+      <p class="newsletter-description">One email when a new tool ships. No spam, unsubscribe anytime.</p>
+      <div class="newsletter-fields">
+        <label for="newsletter-email" class="sr-only">Email address</label>
+        <input id="newsletter-email" name="email" type="email" required placeholder="you@example.com" autocomplete="email">
+        <button type="submit">Subscribe</button>
+      </div>
+    </form>`;
+}
+
 function renderFooter() {
   const groups = Object.entries(CATEGORY_LABELS)
     .map(([catKey, catLabel]) => {
@@ -132,6 +167,7 @@ function renderFooter() {
       <a href="https://ko-fi.com/flavaa" target="_blank" rel="noopener noreferrer">Ko-fi</a>
       <a href="https://buymeacoffee.com/dylanger254" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a>
     </p>
+    ${renderNewsletterSignup()}
     ${adSlot('footer')}
     <p class="caption">&copy; ${new Date().getFullYear()} ${escapeHtml(SITE_NAME)}</p>
   </footer>`;
@@ -145,13 +181,13 @@ function renderFooter() {
  * @returns {string} a complete standalone HTML document.
  */
 function renderPage(opts) {
-  const { slug = null, title, metaDescription, breadcrumb, mainHtml, jsonLd, canonical, wide, noindex, skipTarget = '#main' } = opts;
+  const { slug = null, title, metaDescription, breadcrumb, mainHtml, jsonLd, canonical, wide, noindex, skipTarget = '#main', feedUrl } = opts;
   const breadcrumbHtml = breadcrumb ? renderBreadcrumb(breadcrumb) : '';
   const skipLabel = skipTarget === '#tool' ? 'Skip to tool' : 'Skip to content';
 
   return `<!doctype html>
 <html lang="en">
-${documentHead({ title, description: metaDescription, canonical, jsonLd, noindex })}
+${documentHead({ title, description: metaDescription, canonical, jsonLd, noindex, feedUrl })}
 <body>
   <a class="skip-link" href="${escapeHtml(skipTarget)}">${escapeHtml(skipLabel)}</a>
   ${renderHeader(slug)}
@@ -201,6 +237,7 @@ module.exports = {
   documentHead,
   renderHeader,
   renderFooter,
+  renderNewsletterSignup,
   renderBreadcrumb,
   renderPage,
   render404Page,

@@ -3,6 +3,9 @@
 module.exports = {
   slug: 'rotate-pdf',
   category: 'pdf',
+  // See pdf-merge.js's launchDate comment for what reads this and when to
+  // set it.
+  launchDate: '2026-08-13',
   navLabel: 'Rotate PDF',
   h1: 'Rotate a PDF',
   title: 'Rotate PDF Pages Free — In Your Browser | filetools',
@@ -14,8 +17,8 @@ module.exports = {
   multiple: false,
   howSteps: [
     'Choose or drop one PDF file.',
-    'Rotate individual pages left or right, or use "Rotate all" to turn every page at once.',
-    'Select "Save rotated PDF" and the file downloads to your device.',
+    'Rotate individual pages left or right, or use “Rotate all” to turn every page at once.',
+    'Select “Save rotated PDF” and the file downloads to your device.',
   ],
   faqs: [
     {

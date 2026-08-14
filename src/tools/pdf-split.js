@@ -3,6 +3,9 @@
 module.exports = {
   slug: 'split-pdf',
   category: 'pdf',
+  // See pdf-merge.js's launchDate comment for what reads this and when to
+  // set it.
+  launchDate: '2026-08-13',
   navLabel: 'Split PDF',
   h1: 'Split a PDF',
   title: 'Split a PDF — Extract or Separate Pages | filetools',
@@ -14,17 +17,17 @@ module.exports = {
   multiple: false,
   howSteps: [
     'Choose or drop one PDF file.',
-    'Check the pages you want (or type a range like "1-3, 7, 9-12"), and choose whether you want them as one file or as separate files.',
-    'Select "Split PDF" and your file(s) download to your device.',
+    'Check the pages you want (or type a range like “1-3, 7, 9-12”), and choose whether you want them as one file or as separate files.',
+    'Select “Split PDF” and your file(s) download to your device.',
   ],
   faqs: [
     {
       q: 'How do I extract just a few pages?',
-      answerHtml: 'Check the pages you want in the grid, or type a range such as "1-3, 7" into the range field — both stay in sync with each other.',
+      answerHtml: 'Check the pages you want in the grid, or type a range such as “1-3, 7” into the range field — both stay in sync with each other.',
     },
     {
       q: 'Can I get every page as its own separate PDF?',
-      answerHtml: 'Yes. Choose "Each page as its own file" before splitting. Each page downloads as its own PDF, one after another.',
+      answerHtml: 'Yes. Choose “Each page as its own file” before splitting. Each page downloads as its own PDF, one after another.',
     },
     {
       q: 'Is my file uploaded to a server?',

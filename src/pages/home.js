@@ -29,6 +29,7 @@ function renderHomePage() {
     mainHtml,
     jsonLd: [websiteJsonLd()],
     canonical: absoluteUrl(),
+    feedUrl: absoluteUrl('feed.xml'),
   });
 }
 

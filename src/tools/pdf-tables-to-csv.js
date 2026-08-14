@@ -3,6 +3,9 @@
 module.exports = {
   slug: 'pdf-to-csv',
   category: 'pdf',
+  // See pdf-merge.js's launchDate comment for what reads this and when to
+  // set it.
+  launchDate: '2026-08-13',
   navLabel: 'PDF Tables to CSV',
   h1: 'Extract Tables from PDF to CSV',
   title: 'Extract Tables from PDF to CSV — In Your Browser | filetools',

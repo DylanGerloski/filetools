@@ -9,3 +9,8 @@ visual-qa-output/
 TESTING.md
 SEO_PLAN.md
 DISTRIBUTION_PACKET.md
+
+# scripts/announce.js's local "already drafted" state and its default
+# output directory -- never pushed to a public repo.
+.announce-state.json
+dist-announcements/

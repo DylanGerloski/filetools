@@ -21,6 +21,7 @@ const { renderToolPage } = require('./pages/toolPage.js');
 const { render404Page } = require('./shell.js');
 const { TOOLS } = require('./tools/index.js');
 const { renderSitemapXml, robotsTxtContent } = require('./sitemap.js');
+const { renderRssXml } = require('./rss.js');
 const { ICON_SVG } = require('./icon.js');
 
 const ROOT = path.join(__dirname, '..');
@@ -100,6 +101,9 @@ function build() {
   fs.writeFileSync(path.join(OUT_DIR, 'sitemap.xml'), renderSitemapXml(sitemapPaths), 'utf8');
   fs.writeFileSync(path.join(OUT_DIR, 'robots.txt'), robotsTxtContent(), 'utf8');
   fs.writeFileSync(path.join(OUT_DIR, 'ads.txt'), adsTxtContent(), 'utf8');
+
+  // 7. feed.xml -- RSS of tool launches (see src/rss.js's header comment).
+  fs.writeFileSync(path.join(OUT_DIR, 'feed.xml'), renderRssXml(TOOLS), 'utf8');
 
   console.log(`Built ${TOOLS.length + 3} pages plus 404.html into dist/.`);
 }

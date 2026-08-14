@@ -47,3 +47,15 @@ third-party libraries each tool depends on.
 Both libraries are copied into `vendor/` at build time and served from this
 site's own origin — never a CDN — so a tool page keeps working even with no
 network connection once it's loaded.
+
+## Third-party origins
+
+Every origin loaded by the live site, and why:
+
+- `pagead2.googlesyndication.com` — Google AdSense, the site's ad script.
+- `gc.zgo.at` — GoatCounter, privacy-friendly visit-count analytics (no
+  cookies, no personal data collected).
+
+Nothing else is fetched from a third-party origin at runtime — `pdf-lib` and
+`pdf.js` are vendored into this site's own origin (see Stack, above), not
+loaded from a CDN.

@@ -15,8 +15,9 @@ const pdfRotate = require('./pdf-rotate.js');
 const pdfTablesToCsv = require('./pdf-tables-to-csv.js');
 const statementToCsv = require('./statement-to-csv.js');
 const htmlTableToCsv = require('./html-table-to-csv.js');
+const dedupeLines = require('./dedupe-lines.js');
 
-const TOOLS = [pdfMerge, pdfSplit, pdfRotate, pdfTablesToCsv, statementToCsv, htmlTableToCsv];
+const TOOLS = [pdfMerge, pdfSplit, pdfRotate, pdfTablesToCsv, statementToCsv, htmlTableToCsv, dedupeLines];
 
 const CATEGORY_LABELS = {
   pdf: 'PDF tools',

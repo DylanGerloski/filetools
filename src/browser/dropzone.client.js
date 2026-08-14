@@ -36,6 +36,17 @@ if (toolSection) {
     pdfTables: () => import('./pdfTables.client.js'),
     statementToCsv: () => import('./statementToCsv.client.js'),
     htmlTableToCsv: () => import('./htmlTableToCsv.client.js'),
+    dedupeLines: () => import('./dedupeLines.client.js'),
+  };
+
+  // The synthetic File a "paste" submission is wrapped in (see the
+  // pasteButton handler below) needs a name/type each pasteInput-enabled
+  // processor recognizes -- keyed by clientEntry, same key space as
+  // PROCESSORS above, so adding a new pasteInput tool is a one-line
+  // addition here, not a hardcoded name shared by every tool.
+  const PASTE_FILE = {
+    htmlTableToCsv: { name: 'pasted-table.html', type: 'text/html' },
+    dedupeLines: { name: 'pasted-list.txt', type: 'text/plain' },
   };
 
   let processorPromise = null;
@@ -197,7 +208,8 @@ if (toolSection) {
         setStatus('Paste some markup first, or choose a file instead.', 'error');
         return;
       }
-      const file = new File([text], 'pasted-table.html', { type: 'text/html' });
+      const pasteFile = PASTE_FILE[clientEntry] || { name: 'pasted-input.txt', type: 'text/plain' };
+      const file = new File([text], pasteFile.name, { type: pasteFile.type });
       handleFileList([file]);
     });
   }

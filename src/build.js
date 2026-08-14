@@ -73,6 +73,7 @@ function build() {
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'pdfTables.client.js'), path.join(jsDir, 'pdfTables.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'statementToCsv.client.js'), path.join(jsDir, 'statementToCsv.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'htmlTableToCsv.client.js'), path.join(jsDir, 'htmlTableToCsv.client.js'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'dedupeLines.client.js'), path.join(jsDir, 'dedupeLines.client.js'));
 
   // 3. Pure modules also loaded client-side -> dist/pure/
   const pureDir = path.join(OUT_DIR, 'pure');
@@ -82,6 +83,7 @@ function build() {
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'csv.mjs'), path.join(pureDir, 'csv.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'statementMerge.mjs'), path.join(pureDir, 'statementMerge.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'htmlTableExtract.mjs'), path.join(pureDir, 'htmlTableExtract.mjs'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'dedupeLines.mjs'), path.join(pureDir, 'dedupeLines.mjs'));
 
   // 4. Vendor libraries (pdf-lib, pdfjs-dist) -> dist/vendor/
   copyVendor();

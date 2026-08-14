@@ -75,6 +75,7 @@ function build() {
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'htmlTableToCsv.client.js'), path.join(jsDir, 'htmlTableToCsv.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'dedupeLines.client.js'), path.join(jsDir, 'dedupeLines.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'sortLines.client.js'), path.join(jsDir, 'sortLines.client.js'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'newsletter.client.js'), path.join(jsDir, 'newsletter.client.js'));
 
   // 3. Pure modules also loaded client-side -> dist/pure/
   const pureDir = path.join(OUT_DIR, 'pure');

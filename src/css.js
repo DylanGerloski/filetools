@@ -673,33 +673,15 @@ ${designTokensCss(DESIGN_TOKENS)}
     margin: 0 0 var(--space-3);
   }
   .newsletter-signup--pending .newsletter-description { margin-bottom: 0; }
-  .newsletter-fields {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-  .newsletter-fields input[type="email"] {
-    flex: 1 1 220px;
-    min-height: 44px;
-    padding: var(--space-2) var(--space-3);
+  .newsletter-embed {
+    display: block;
+    width: 100%;
+    max-width: 480px;
+    height: 320px;
     border: var(--border-hairline) solid var(--color-border);
     border-radius: var(--radius-sm);
-    font-size: var(--text-sm);
     background: var(--color-bg);
-    color: var(--color-text);
   }
-  .newsletter-fields button {
-    min-height: 44px;
-    padding: var(--space-2) var(--space-4);
-    border: var(--border-hairline) solid var(--color-accent);
-    border-radius: var(--radius-sm);
-    background: var(--color-accent);
-    color: var(--color-surface);
-    font-size: var(--text-sm);
-    font-weight: 600;
-    cursor: pointer;
-  }
-  .newsletter-fields button:hover { background: var(--color-accent-hover); }
 
   /* -------------------------------------------------------------------
      404

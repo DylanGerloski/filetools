@@ -55,6 +55,10 @@ Every origin loaded by the live site, and why:
 - `pagead2.googlesyndication.com` — Google AdSense, the site's ad script.
 - `gc.zgo.at` — GoatCounter, privacy-friendly visit-count analytics (no
   cookies, no personal data collected).
+- `builtittheycome.substack.com` — email newsletter signup, embedded as an
+  iframe in the site footer (Substack's own "embed a subscribe widget"
+  output). No personal data reaches this site's own origin; the visitor's
+  email goes directly from the iframe to Substack.
 
 Nothing else is fetched from a third-party origin at runtime — `pdf-lib` and
 `pdf.js` are vendored into this site's own origin (see Stack, above), not

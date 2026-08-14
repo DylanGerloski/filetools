@@ -124,15 +124,17 @@ function renderBreadcrumb(crumbs) {
   return `<nav class="breadcrumb" aria-label="Breadcrumb">${items}</nav>`;
 }
 
-// Newsletter signup: no email provider is connected yet. This constant is
-// the ONE place to enable real capture later -- once a provider is chosen,
-// set NEWSLETTER_FORM_ACTION to that provider's real hosted-form action URL
-// (e.g. a Buttondown/ConvertKit "plain HTML form" embed action) -- that one
-// edit is the entire wiring change, no rebuild of renderNewsletterSignup()
-// itself. Left null (the current state) renders an honest "not live yet"
-// placeholder instead of a form with nowhere real to submit to.
-const NEWSLETTER_FORM_ACTION = null;
-const NEWSLETTER_FORM_METHOD = 'POST';
+// Newsletter signup: wired to the project's Substack publication. The
+// embed URL below is the exact value Substack's own "embed a subscribe
+// widget" panel generates for that publication (Settings -> Growth), so
+// it is the one verified pointer to the right destination -- if the
+// provider is ever swapped, replace this one constant. Loaded lazily by
+// js/newsletter.client.js (only once its footer slot nears the viewport)
+// rather than unconditionally on every page -- an eagerly-loaded iframe
+// here cost the whole site's Lighthouse Performance budget, since the
+// footer this renders into is sitewide.
+const NEWSLETTER_FORM_ACTION = 'https://builtittheycome.substack.com/embed';
+const SUBSTACK_PUBLICATION_URL = 'https://builtittheycome.substack.com';
 
 /**
  * Sitewide newsletter signup, rendered inside the shared footer so it
@@ -145,15 +147,13 @@ function renderNewsletterSignup() {
       <p class="newsletter-description">Email sign-up isn&rsquo;t live yet &mdash; check back soon, or follow the <a href="${escapeHtml(url('feed.xml'))}">RSS feed</a> in the meantime.</p>
     </div>`;
   }
-  return `<form class="newsletter-signup" action="${escapeHtml(NEWSLETTER_FORM_ACTION)}" method="${escapeHtml(NEWSLETTER_FORM_METHOD)}">
+  const embedTitle = 'Email signup for filetools updates';
+  return `<div class="newsletter-signup">
       <h2 class="newsletter-heading">Hear about new tools</h2>
       <p class="newsletter-description">One email when a new tool ships. No spam, unsubscribe anytime.</p>
-      <div class="newsletter-fields">
-        <label for="newsletter-email" class="sr-only">Email address</label>
-        <input id="newsletter-email" name="email" type="email" required placeholder="you@example.com" autocomplete="email">
-        <button type="submit">Subscribe</button>
-      </div>
-    </form>`;
+      <div class="newsletter-embed" data-newsletter-slot data-newsletter-src="${escapeHtml(NEWSLETTER_FORM_ACTION)}" data-newsletter-title="${escapeHtml(embedTitle)}"></div>
+      <noscript><p class="newsletter-description"><a href="${escapeHtml(SUBSTACK_PUBLICATION_URL)}" target="_blank" rel="noopener noreferrer">Subscribe on Substack</a></p></noscript>
+    </div>`;
 }
 
 function renderFooter() {
@@ -218,6 +218,7 @@ ${documentHead({ title, description: metaDescription, canonical, jsonLd, noindex
 ${mainHtml}
   </main>
   ${renderFooter()}
+  <script type="module" src="${escapeHtml(url('js/newsletter.client.js'))}"></script>
 </body>
 </html>
 `;
@@ -246,6 +247,7 @@ ${documentHead({ title, description, canonical: absoluteUrl('404.html'), noindex
     ${body}
   </main>
   ${renderFooter()}
+  <script type="module" src="${escapeHtml(url('js/newsletter.client.js'))}"></script>
 </body>
 </html>
 `;

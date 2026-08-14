@@ -1,0 +1,11 @@
+node_modules/
+dist/
+vendor/
+tmp_test/
+visual-qa-output/
+.lighthouseci/
+
+# Local-only planning/testing artifacts -- never pushed to a public repo.
+TESTING.md
+SEO_PLAN.md
+DISTRIBUTION_PACKET.md

@@ -1,0 +1,27 @@
+{
+  "name": "filetools",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Static, fully client-side file utilities. Every conversion runs in the visitor's browser -- no server, no accounts, no file ever leaves the device.",
+  "type": "commonjs",
+  "main": "src/build.js",
+  "scripts": {
+    "build": "node src/build.js",
+    "vendor": "node scripts/copy-vendor.js",
+    "serve": "node scripts/serve.js 8080",
+    "test": "node --test test/*.test.mjs",
+    "visual-qa": "node scripts/visual-qa.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^4.10.38"
+  },
+  "devDependencies": {
+    "lighthouse": "^13.4.1",
+    "playwright": "^1.62.1"
+  }
+}

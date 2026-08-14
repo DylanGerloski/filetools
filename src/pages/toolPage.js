@@ -36,7 +36,7 @@ function renderToolPage(tool) {
 
   const mainHtml = `    <h1>${escapeHtml(tool.h1)}</h1>
     <p class="deck">${escapeHtml(tool.deck)}</p>
-    <section id="tool" aria-labelledby="tool-h" data-mode="${escapeHtml(tool.mode)}" data-accept="${escapeHtml(tool.accepts)}"${tool.multiple ? ' data-multiple="true"' : ''}>
+    <section id="tool" aria-labelledby="tool-h" data-mode="${escapeHtml(tool.mode)}" data-client="${escapeHtml(tool.clientEntry)}" data-accept="${escapeHtml(tool.accepts)}"${tool.multiple ? ' data-multiple="true"' : ''}>
       <h2 id="tool-h" class="sr-only">${escapeHtml(tool.h1)}</h2>
       <div class="dropzone" data-state="idle">
         <svg class="dz-icon" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path d="M17 8h20l14 14v34a3 3 0 0 1-3 3H17a3 3 0 0 1-3-3V11a3 3 0 0 1 3-3z" fill="none" stroke="currentColor" stroke-width="3"/><path d="M37 8v14h14" fill="none" stroke="currentColor" stroke-width="3"/></svg>

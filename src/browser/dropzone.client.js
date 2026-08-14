@@ -1,12 +1,14 @@
 // Shared drop-zone controller -- page-agnostic UI/state-machine logic used
-// by every merge/split/rotate tool page. Knows nothing about
+// by every tool page on the site. Knows nothing about
 // PDFs specifically: it validates file type/count against the #tool
 // section's data-accept/data-multiple attributes, manages the dropzone's
 // five visual states (idle/dragover/working/error/done -- see src/css.js),
-// and hands the chosen FileList off to the mode-specific processor in
-// ./pdfPages.client.js. Loaded as a plain <script type="module"> (see
-// src/pages/toolPage.js) -- no bundler, no build step needed for this file
-// itself to run in a browser.
+// and hands the chosen FileList off to the mode-specific processor named by
+// #tool's data-client attribute (e.g. "pdfPages" -> ./pdfPages.client.js,
+// "pdfTables" -> ./pdfTables.client.js -- this is the TOOLS registry's
+// `clientEntry` field, see src/tools/index.js). Loaded as a plain
+// <script type="module"> (see src/pages/toolPage.js) -- no bundler, no
+// build step needed for this file itself to run in a browser.
 //
 // THE LANGUAGE RULE: the word "upload" never appears in any control, status,
 // or error string here. Nothing this site does is actually an upload (the
@@ -16,6 +18,7 @@
 const toolSection = document.getElementById('tool');
 if (toolSection) {
   const mode = toolSection.dataset.mode;
+  const clientEntry = toolSection.dataset.client || 'pdfPages';
   const accept = (toolSection.dataset.accept || '').split(',').map((s) => s.trim()).filter(Boolean);
   const multiple = toolSection.dataset.multiple === 'true';
 
@@ -24,10 +27,20 @@ if (toolSection) {
   const statusEl = toolSection.querySelector('.dz-status');
   const resultEl = toolSection.querySelector('.result');
 
+  // Known, closed set of processor modules -- an explicit map rather than a
+  // template-string import(`./${clientEntry}.client.js`) so an unexpected
+  // or malformed data-client value fails loudly (see the catch in
+  // handleFileList) instead of silently attempting an arbitrary import.
+  const PROCESSORS = {
+    pdfPages: () => import('./pdfPages.client.js'),
+    pdfTables: () => import('./pdfTables.client.js'),
+  };
+
   let processorPromise = null;
   function warmProcessor() {
     if (!processorPromise) {
-      processorPromise = import('./pdfPages.client.js');
+      const loader = PROCESSORS[clientEntry];
+      processorPromise = loader ? loader() : Promise.reject(new Error(`Unknown tool client: ${clientEntry}`));
     }
     return processorPromise;
   }

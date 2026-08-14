@@ -12,8 +12,9 @@
 const pdfMerge = require('./pdf-merge.js');
 const pdfSplit = require('./pdf-split.js');
 const pdfRotate = require('./pdf-rotate.js');
+const pdfTablesToCsv = require('./pdf-tables-to-csv.js');
 
-const TOOLS = [pdfMerge, pdfSplit, pdfRotate];
+const TOOLS = [pdfMerge, pdfSplit, pdfRotate, pdfTablesToCsv];
 
 const CATEGORY_LABELS = {
   pdf: 'PDF tools',

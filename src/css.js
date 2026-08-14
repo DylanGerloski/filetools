@@ -359,6 +359,93 @@ ${designTokensCss(DESIGN_TOKENS)}
   .page-card canvas[data-rotation="270"] { transform: rotate(270deg); }
 
   /* -------------------------------------------------------------------
+     Extracted-table preview (PDF tables to CSV --
+     src/browser/pdfTables.client.js)
+     ------------------------------------------------------------------- */
+  .table-block {
+    margin: var(--space-5) 0;
+    padding: var(--space-4);
+    background: var(--color-surface);
+    border: var(--border-hairline) solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+  .table-block-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+  .page-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-1) var(--space-3);
+    background: var(--color-accent-tint);
+    color: var(--color-accent);
+    border-radius: var(--radius-pill);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+  }
+  .table-block-head label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+  /* Horizontally scrollable inside its OWN container so the page itself
+     never scrolls horizontally at 360px, per design-standards. */
+  .table-scroll {
+    overflow-x: auto;
+    border: var(--border-hairline) solid var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+  .extracted-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+  }
+  .extracted-table th, .extracted-table td {
+    padding: var(--space-2) var(--space-3);
+    text-align: left;
+    border-bottom: var(--border-hairline) solid var(--color-border);
+    white-space: nowrap;
+  }
+  .extracted-table thead th {
+    position: sticky;
+    top: 0;
+    background: var(--color-surface-alt);
+    font-weight: var(--weight-medium);
+    z-index: 1;
+  }
+  .extracted-table tbody tr:last-child td { border-bottom: none; }
+  .row-action-cell { width: 44px; text-align: center; }
+  .boundary-editor { margin-top: var(--space-4); }
+  .boundary-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+  }
+  .boundary-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+  .boundary-item input[type="number"] {
+    width: 72px;
+    min-height: 36px;
+    padding: var(--space-1) var(--space-2);
+    border: var(--border-hairline) solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-variant-numeric: tabular-nums;
+    font-size: var(--text-sm);
+  }
+  .table-block > .btn-secondary { margin-top: var(--space-4); }
+
+  /* -------------------------------------------------------------------
      Result block
      ------------------------------------------------------------------- */
   .result {

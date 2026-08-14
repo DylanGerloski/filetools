@@ -69,11 +69,14 @@ function build() {
   fs.mkdirSync(jsDir, { recursive: true });
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'dropzone.client.js'), path.join(jsDir, 'dropzone.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'pdfPages.client.js'), path.join(jsDir, 'pdfPages.client.js'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'pdfTables.client.js'), path.join(jsDir, 'pdfTables.client.js'));
 
   // 3. Pure modules also loaded client-side -> dist/pure/
   const pureDir = path.join(OUT_DIR, 'pure');
   fs.mkdirSync(pureDir, { recursive: true });
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'pageRange.mjs'), path.join(pureDir, 'pageRange.mjs'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'tableExtract.mjs'), path.join(pureDir, 'tableExtract.mjs'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'csv.mjs'), path.join(pureDir, 'csv.mjs'));
 
   // 4. Vendor libraries (pdf-lib, pdfjs-dist) -> dist/vendor/
   copyVendor();

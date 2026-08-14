@@ -10,6 +10,9 @@ Live tools:
 - **Split a PDF** — extract specific pages, or split every page into its
   own file.
 - **Rotate a PDF** — fix sideways pages, one at a time or all at once.
+- **Extract Tables from PDF to CSV** — finds tables in a PDF, shows exactly
+  what it found so you can fix a column before exporting, then downloads a
+  CSV per table.
 
 ## Why it's built this way
 

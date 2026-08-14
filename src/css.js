@@ -444,6 +444,57 @@ ${designTokensCss(DESIGN_TOKENS)}
     font-size: var(--text-sm);
   }
   .table-block > .btn-secondary { margin-top: var(--space-4); }
+  .download-btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+  }
+
+  /* -------------------------------------------------------------------
+     Second input path: "paste markup" (html-table-to-csv today; toolPage.js
+     only renders this block when a tool config sets pasteInput)
+     ------------------------------------------------------------------- */
+  .or-divider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin: var(--space-4) 0;
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+  }
+  .or-divider::before, .or-divider::after {
+    content: '';
+    flex: 1;
+    height: var(--border-hairline);
+    background: var(--color-border);
+  }
+  .paste-input {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .paste-input label {
+    font-weight: var(--weight-medium);
+    font-size: var(--text-sm);
+  }
+  .paste-textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: var(--space-3);
+    border: var(--border-hairline) solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    background: var(--color-surface);
+    resize: vertical;
+  }
+  .paste-textarea:focus-visible {
+    outline: var(--border-control) solid var(--color-accent);
+    outline-offset: 1px;
+  }
+  .paste-input > .btn-secondary { align-self: flex-start; }
 
   /* -------------------------------------------------------------------
      Result block

@@ -35,6 +35,7 @@ if (toolSection) {
     pdfPages: () => import('./pdfPages.client.js'),
     pdfTables: () => import('./pdfTables.client.js'),
     statementToCsv: () => import('./statementToCsv.client.js'),
+    htmlTableToCsv: () => import('./htmlTableToCsv.client.js'),
   };
 
   let processorPromise = null;
@@ -97,6 +98,11 @@ if (toolSection) {
   function fileMatchesAccept(file) {
     if (!accept.length) return true;
     return accept.some((pattern) => {
+      // A leading dot is a filename-extension pattern (e.g. ".html") rather
+      // than a MIME type -- needed because some browser/OS combinations
+      // report an empty or unexpected `file.type` for less common
+      // extensions, and checking the extension too is a cheap backstop.
+      if (pattern.startsWith('.')) return file.name.toLowerCase().endsWith(pattern.toLowerCase());
       if (pattern.endsWith('/*')) return file.type.startsWith(pattern.slice(0, -1));
       return file.type === pattern;
     });
@@ -175,4 +181,24 @@ if (toolSection) {
   window.addEventListener('drop', (e) => {
     if (!toolSection.contains(e.target)) e.preventDefault();
   });
+
+  // Optional second input path (src/pages/toolPage.js's `pasteInput`
+  // block, currently only html-table-to-csv): pasted text is wrapped in a
+  // synthetic File and pushed through the exact same handleFileList/
+  // processor.run() path a chosen/dropped file takes, so every tool's
+  // processor only ever has to handle one input shape.
+  const pasteTextarea = toolSection.querySelector('.paste-textarea');
+  const pasteButton = toolSection.querySelector('.paste-convert-btn');
+  if (pasteTextarea && pasteButton) {
+    pasteButton.addEventListener('click', () => {
+      const text = pasteTextarea.value;
+      if (!text.trim()) {
+        setState('error');
+        setStatus('Paste some markup first, or choose a file instead.', 'error');
+        return;
+      }
+      const file = new File([text], 'pasted-table.html', { type: 'text/html' });
+      handleFileList([file]);
+    });
+  }
 }

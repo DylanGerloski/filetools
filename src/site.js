@@ -22,6 +22,7 @@ const BUILD_DATE = new Date().toISOString().slice(0, 10);
 /** Tool categories, in the order they should appear in nav/footer/home. */
 const CATEGORIES = [
   { key: 'pdf', label: 'PDF tools' },
+  { key: 'data', label: 'CSV & data tools' },
 ];
 
 /**

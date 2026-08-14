@@ -31,8 +31,18 @@ function renderToolPage(tool) {
       </a>`)
     .join('\n      ');
 
-  const dzTitle = tool.multiple ? 'Drop your PDF files here' : 'Drop your PDF here';
+  const fileTypeLabel = tool.fileTypeLabel || 'PDF';
+  const dzTitle = tool.multiple ? `Drop your ${fileTypeLabel} files here` : `Drop your ${fileTypeLabel} here`;
   const chooseLabel = tool.multiple ? 'Choose files' : 'Choose file';
+
+  const pasteHtml = tool.pasteInput
+    ? `<div class="or-divider" role="separator" aria-label="or"><span>or</span></div>
+      <div class="paste-input">
+        <label for="paste-textarea">${escapeHtml(tool.pasteInput.label)}</label>
+        <textarea id="paste-textarea" class="paste-textarea" placeholder="${escapeHtml(tool.pasteInput.placeholder)}" rows="6" spellcheck="false"></textarea>
+        <button type="button" id="paste-convert" class="btn-secondary paste-convert-btn">${escapeHtml(tool.pasteInput.buttonLabel)}</button>
+      </div>`
+    : '';
 
   const mainHtml = `    <h1>${escapeHtml(tool.h1)}</h1>
     <p class="deck">${escapeHtml(tool.deck)}</p>
@@ -46,6 +56,7 @@ function renderToolPage(tool) {
         <p class="dz-caption">Any size. Stays on this device.</p>
       </div>
       <p class="dz-proof">Nothing is sent anywhere. Turn off your Wi-Fi and this page still works — try it.</p>
+      ${pasteHtml}
       <div class="dz-status" role="status" aria-live="polite"></div>
       <div class="result" hidden></div>
     </section>

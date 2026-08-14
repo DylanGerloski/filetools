@@ -6,9 +6,15 @@ visual-qa-output/
 .lighthouseci/
 
 # Local-only planning/testing artifacts -- never pushed to a public repo.
+# Broad patterns since growth/reviewer passes name these inconsistently.
 TESTING.md
 SEO_PLAN.md
+SEO_*.md
 DISTRIBUTION_PACKET.md
+*_AUDIT_*.md
+*_REPORT_*.md
+*HEALTH*.md
+*_PLAN.md
 
 # scripts/announce.js's local "already drafted" state and its default
 # output directory -- never pushed to a public repo.

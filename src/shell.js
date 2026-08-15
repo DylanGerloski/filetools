@@ -15,7 +15,7 @@ const { adSlot, adsScriptTag } = require('./ads.js');
 const adConfig = require('./adConfig.js');
 const { TOOLS, CATEGORY_LABELS, toolBySlug } = require('./tools/index.js');
 
-const GOATCOUNTER_URL = 'https://dylangerrrr.goatcounter.com/count';
+const GOATCOUNTER_URL = 'https://dg-filetools.goatcounter.com/count';
 const KOFI_URL = 'https://ko-fi.com/flavaa';
 const BMC_URL = 'https://buymeacoffee.com/dylanger254';
 const OG_DEFAULT_IMAGE = absoluteUrl('og-default.png');

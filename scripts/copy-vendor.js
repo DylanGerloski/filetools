@@ -51,7 +51,20 @@ function copyVendor() {
     path.join(VENDOR, 'pdfjs-dist', 'LICENSE')
   );
 
-  console.log('vendor/ populated from node_modules (pdf-lib, pdfjs-dist).');
+  // fflate -- MIT (verified: node_modules/fflate/LICENSE). Self-contained
+  // ESM build with zero further imports (esm/browser.js), same reasoning
+  // as pdf-lib/pdfjs-dist above: self-hosted so xlsx-to-csv keeps working
+  // with Wi-Fi off, never a CDN.
+  copy(
+    path.join(nm, 'fflate', 'esm', 'browser.js'),
+    path.join(VENDOR, 'fflate', 'fflate.esm.js')
+  );
+  copy(
+    path.join(nm, 'fflate', 'LICENSE'),
+    path.join(VENDOR, 'fflate', 'LICENSE')
+  );
+
+  console.log('vendor/ populated from node_modules (pdf-lib, pdfjs-dist, fflate).');
 }
 
 if (require.main === module) {

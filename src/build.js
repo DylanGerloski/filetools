@@ -75,6 +75,7 @@ function build() {
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'htmlTableToCsv.client.js'), path.join(jsDir, 'htmlTableToCsv.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'dedupeLines.client.js'), path.join(jsDir, 'dedupeLines.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'sortLines.client.js'), path.join(jsDir, 'sortLines.client.js'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'flattenJson.client.js'), path.join(jsDir, 'flattenJson.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'jsonToCsv.client.js'), path.join(jsDir, 'jsonToCsv.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'csvMerge.client.js'), path.join(jsDir, 'csvMerge.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'newsletter.client.js'), path.join(jsDir, 'newsletter.client.js'));
@@ -90,6 +91,7 @@ function build() {
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'htmlTableExtract.mjs'), path.join(pureDir, 'htmlTableExtract.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'dedupeLines.mjs'), path.join(pureDir, 'dedupeLines.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'sortLines.mjs'), path.join(pureDir, 'sortLines.mjs'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'flattenJson.mjs'), path.join(pureDir, 'flattenJson.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'xlsxGrid.mjs'), path.join(pureDir, 'xlsxGrid.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'jsonToCsv.mjs'), path.join(pureDir, 'jsonToCsv.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'csvMerge.mjs'), path.join(pureDir, 'csvMerge.mjs'));

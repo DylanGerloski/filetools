@@ -67,6 +67,7 @@ if (toolSection) {
     htmlTableToCsv: () => import('./htmlTableToCsv.client.js'),
     dedupeLines: () => import('./dedupeLines.client.js'),
     sortLines: () => import('./sortLines.client.js'),
+    flattenJson: () => import('./flattenJson.client.js'),
     xlsxToCsv: () => import('./xlsxToCsv.client.js'),
     jsonToCsv: () => import('./jsonToCsv.client.js'),
     csvMerge: () => import('./csvMerge.client.js'),
@@ -88,6 +89,7 @@ if (toolSection) {
     htmlTableToCsv: 20 * 1024 * 1024, // parsed HTML/text, held in the DOM for preview
     dedupeLines: 20 * 1024 * 1024, // plain text lists
     sortLines: 20 * 1024 * 1024,
+    flattenJson: 20 * 1024 * 1024, // parsed and held in memory as a JS object
     xlsxToCsv: 25 * 1024 * 1024, // unzipped + held in memory as parsed XML for preview
     jsonToCsv: 20 * 1024 * 1024, // parsed JSON, held in memory for preview
     csvMerge: 20 * 1024 * 1024, // multiple CSVs, all held in memory to merge
@@ -107,6 +109,7 @@ if (toolSection) {
     htmlTableToCsv: { name: 'pasted-table.html', type: 'text/html' },
     dedupeLines: { name: 'pasted-list.txt', type: 'text/plain' },
     sortLines: { name: 'pasted-list.txt', type: 'text/plain' },
+    flattenJson: { name: 'pasted-input.json', type: 'application/json' },
     jsonToCsv: { name: 'pasted-input.json', type: 'application/json' },
   };
 

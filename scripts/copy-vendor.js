@@ -65,6 +65,19 @@ function copyVendor() {
     path.join(VENDOR, 'exceljs', 'LICENSE')
   );
 
+  // fflate -- MIT (verified: node_modules/fflate/LICENSE). Single-file,
+  // dependency-free ESM browser build, used by the split-CSV tool to
+  // package its output files into one zip. Pinned to an exact version in
+  // package.json (npm audit --omit=dev: 0 vulnerabilities, 2026-08-15).
+  copy(
+    path.join(nm, 'fflate', 'esm', 'browser.js'),
+    path.join(VENDOR, 'fflate', 'browser.js')
+  );
+  copy(
+    path.join(nm, 'fflate', 'LICENSE'),
+    path.join(VENDOR, 'fflate', 'LICENSE')
+  );
+
   // Space Grotesk (display typeface) -- SIL OFL 1.1 (verified:
   // node_modules/@fontsource-variable/space-grotesk/LICENSE). Latin subset
   // only, variable weight -- see src/css.js's @font-face block.
@@ -77,7 +90,7 @@ function copyVendor() {
     path.join(VENDOR, 'fonts', 'space-grotesk', 'LICENSE')
   );
 
-  console.log('vendor/ populated from node_modules (pdf-lib, pdfjs-dist, exceljs, space-grotesk).');
+  console.log('vendor/ populated from node_modules (pdf-lib, pdfjs-dist, exceljs, fflate, space-grotesk).');
 }
 
 if (require.main === module) {

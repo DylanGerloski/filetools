@@ -38,6 +38,7 @@ if (toolSection) {
     htmlTableToCsv: () => import('./htmlTableToCsv.client.js'),
     dedupeLines: () => import('./dedupeLines.client.js'),
     sortLines: () => import('./sortLines.client.js'),
+    csvDiff: () => import('./csvDiff.client.js'),
   };
 
   // Per-tool file-size cap, checked before a file ever reaches its
@@ -56,6 +57,7 @@ if (toolSection) {
     htmlTableToCsv: 20 * 1024 * 1024, // parsed HTML/text, held in the DOM for preview
     dedupeLines: 20 * 1024 * 1024, // plain text lists
     sortLines: 20 * 1024 * 1024,
+    csvDiff: 20 * 1024 * 1024, // two CSVs, both held in memory to diff
   };
   const DEFAULT_MAX_BYTES = 20 * 1024 * 1024;
 

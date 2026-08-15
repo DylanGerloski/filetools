@@ -71,6 +71,7 @@ if (toolSection) {
     jsonToCsv: () => import('./jsonToCsv.client.js'),
     csvMerge: () => import('./csvMerge.client.js'),
     csvDiff: () => import('./csvDiff.client.js'),
+    splitCsv: () => import('./splitCsv.client.js'),
   };
 
   // Per-tool file-size cap, checked before a file ever reaches its
@@ -93,6 +94,7 @@ if (toolSection) {
     jsonToCsv: 20 * 1024 * 1024, // parsed JSON, held in memory for preview
     csvMerge: 20 * 1024 * 1024, // multiple CSVs, all held in memory to merge
     csvDiff: 20 * 1024 * 1024, // two CSVs, both held in memory to diff
+    splitCsv: 20 * 1024 * 1024, // whole CSV held in memory to chunk and zip
   };
   const DEFAULT_MAX_BYTES = 20 * 1024 * 1024;
 
@@ -111,6 +113,7 @@ if (toolSection) {
     sortLines: { name: 'pasted-list.txt', type: 'text/plain' },
     flattenJson: { name: 'pasted-input.json', type: 'application/json' },
     jsonToCsv: { name: 'pasted-input.json', type: 'application/json' },
+    splitCsv: { name: 'pasted-input.csv', type: 'text/csv' },
   };
 
   let processorPromise = null;

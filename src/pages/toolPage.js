@@ -24,6 +24,7 @@ const MAX_BYTES_BY_CLIENT = {
   jsonToCsv: 20 * 1024 * 1024,
   csvMerge: 20 * 1024 * 1024,
   csvDiff: 20 * 1024 * 1024,
+  splitCsv: 20 * 1024 * 1024,
 };
 const DEFAULT_MAX_BYTES = 20 * 1024 * 1024;
 

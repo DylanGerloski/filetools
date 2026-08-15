@@ -51,6 +51,20 @@ function copyVendor() {
     path.join(VENDOR, 'pdfjs-dist', 'LICENSE')
   );
 
+  // exceljs -- MIT (verified: node_modules/exceljs/LICENSE). Its own
+  // pre-built browser bundle (the "browser" field in its package.json) --
+  // a UMD/browserify build, not ESM, hence xlsxToJson.client.js loading it
+  // via a classic <script> tag rather than import() like pdf-lib/pdf.js
+  // above (see that file's header comment for why).
+  copy(
+    path.join(nm, 'exceljs', 'dist', 'exceljs.min.js'),
+    path.join(VENDOR, 'exceljs', 'exceljs.min.js')
+  );
+  copy(
+    path.join(nm, 'exceljs', 'LICENSE'),
+    path.join(VENDOR, 'exceljs', 'LICENSE')
+  );
+
   // fflate -- MIT (verified: node_modules/fflate/LICENSE). Self-contained
   // ESM build with zero further imports (esm/browser.js), same reasoning
   // as pdf-lib/pdfjs-dist above: self-hosted so every tool keeps working
@@ -83,7 +97,7 @@ function copyVendor() {
     path.join(VENDOR, 'fonts', 'space-grotesk', 'LICENSE')
   );
 
-  console.log('vendor/ populated from node_modules (pdf-lib, pdfjs-dist, fflate, space-grotesk).');
+  console.log('vendor/ populated from node_modules (pdf-lib, pdfjs-dist, exceljs, fflate, space-grotesk).');
 }
 
 if (require.main === module) {

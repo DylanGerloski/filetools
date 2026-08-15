@@ -51,7 +51,20 @@ function copyVendor() {
     path.join(VENDOR, 'pdfjs-dist', 'LICENSE')
   );
 
-  console.log('vendor/ populated from node_modules (pdf-lib, pdfjs-dist).');
+  // fflate -- MIT (verified: node_modules/fflate/LICENSE). Single-file,
+  // dependency-free ESM browser build, used by the split-CSV tool to
+  // package its output files into one zip. Pinned to an exact version in
+  // package.json (npm audit --omit=dev: 0 vulnerabilities, 2026-08-15).
+  copy(
+    path.join(nm, 'fflate', 'esm', 'browser.js'),
+    path.join(VENDOR, 'fflate', 'browser.js')
+  );
+  copy(
+    path.join(nm, 'fflate', 'LICENSE'),
+    path.join(VENDOR, 'fflate', 'LICENSE')
+  );
+
+  console.log('vendor/ populated from node_modules (pdf-lib, pdfjs-dist, fflate).');
 }
 
 if (require.main === module) {

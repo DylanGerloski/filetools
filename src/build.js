@@ -75,6 +75,7 @@ function build() {
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'htmlTableToCsv.client.js'), path.join(jsDir, 'htmlTableToCsv.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'dedupeLines.client.js'), path.join(jsDir, 'dedupeLines.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'sortLines.client.js'), path.join(jsDir, 'sortLines.client.js'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'splitCsv.client.js'), path.join(jsDir, 'splitCsv.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'newsletter.client.js'), path.join(jsDir, 'newsletter.client.js'));
 
   // 3. Pure modules also loaded client-side -> dist/pure/
@@ -87,8 +88,9 @@ function build() {
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'htmlTableExtract.mjs'), path.join(pureDir, 'htmlTableExtract.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'dedupeLines.mjs'), path.join(pureDir, 'dedupeLines.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'sortLines.mjs'), path.join(pureDir, 'sortLines.mjs'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'splitCsv.mjs'), path.join(pureDir, 'splitCsv.mjs'));
 
-  // 4. Vendor libraries (pdf-lib, pdfjs-dist) -> dist/vendor/
+  // 4. Vendor libraries (pdf-lib, pdfjs-dist, fflate) -> dist/vendor/
   copyVendor();
   copyDir(path.join(ROOT, 'vendor'), path.join(OUT_DIR, 'vendor'));
 

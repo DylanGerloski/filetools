@@ -311,7 +311,7 @@ function renderSheetBlock(container, sheetState, rowsToCsv, sheetCount, sheetInd
 
 /** Strips path separators, control characters, and trims length -- same download-filename hygiene every tool here applies to visitor-influenced filenames. */
 function sanitizeFilename(name) {
-  const cleaned = String(name || 'sheet').replace(/[\\/:*?"<>| -]/g, '_').trim();
+  const cleaned = String(name || 'sheet').replace(/[\\/:*?"<>|\x00-\x1f]/g, '_').trim();
   return (cleaned || 'sheet').slice(0, 100);
 }
 

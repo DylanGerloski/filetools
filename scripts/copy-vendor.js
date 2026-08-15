@@ -65,7 +65,19 @@ function copyVendor() {
     path.join(VENDOR, 'exceljs', 'LICENSE')
   );
 
-  console.log('vendor/ populated from node_modules (pdf-lib, pdfjs-dist, exceljs).');
+  // Space Grotesk (display typeface) -- SIL OFL 1.1 (verified:
+  // node_modules/@fontsource-variable/space-grotesk/LICENSE). Latin subset
+  // only, variable weight -- see src/css.js's @font-face block.
+  copy(
+    path.join(nm, '@fontsource-variable', 'space-grotesk', 'files', 'space-grotesk-latin-wght-normal.woff2'),
+    path.join(VENDOR, 'fonts', 'space-grotesk', 'space-grotesk-latin-wght-normal.woff2')
+  );
+  copy(
+    path.join(nm, '@fontsource-variable', 'space-grotesk', 'LICENSE'),
+    path.join(VENDOR, 'fonts', 'space-grotesk', 'LICENSE')
+  );
+
+  console.log('vendor/ populated from node_modules (pdf-lib, pdfjs-dist, exceljs, space-grotesk).');
 }
 
 if (require.main === module) {

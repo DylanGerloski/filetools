@@ -26,6 +26,35 @@ if (toolSection) {
   const fileInput = toolSection.querySelector('#file-input');
   const statusEl = toolSection.querySelector('.dz-status');
   const resultEl = toolSection.querySelector('.result');
+  const cancelBtn = toolSection.querySelector('.dz-cancel');
+
+  // "working" state timing (design-standards.md's three response-time
+  // limits): a generation counter is bumped on every new file selection
+  // AND on Cancel, so a
+  // processor that's still running when the visitor cancels can finish
+  // its work in the background without ever touching the UI again --
+  // that's what makes Cancel real from the visitor's point of view, even
+  // though no per-processor AbortSignal plumbing exists to stop the
+  // in-flight CPU work itself (out of scope for this pass; noted here so
+  // it isn't assumed away).
+  let currentGeneration = 0;
+  let slowTimer = null;
+
+  function clearSlowTimer() {
+    if (slowTimer) { clearTimeout(slowTimer); slowTimer = null; }
+    delete dropzone.dataset.slow;
+  }
+
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', () => {
+      currentGeneration += 1;
+      clearSlowTimer();
+      setState('idle');
+      setStatus('Cancelled.');
+      resultEl.hidden = true;
+      resultEl.innerHTML = '';
+    });
+  }
 
   // Known, closed set of processor modules -- an explicit map rather than a
   // template-string import(`./${clientEntry}.client.js`) so an unexpected
@@ -39,6 +68,8 @@ if (toolSection) {
     dedupeLines: () => import('./dedupeLines.client.js'),
     sortLines: () => import('./sortLines.client.js'),
     xlsxToJson: () => import('./xlsxToJson.client.js'),
+    jsonToCsv: () => import('./jsonToCsv.client.js'),
+    csvMerge: () => import('./csvMerge.client.js'),
   };
 
   // Per-tool file-size cap, checked before a file ever reaches its
@@ -58,6 +89,8 @@ if (toolSection) {
     dedupeLines: 20 * 1024 * 1024, // plain text lists
     sortLines: 20 * 1024 * 1024,
     xlsxToJson: 20 * 1024 * 1024, // a compressed .xlsx unzips into verbose XML -- ExcelJS holds the whole parsed workbook in memory
+    jsonToCsv: 20 * 1024 * 1024, // parsed JSON, held in memory for preview
+    csvMerge: 20 * 1024 * 1024, // multiple CSVs, all held in memory to merge
   };
   const DEFAULT_MAX_BYTES = 20 * 1024 * 1024;
 
@@ -74,6 +107,7 @@ if (toolSection) {
     htmlTableToCsv: { name: 'pasted-table.html', type: 'text/html' },
     dedupeLines: { name: 'pasted-list.txt', type: 'text/plain' },
     sortLines: { name: 'pasted-list.txt', type: 'text/plain' },
+    jsonToCsv: { name: 'pasted-input.json', type: 'application/json' },
   };
 
   let processorPromise = null;
@@ -171,25 +205,48 @@ if (toolSection) {
       return;
     }
 
+    const myGeneration = ++currentGeneration;
+    function stillCurrent() {
+      return myGeneration === currentGeneration;
+    }
+
     setState('working');
     setStatus('Reading your file on this device…');
     resultEl.hidden = true;
     resultEl.innerHTML = '';
 
+    // Past 10s of the SAME job still running, reveal the Cancel button
+    // (Nielsen's third response-time limit). Guarded by stillCurrent() so
+    // a fast job that already finished doesn't pop it back up late.
+    clearSlowTimer();
+    slowTimer = setTimeout(() => {
+      if (stillCurrent()) dropzone.dataset.slow = 'true';
+    }, 10000);
+
     try {
       const processor = await warmProcessor();
+      // setState/setStatus/resultEl are only ever touched by this
+      // generation's own processor.run() call below (a plain object, not a
+      // wrapped guard) -- the guard applies to the OUTER handling here, so
+      // a superseded generation's eventual resolution/rejection can't
+      // overwrite what a later (or cancelled) selection already put on
+      // screen.
       await processor.run({
         mode,
         files,
         section: toolSection,
         dropzone,
         resultEl,
-        setState,
-        setStatus,
+        setState: (s) => { if (stillCurrent()) setState(s); },
+        setStatus: (m, t) => { if (stillCurrent()) setStatus(m, t); },
       });
+      if (stillCurrent()) clearSlowTimer();
     } catch (err) {
-      setState('error');
-      setStatus(err && err.message ? err.message : 'Something went wrong reading that file.', 'error');
+      if (stillCurrent()) {
+        clearSlowTimer();
+        setState('error');
+        setStatus(err && err.message ? err.message : 'Something went wrong reading that file.', 'error');
+      }
     }
   }
 

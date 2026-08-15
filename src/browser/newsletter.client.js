@@ -18,6 +18,12 @@
     const src = slot.getAttribute('data-newsletter-src');
     const title = slot.getAttribute('data-newsletter-title') || 'Email signup form';
     if (!src || !/^https:\/\//.test(src)) return;
+    // Keep the slot's own visible fallback link (see src/shell.js's
+    // renderNewsletterSignup) so a failed iframe load can fall back to it
+    // instead of leaving an empty styled box -- the exact bug this file
+    // used to have (see the D1 fix note in src/shell.js).
+    const fallback = slot.cloneNode(true);
+    fallback.removeAttribute('data-newsletter-slot');
     const iframe = document.createElement('iframe');
     iframe.src = src;
     iframe.width = '480';
@@ -27,6 +33,9 @@
     iframe.className = 'newsletter-embed';
     iframe.setAttribute('frameborder', '0');
     iframe.setAttribute('scrolling', 'no');
+    iframe.addEventListener('error', () => {
+      if (iframe.isConnected) iframe.replaceWith(fallback);
+    });
     slot.replaceWith(iframe);
   }
 

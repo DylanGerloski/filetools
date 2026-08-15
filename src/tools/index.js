@@ -17,10 +17,12 @@ const statementToCsv = require('./statement-to-csv.js');
 const htmlTableToCsv = require('./html-table-to-csv.js');
 const dedupeLines = require('./dedupe-lines.js');
 const sortLines = require('./sort-lines.js');
+const flattenJson = require('./flatten-json.js');
 const jsonToCsv = require('./json-to-csv.js');
+const mergeCsv = require('./merge-csv.js');
 const compareCsv = require('./compare-csv.js');
 
-const TOOLS = [pdfMerge, pdfSplit, pdfRotate, pdfTablesToCsv, statementToCsv, htmlTableToCsv, dedupeLines, sortLines, jsonToCsv, compareCsv];
+const TOOLS = [pdfMerge, pdfSplit, pdfRotate, pdfTablesToCsv, statementToCsv, htmlTableToCsv, dedupeLines, sortLines, flattenJson, jsonToCsv, mergeCsv, compareCsv];
 
 const CATEGORY_LABELS = {
   pdf: 'PDF tools',

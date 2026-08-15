@@ -35,14 +35,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run test suite
-        run: npm test
-
       - name: Vendor client-side libraries
         run: npm run vendor
 
       - name: Build site
         run: npm run build
+
+      # Requires dist/ to already exist -- the end-to-end tests exercise the
+      # built site itself, not just source. See TESTING.md section 5.
+      - name: Run test suite
+        run: npm test
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1

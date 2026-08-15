@@ -70,6 +70,7 @@ if (toolSection) {
     flattenJson: () => import('./flattenJson.client.js'),
     jsonToCsv: () => import('./jsonToCsv.client.js'),
     csvMerge: () => import('./csvMerge.client.js'),
+    csvDiff: () => import('./csvDiff.client.js'),
     splitCsv: () => import('./splitCsv.client.js'),
   };
 
@@ -92,6 +93,7 @@ if (toolSection) {
     flattenJson: 20 * 1024 * 1024, // parsed and held in memory as a JS object
     jsonToCsv: 20 * 1024 * 1024, // parsed JSON, held in memory for preview
     csvMerge: 20 * 1024 * 1024, // multiple CSVs, all held in memory to merge
+    csvDiff: 20 * 1024 * 1024, // two CSVs, both held in memory to diff
     splitCsv: 20 * 1024 * 1024, // whole CSV held in memory to chunk and zip
   };
   const DEFAULT_MAX_BYTES = 20 * 1024 * 1024;

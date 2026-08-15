@@ -583,6 +583,33 @@ ${designTokensCss(DESIGN_TOKENS)}
   }
 
   /* -------------------------------------------------------------------
+     Cell-level CSV diff table (compare-csv --
+     src/browser/csvDiff.client.js). Row-level tint from a shared
+     background token PLUS the .diff-status-cell text label in every row
+     (never color alone -- see design-standards.md's "color never the sole
+     carrier of meaning").
+     ------------------------------------------------------------------- */
+  .extracted-table tr[data-diff-status="added"] > td { background: var(--color-success-bg); }
+  .extracted-table tr[data-diff-status="removed"] > td { background: var(--color-danger-bg); }
+  .extracted-table tr[data-diff-status="changed"] > td { background: var(--color-warn-bg); }
+  .extracted-table td[data-diff-cell="changed"] { font-weight: var(--weight-bold); }
+  .diff-cell-old {
+    color: var(--color-danger);
+    text-decoration: line-through;
+    margin-right: var(--space-1);
+  }
+  .diff-cell-new { color: var(--color-success); }
+  .diff-status-cell {
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    white-space: nowrap;
+  }
+  .diff-status-cell[data-diff-status="added"] { color: var(--color-success); }
+  .diff-status-cell[data-diff-status="removed"] { color: var(--color-danger); }
+  .diff-status-cell[data-diff-status="changed"] { color: var(--color-warn); }
+  .diff-status-cell[data-diff-status="unchanged"] { color: var(--color-muted); }
+
+  /* -------------------------------------------------------------------
      Second input path: "paste markup" (html-table-to-csv today; toolPage.js
      only renders this block when a tool config sets pasteInput)
      ------------------------------------------------------------------- */

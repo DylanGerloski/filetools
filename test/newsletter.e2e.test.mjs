@@ -91,13 +91,17 @@ test('newsletter embed: scrolling the footer into view replaces the slot with th
   await page.close();
 });
 
-test('newsletter embed: degrades to a real link when JavaScript is disabled', async () => {
+test('newsletter embed: degrades to a real, visible link when JavaScript is disabled (D1 fix -- the slot never renders as an empty styled box)', async () => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto(baseUrl);
 
-  const link = page.locator('.newsletter-signup noscript');
-  await assert.doesNotReject(link.waitFor({ state: 'attached' }));
+  const link = page.locator('.newsletter-slot a[href^="https://builtittheycome.substack.com"]');
+  await assert.doesNotReject(link.waitFor({ state: 'visible' }));
+  // Since there is no JS to swap it, the slot must still be the plain,
+  // unstyled link -- never the iframe (which never loads without JS) and
+  // never an empty box.
+  assert.equal(await page.locator('.newsletter-signup iframe').count(), 0);
 
   await page.close();
   await context.close();

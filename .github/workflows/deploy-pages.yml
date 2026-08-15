@@ -41,6 +41,31 @@ jobs:
       - name: Build site
         run: npm run build
 
+      # The end-to-end tests drive a real headless Chromium via Playwright.
+      # npm ci does not download browser binaries on its own -- without this,
+      # every e2e test fails fast with "Executable doesn't exist" and the
+      # test runner then hangs rather than exiting, burning CI minutes until
+      # the job times out. Cached the same way as lichess-stats-poc's
+      # workflow.
+      - name: Resolve installed Playwright version
+        id: playwright-version
+        run: echo "version=$(node -e "console.log(require('./node_modules/playwright/package.json').version)")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
+
+      - name: Install Playwright Chromium (cache miss)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright OS dependencies only (cache hit)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
       # Requires dist/ to already exist -- the end-to-end tests exercise the
       # built site itself, not just source. See TESTING.md section 5.
       - name: Run test suite

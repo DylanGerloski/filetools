@@ -160,7 +160,7 @@ function renderResult(resultEl, rawLines, optionState, naming, dedupeLines, join
 
   const supportNote = document.createElement('p');
   supportNote.className = 'support-note';
-  supportNote.innerHTML = 'That ran entirely on your machine — no servers, no cost to run. If it saved you time, you can buy me a coffee: '
+  supportNote.innerHTML = 'That ran entirely on your machine, with no server and no hosting cost on my end. If it saved you time, you can buy me a coffee: '
     + '<a href="https://ko-fi.com/flavaa" target="_blank" rel="noopener noreferrer">Ko-fi</a>'
     + ' &middot; '
     + '<a href="https://buymeacoffee.com/dylanger254" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a>.';

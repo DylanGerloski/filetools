@@ -43,8 +43,10 @@ third-party libraries each tool depends on.
   manipulation.
 - [pdf.js](https://github.com/mozilla/pdf.js) (Apache-2.0) for reading and
   rendering PDF pages in the browser.
+- [fflate](https://github.com/101arrowz/fflate) (MIT) for building the zip
+  the split-CSV tool downloads its output files in.
 
-Both libraries are copied into `vendor/` at build time and served from this
+These libraries are copied into `vendor/` at build time and served from this
 site's own origin — never a CDN — so a tool page keeps working even with no
 network connection once it's loaded.
 
@@ -60,6 +62,6 @@ Every origin loaded by the live site, and why:
   output). No personal data reaches this site's own origin; the visitor's
   email goes directly from the iframe to Substack.
 
-Nothing else is fetched from a third-party origin at runtime — `pdf-lib` and
-`pdf.js` are vendored into this site's own origin (see Stack, above), not
+Nothing else is fetched from a third-party origin at runtime — `pdf-lib`,
+`pdf.js`, and `fflate` are vendored into this site's own origin (see Stack, above), not
 loaded from a CDN.

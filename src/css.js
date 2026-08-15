@@ -508,6 +508,23 @@ ${designTokensCss(DESIGN_TOKENS)}
     outline: var(--border-control) solid var(--color-accent);
     outline-offset: 1px;
   }
+  /* Split-CSV's rows-per-file control (src/browser/splitCsv.client.js)
+     reuses this same options-row pattern with a number input. */
+  .table-block-head input[type="number"] {
+    width: 88px;
+    min-height: 36px;
+    padding: var(--space-1) var(--space-2);
+    border: var(--border-hairline) solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-variant-numeric: tabular-nums;
+    font-size: var(--text-sm);
+  }
+  .table-block-head input[type="number"]:focus-visible {
+    outline: var(--border-control) solid var(--color-accent);
+    outline-offset: 1px;
+  }
   /* Horizontally scrollable inside its OWN container so the page itself
      never scrolls horizontally at 360px, even for a wide extracted table. */
   .table-scroll {

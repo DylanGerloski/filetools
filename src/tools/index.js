@@ -20,8 +20,9 @@ const sortLines = require('./sort-lines.js');
 const flattenJson = require('./flatten-json.js');
 const jsonToCsv = require('./json-to-csv.js');
 const mergeCsv = require('./merge-csv.js');
+const splitCsv = require('./split-csv.js');
 
-const TOOLS = [pdfMerge, pdfSplit, pdfRotate, pdfTablesToCsv, statementToCsv, htmlTableToCsv, dedupeLines, sortLines, flattenJson, jsonToCsv, mergeCsv];
+const TOOLS = [pdfMerge, pdfSplit, pdfRotate, pdfTablesToCsv, statementToCsv, htmlTableToCsv, dedupeLines, sortLines, flattenJson, jsonToCsv, mergeCsv, splitCsv];
 
 const CATEGORY_LABELS = {
   pdf: 'PDF tools',

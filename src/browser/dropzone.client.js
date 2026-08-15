@@ -67,7 +67,9 @@ if (toolSection) {
     htmlTableToCsv: () => import('./htmlTableToCsv.client.js'),
     dedupeLines: () => import('./dedupeLines.client.js'),
     sortLines: () => import('./sortLines.client.js'),
+    flattenJson: () => import('./flattenJson.client.js'),
     jsonToCsv: () => import('./jsonToCsv.client.js'),
+    csvMerge: () => import('./csvMerge.client.js'),
     splitCsv: () => import('./splitCsv.client.js'),
   };
 
@@ -87,7 +89,9 @@ if (toolSection) {
     htmlTableToCsv: 20 * 1024 * 1024, // parsed HTML/text, held in the DOM for preview
     dedupeLines: 20 * 1024 * 1024, // plain text lists
     sortLines: 20 * 1024 * 1024,
+    flattenJson: 20 * 1024 * 1024, // parsed and held in memory as a JS object
     jsonToCsv: 20 * 1024 * 1024, // parsed JSON, held in memory for preview
+    csvMerge: 20 * 1024 * 1024, // multiple CSVs, all held in memory to merge
     splitCsv: 20 * 1024 * 1024, // whole CSV held in memory to chunk and zip
   };
   const DEFAULT_MAX_BYTES = 20 * 1024 * 1024;
@@ -105,6 +109,7 @@ if (toolSection) {
     htmlTableToCsv: { name: 'pasted-table.html', type: 'text/html' },
     dedupeLines: { name: 'pasted-list.txt', type: 'text/plain' },
     sortLines: { name: 'pasted-list.txt', type: 'text/plain' },
+    flattenJson: { name: 'pasted-input.json', type: 'application/json' },
     jsonToCsv: { name: 'pasted-input.json', type: 'application/json' },
     splitCsv: { name: 'pasted-input.csv', type: 'text/csv' },
   };

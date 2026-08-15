@@ -20,7 +20,9 @@ const MAX_BYTES_BY_CLIENT = {
   htmlTableToCsv: 20 * 1024 * 1024,
   dedupeLines: 20 * 1024 * 1024,
   sortLines: 20 * 1024 * 1024,
+  flattenJson: 20 * 1024 * 1024,
   jsonToCsv: 20 * 1024 * 1024,
+  csvMerge: 20 * 1024 * 1024,
   splitCsv: 20 * 1024 * 1024,
 };
 const DEFAULT_MAX_BYTES = 20 * 1024 * 1024;

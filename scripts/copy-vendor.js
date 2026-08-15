@@ -65,10 +65,17 @@ function copyVendor() {
     path.join(VENDOR, 'exceljs', 'LICENSE')
   );
 
-  // fflate -- MIT (verified: node_modules/fflate/LICENSE). Single-file,
-  // dependency-free ESM browser build, used by the split-CSV tool to
-  // package its output files into one zip. Pinned to an exact version in
-  // package.json (npm audit --omit=dev: 0 vulnerabilities, 2026-08-15).
+  // fflate -- MIT (verified: node_modules/fflate/LICENSE). Self-contained
+  // ESM build with zero further imports (esm/browser.js), same reasoning
+  // as pdf-lib/pdfjs-dist above: self-hosted so every tool keeps working
+  // with Wi-Fi off, never a CDN. Copied to two filenames because two
+  // independently-built tools (xlsx-to-csv, split-csv) each import it
+  // under a different relative name -- see xlsxToCsv.client.js and
+  // splitCsv.client.js.
+  copy(
+    path.join(nm, 'fflate', 'esm', 'browser.js'),
+    path.join(VENDOR, 'fflate', 'fflate.esm.js')
+  );
   copy(
     path.join(nm, 'fflate', 'esm', 'browser.js'),
     path.join(VENDOR, 'fflate', 'browser.js')

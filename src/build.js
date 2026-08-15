@@ -81,6 +81,7 @@ function build() {
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'csvDiff.client.js'), path.join(jsDir, 'csvDiff.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'splitCsv.client.js'), path.join(jsDir, 'splitCsv.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'newsletter.client.js'), path.join(jsDir, 'newsletter.client.js'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'xlsxToCsv.client.js'), path.join(jsDir, 'xlsxToCsv.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'xlsxToJson.client.js'), path.join(jsDir, 'xlsxToJson.client.js'));
 
   // 3. Pure modules also loaded client-side -> dist/pure/
@@ -94,6 +95,7 @@ function build() {
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'dedupeLines.mjs'), path.join(pureDir, 'dedupeLines.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'sortLines.mjs'), path.join(pureDir, 'sortLines.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'flattenJson.mjs'), path.join(pureDir, 'flattenJson.mjs'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'xlsxGrid.mjs'), path.join(pureDir, 'xlsxGrid.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'xlsxExtract.mjs'), path.join(pureDir, 'xlsxExtract.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'jsonToCsv.mjs'), path.join(pureDir, 'jsonToCsv.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'csvMerge.mjs'), path.join(pureDir, 'csvMerge.mjs'));

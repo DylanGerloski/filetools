@@ -68,6 +68,7 @@ if (toolSection) {
     dedupeLines: () => import('./dedupeLines.client.js'),
     sortLines: () => import('./sortLines.client.js'),
     flattenJson: () => import('./flattenJson.client.js'),
+    xlsxToCsv: () => import('./xlsxToCsv.client.js'),
     xlsxToJson: () => import('./xlsxToJson.client.js'),
     jsonToCsv: () => import('./jsonToCsv.client.js'),
     csvMerge: () => import('./csvMerge.client.js'),
@@ -92,6 +93,7 @@ if (toolSection) {
     dedupeLines: 20 * 1024 * 1024, // plain text lists
     sortLines: 20 * 1024 * 1024,
     flattenJson: 20 * 1024 * 1024, // parsed and held in memory as a JS object
+    xlsxToCsv: 25 * 1024 * 1024, // unzipped + held in memory as parsed XML for preview
     xlsxToJson: 20 * 1024 * 1024, // a compressed .xlsx unzips into verbose XML -- ExcelJS holds the whole parsed workbook in memory
     jsonToCsv: 20 * 1024 * 1024, // parsed JSON, held in memory for preview
     csvMerge: 20 * 1024 * 1024, // multiple CSVs, all held in memory to merge

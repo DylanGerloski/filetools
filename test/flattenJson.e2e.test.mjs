@@ -59,7 +59,7 @@ before(async () => {
     JSON.stringify({ user: { name: 'Ada', roles: ['admin', 'editor'] } })
   );
   fs.writeFileSync(
-    path.join(TMP, 'records.json'),
+    path.join(TMP, 'flatten-records.json'),
     JSON.stringify([
       { id: 1, name: 'Coffee', tags: { hot: true } },
       { id: 2, name: 'Tea' },
@@ -106,7 +106,7 @@ test('flatten-json: uploading a nested-object .json file shows a flattened key/v
 test('flatten-json: an array of records renders as a table and downloads a matching CSV', async () => {
   const page = await browser.newPage({ acceptDownloads: true });
   await page.goto(`${baseUrl}data/flatten-json/`, { waitUntil: 'networkidle' });
-  await page.locator('#file-input').setInputFiles(path.join(TMP, 'records.json'));
+  await page.locator('#file-input').setInputFiles(path.join(TMP, 'flatten-records.json'));
   await page.waitForSelector('.table-block');
 
   const badgeText = await page.locator('.page-badge').textContent();

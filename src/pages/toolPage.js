@@ -4,6 +4,8 @@ const { renderPage, adSlot, escapeHtml } = require('../shell.js');
 const { breadcrumbJsonLd, softwareApplicationJsonLd, faqPageJsonLd } = require('../structuredData.js');
 const { toolBySlug } = require('../tools/index.js');
 const { url, absoluteUrl } = require('../site.js');
+const { iconFor } = require('../icons.js');
+const { diagramFor } = require('../diagrams.js');
 
 // Kept in sync BY HAND with src/browser/dropzone.client.js's own
 // MAX_BYTES_BY_CLIENT/DEFAULT_MAX_BYTES (this file is Node/CommonJS
@@ -19,6 +21,8 @@ const MAX_BYTES_BY_CLIENT = {
   dedupeLines: 20 * 1024 * 1024,
   sortLines: 20 * 1024 * 1024,
   flattenJson: 20 * 1024 * 1024,
+  jsonToCsv: 20 * 1024 * 1024,
+  csvMerge: 20 * 1024 * 1024,
 };
 const DEFAULT_MAX_BYTES = 20 * 1024 * 1024;
 
@@ -38,18 +42,29 @@ function renderToolPage(tool) {
   const canonical = absoluteUrl(`${tool.category}/${tool.slug}/`);
 
   const howItems = tool.howSteps.map((s) => `<li>${escapeHtml(s)}</li>`).join('\n        ');
-  const faqItems = tool.faqs.map((f) => `<div class="faq-item">
-        <h3>${escapeHtml(f.q)}</h3>
+  // Native <details>/<summary> disclosure, not a JS accordion -- zero extra
+  // JS, correct keyboard/screen-reader behaviour by construction, and every
+  // answer stays present in the served HTML (accordion content that's
+  // injected only on interaction is treated as lower-weight by search
+  // engines; native <details> keeps 100% of the text in the served HTML).
+  // The first two items ship `open` so the two highest-value answers
+  // (privacy first) keep their immediately-visible weight; the rest are
+  // collapsed.
+  const faqItems = tool.faqs.map((f, i) => `<details class="faq-item"${i < 2 ? ' open' : ''}>
+        <summary><h3>${escapeHtml(f.q)}</h3></summary>
         <p>${f.answerHtml}</p>
-      </div>`).join('\n      ');
+      </details>`).join('\n      ');
 
+  // A single inline glyph+text row under a hairline, not a 3-card grid --
+  // giving "related" content-block visual weight on every one of this
+  // site's tool pages was the single largest contributor to identical
+  // section silhouettes across pages (design-standards.md). Every link and
+  // its anchor text is unchanged from the card version; only the
+  // restated-deck paragraph is dropped.
   const related = tool.relatedSlugs
     .map((slug) => toolBySlug(slug))
     .filter(Boolean)
-    .map((t) => `<a class="related-card" href="${escapeHtml(url(`${t.category}/${t.slug}/`))}">
-        <h3>${escapeHtml(t.navLabel)}</h3>
-        <p>${escapeHtml(t.deck)}</p>
-      </a>`)
+    .map((t) => `<a class="related-link" href="${escapeHtml(url(`${t.category}/${t.slug}/`))}">${iconFor(t.slug)}${escapeHtml(t.navLabel)}</a>`)
     .join('\n      ');
 
   const fileTypeLabel = tool.fileTypeLabel || 'PDF';
@@ -65,16 +80,24 @@ function renderToolPage(tool) {
       </div>`
     : '';
 
+  const diagramHtml = diagramFor(tool.slug);
+
   const mainHtml = `    <h1>${escapeHtml(tool.h1)}</h1>
     <p class="deck">${escapeHtml(tool.deck)}</p>
+    ${diagramHtml}
     <section id="tool" aria-labelledby="tool-h" data-mode="${escapeHtml(tool.mode)}" data-client="${escapeHtml(tool.clientEntry)}" data-accept="${escapeHtml(tool.accepts)}"${tool.multiple ? ' data-multiple="true"' : ''}>
       <h2 id="tool-h" class="sr-only">${escapeHtml(tool.h1)}</h2>
       <div class="dropzone" data-state="idle">
-        <svg class="dz-icon" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path d="M17 8h20l14 14v34a3 3 0 0 1-3 3H17a3 3 0 0 1-3-3V11a3 3 0 0 1 3-3z" fill="none" stroke="currentColor" stroke-width="3"/><path d="M37 8v14h14" fill="none" stroke="currentColor" stroke-width="3"/></svg>
+        <div class="dz-icon-wrap">
+          ${iconFor(tool.slug).replace('<svg ', '<svg class="dz-icon" ')}
+          <svg class="dz-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 12.5 9.5 18 20 6"/></svg>
+        </div>
         <p class="dz-title">${escapeHtml(dzTitle)}</p>
         <label class="btn-primary" for="file-input">${escapeHtml(chooseLabel)}</label>
         <input id="file-input" type="file" class="sr-only" accept="${escapeHtml(tool.accepts)}"${tool.multiple ? ' multiple' : ''}>
         <p class="dz-caption">Up to ${formatMb(MAX_BYTES_BY_CLIENT[tool.clientEntry] || DEFAULT_MAX_BYTES)} per file. Stays on this device.</p>
+        <div class="progress-track" aria-hidden="true"><div class="progress-fill"></div></div>
+        <button type="button" class="btn-secondary dz-cancel">Cancel</button>
       </div>
       <p class="dz-proof">Nothing is sent anywhere. Turn off your Wi-Fi and this page still works — try it.</p>
       ${pasteHtml}
@@ -98,9 +121,9 @@ function renderToolPage(tool) {
 
     <section class="related" aria-labelledby="related-h">
       <h2 id="related-h">Related tools</h2>
-      <div class="related-grid">
+      <p class="related-row">
       ${related}
-      </div>
+      </p>
     </section>
 
     <p class="caption">Files are processed locally in your browser and never uploaded. Read more on the <a href="${escapeHtml(url('privacy/'))}">privacy page</a>.</p>

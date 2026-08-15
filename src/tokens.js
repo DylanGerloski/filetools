@@ -6,18 +6,26 @@
  * every rule in src/css.js and every inline style this build ever emits
  * pulls from here through var(--token-name).
  *
- * Typeface note: the original design called for a self-hosted display face
- * (Space Grotesk) plus a system-UI sans. That webfont was never license-
- * verified before this build, so this build falls back to the system font
- * stack for the display role too -- the layout doesn't depend on the face;
- * the two-tone wordmark (bold, tight tracking, accent-colored tail) carries
- * the brand identity either way. Swapping in a self-hosted webfont later is
- * a one-line change here plus an @font-face block in src/css.js -- nothing
- * else references a typeface.
+ * Typeface note: the display face is Space Grotesk, self-hosted from
+ * vendor/fonts/ (see scripts/copy-vendor.js -- same node_modules-to-vendor
+ * pattern already used for pdf-lib/pdfjs-dist). Licensed SIL OFL 1.1
+ * (vendor/fonts/space-grotesk/LICENSE), which permits bundling and
+ * redistribution with software -- a license grant, not a service ToS, so no
+ * account or ToS agreement was needed to add it. Applied to h1/h2/h3,
+ * <summary>, the wordmark and step-marker numerals only (src/css.js); body
+ * text stays on the system stack, so this remains a single extra network
+ * request sitewide. The @font-face block (src/css.js) declares
+ * font-display: swap; no CLS-safe metric-matched fallback (size-adjust/
+ * ascent-override/etc, measured from the real shipped font's own metrics)
+ * was built for this pass -- font-display: swap plus heading-only
+ * application is a reasonable fallback when those metrics haven't been
+ * measured yet. Check Lighthouse CLS after this change rather than
+ * assuming it's zero; add the metric-matched fallback if it turns out to
+ * matter in practice.
  */
 const DESIGN_TOKENS = {
   '--font-sans': '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-  '--font-display': '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+  '--font-display': '"Space Grotesk Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
 
   '--color-bg': '#f6f7f9',
   '--color-surface': '#ffffff',
@@ -83,6 +91,30 @@ const DESIGN_TOKENS = {
   '--border-hairline': '1px',
   '--border-control': '2px',
   '--border-drop': '2px',
+
+  // Motion system (design-standards.md's required motion token group --
+  // previously absent entirely; see docs/CHANGELOG.md for the audit that
+  // found it). Values are Material's, as cited in docs/DESIGN_PLAYBOOK.md.
+  // Hard cap: no transition in src/css.js may exceed 400ms.
+  '--motion-duration-fast': '150ms',
+  '--motion-duration-standard': '200ms',
+  '--motion-duration-entering': '225ms',
+  '--motion-duration-exiting': '195ms',
+  // The one permitted looping animation on the site (the working-state
+  // indeterminate progress bar) -- encodes ongoing work rather than
+  // decorating, and is fully suppressed under prefers-reduced-motion.
+  '--motion-duration-loop': '1200ms',
+  '--motion-ease-standard': 'cubic-bezier(0.4, 0.0, 0.2, 1)',
+  '--motion-ease-decelerate': 'cubic-bezier(0.0, 0.0, 0.2, 1)',
+  '--motion-ease-accelerate': 'cubic-bezier(0.4, 0.0, 1, 1)',
+  '--motion-ease-sharp': 'cubic-bezier(0.4, 0.0, 0.6, 1)',
+
+  // Focus ring -- the portfolio's one shared interaction signature. Applied
+  // identically on :focus-visible for every interactive element.
+  '--focus-ring-width': '3px',
+  '--focus-ring-offset': '2px',
+  '--focus-ring-color': 'var(--color-accent)',
+  '--focus-ring-transition': 'var(--motion-duration-fast) var(--motion-ease-standard)',
 
   // Ad-slot reserved heights (CLS budget) -- same pattern as the two live
   // assets' --ad-min-h-mobile/desktop tokens.

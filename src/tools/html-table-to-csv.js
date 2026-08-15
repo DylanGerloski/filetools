@@ -37,7 +37,7 @@ module.exports = {
     },
     {
       q: 'What if the page has more than one table?',
-      answerHtml: 'Every <code>&lt;table&gt;</code> found — including one nested inside another — is shown as its own separate block with its own download buttons, plus a “Download all” option if more than one was found.',
+      answerHtml: 'Every <code>&lt;table&gt;</code> found, including one nested inside another, is shown as its own separate block with its own download buttons, plus a “Download all” option if more than one was found.',
     },
     {
       q: 'How does it know which row is the header?',

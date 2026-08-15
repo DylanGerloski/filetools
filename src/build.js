@@ -76,6 +76,7 @@ function build() {
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'dedupeLines.client.js'), path.join(jsDir, 'dedupeLines.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'sortLines.client.js'), path.join(jsDir, 'sortLines.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'newsletter.client.js'), path.join(jsDir, 'newsletter.client.js'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'xlsxToJson.client.js'), path.join(jsDir, 'xlsxToJson.client.js'));
 
   // 3. Pure modules also loaded client-side -> dist/pure/
   const pureDir = path.join(OUT_DIR, 'pure');
@@ -87,8 +88,9 @@ function build() {
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'htmlTableExtract.mjs'), path.join(pureDir, 'htmlTableExtract.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'dedupeLines.mjs'), path.join(pureDir, 'dedupeLines.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'sortLines.mjs'), path.join(pureDir, 'sortLines.mjs'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'xlsxExtract.mjs'), path.join(pureDir, 'xlsxExtract.mjs'));
 
-  // 4. Vendor libraries (pdf-lib, pdfjs-dist) -> dist/vendor/
+  // 4. Vendor libraries (pdf-lib, pdfjs-dist, exceljs) -> dist/vendor/
   copyVendor();
   copyDir(path.join(ROOT, 'vendor'), path.join(OUT_DIR, 'vendor'));
 

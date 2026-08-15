@@ -38,6 +38,7 @@ if (toolSection) {
     htmlTableToCsv: () => import('./htmlTableToCsv.client.js'),
     dedupeLines: () => import('./dedupeLines.client.js'),
     sortLines: () => import('./sortLines.client.js'),
+    jsonToCsv: () => import('./jsonToCsv.client.js'),
   };
 
   // Per-tool file-size cap, checked before a file ever reaches its
@@ -56,6 +57,7 @@ if (toolSection) {
     htmlTableToCsv: 20 * 1024 * 1024, // parsed HTML/text, held in the DOM for preview
     dedupeLines: 20 * 1024 * 1024, // plain text lists
     sortLines: 20 * 1024 * 1024,
+    jsonToCsv: 20 * 1024 * 1024, // parsed JSON, held in memory for preview
   };
   const DEFAULT_MAX_BYTES = 20 * 1024 * 1024;
 
@@ -72,6 +74,7 @@ if (toolSection) {
     htmlTableToCsv: { name: 'pasted-table.html', type: 'text/html' },
     dedupeLines: { name: 'pasted-list.txt', type: 'text/plain' },
     sortLines: { name: 'pasted-list.txt', type: 'text/plain' },
+    jsonToCsv: { name: 'pasted-input.json', type: 'application/json' },
   };
 
   let processorPromise = null;

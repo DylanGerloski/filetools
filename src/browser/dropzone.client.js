@@ -68,6 +68,7 @@ if (toolSection) {
     dedupeLines: () => import('./dedupeLines.client.js'),
     sortLines: () => import('./sortLines.client.js'),
     jsonToCsv: () => import('./jsonToCsv.client.js'),
+    csvMerge: () => import('./csvMerge.client.js'),
   };
 
   // Per-tool file-size cap, checked before a file ever reaches its
@@ -87,6 +88,7 @@ if (toolSection) {
     dedupeLines: 20 * 1024 * 1024, // plain text lists
     sortLines: 20 * 1024 * 1024,
     jsonToCsv: 20 * 1024 * 1024, // parsed JSON, held in memory for preview
+    csvMerge: 20 * 1024 * 1024, // multiple CSVs, all held in memory to merge
   };
   const DEFAULT_MAX_BYTES = 20 * 1024 * 1024;
 

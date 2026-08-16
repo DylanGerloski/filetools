@@ -26,7 +26,7 @@ export const slug = 'xlsx-to-json';
 
 export const ariaLabel = 'Example conversion of a small spreadsheet grid into typed JSON records';
 
-export const note = 'Numbers and booleans stay real JSON types (12, true) -- not the text "12" or "true" a CSV would give you.';
+export const note = 'Numbers and booleans stay real JSON types (12, true), not the text "12" or "true" a CSV would give you.';
 
 /** Raw exceljs-shaped cell values, one row per array entry, header first. */
 const FIXTURE_RAW_ROWS = [

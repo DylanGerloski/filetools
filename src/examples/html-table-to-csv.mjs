@@ -23,7 +23,7 @@ export const slug = 'html-table-to-csv';
 
 export const ariaLabel = 'Example conversion of a small HTML table into a CSV-ready grid';
 
-export const note = 'A 3-row HTML <table> converted into a 3-column grid, header row detected automatically.';
+export const note = 'A 3-row HTML <table> converted into a 2-column grid, header row detected automatically.';
 
 // 5 lines -- inside the 6-8 line hard cap.
 export const FIXTURE_HTML = `<table>

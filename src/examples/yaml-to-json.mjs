@@ -18,7 +18,7 @@ export const slug = 'yaml-to-json';
 
 export const ariaLabel = 'Example conversion of a small YAML document into JSON';
 
-export const note = 'A single YAML document converted into JSON. Multiple --- separated documents combine into one array.';
+export const note = 'A single YAML document converted into JSON.';
 
 // 5 lines -- inside the 6-8 line hard cap.
 export const FIXTURE_TEXT = `name: Widget

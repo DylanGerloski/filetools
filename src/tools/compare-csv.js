@@ -13,7 +13,7 @@ module.exports = {
   deck: 'Drop two CSV files and see exactly what changed, cell by cell - added rows, removed rows, and edited values, all highlighted. Pick a unique column and reordered rows still match up correctly. Nothing is uploaded.',
   clientEntry: 'csvDiff',
   mode: 'compare-csv',
-  fileTypeLabel: 'CSV files',
+  fileTypeLabel: 'CSV',
   accepts: '.csv,text/csv',
   multiple: true,
   howSteps: [

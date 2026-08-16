@@ -11,6 +11,11 @@ import { splitFixture } from '../src/examples/split-csv.mjs';
 import { transposeFixture } from '../src/examples/transpose-csv.mjs';
 import { sortFixture } from '../src/examples/sort-lines.mjs';
 import { dedupeFixture } from '../src/examples/remove-duplicate-lines.mjs';
+import { convertFixture as jsonToCsvFixture } from '../src/examples/json-to-csv.mjs';
+import { convertFixture as htmlTableToCsvFixture } from '../src/examples/html-table-to-csv.mjs';
+import { convertFixture as yamlToJsonFixture } from '../src/examples/yaml-to-json.mjs';
+import { flattenFixture } from '../src/examples/flatten-json.mjs';
+import { convertFixture as xlsxToJsonFixture } from '../src/examples/xlsx-to-json.mjs';
 import { SITE_CSS } from '../src/css.js';
 
 /**
@@ -227,4 +232,91 @@ test('remove-duplicate-lines example: the rendered Input table marks duplicate r
   const bananaCount = (outputHtml.match(/<td>banana<\/td>/g) || []).length;
   assert.equal(appleCount, 1);
   assert.equal(bananaCount, 1);
+});
+
+/**
+ * Pattern C ("code-to-grid" / "code-to-code" / "grid-to-code") coverage --
+ * an input code block or grid, plus the real result rendered as a grid or
+ * a second code block. Each of the five tools below asserts against its
+ * own module's real computed result (imported
+ * directly, not re-derived here), the same "assert against reality"
+ * discipline the compare-csv tests above use, so a change to any of these
+ * tools' pure logic breaks the matching test here instead of silently
+ * shipping a stale or wrong example on the live page.
+ */
+
+test('json-to-csv example: the fixture converts to the expected 3-column, 3-row grid', () => {
+  const { columns, dataRows } = jsonToCsvFixture();
+  assert.deepEqual(columns, ['sku', 'name', 'price']);
+  assert.equal(dataRows.length, 3);
+  assert.deepEqual(dataRows[0], ['A100', 'Widget', '9.5']);
+  assert.deepEqual(dataRows[2], ['A102', 'Gizmo', '21.75']);
+});
+
+test('json-to-csv example: the rendered HTML shows the input JSON and the output grid', () => {
+  const html = exampleFor('json-to-csv');
+  assert.ok(html.includes('&quot;sku&quot;: &quot;A100&quot;'));
+  assert.ok(html.includes('<th scope="col">price</th>'));
+  assert.ok(html.includes('<td>21.75</td>'));
+});
+
+test('html-table-to-csv example: the hand-authored cell rows match the fixture HTML\'s own table exactly', () => {
+  // Cheap drift guard for the two hand-authored fixtures this module keeps
+  // in sync by hand (see that module's header comment): every cell's text
+  // that appears in FIXTURE_CELL_ROWS must also literally appear in
+  // FIXTURE_HTML, and the header row's cell count must match the number of
+  // <th> tags in the markup.
+  const { grid, headerRowCount } = htmlTableToCsvFixture();
+  assert.equal(headerRowCount, 1);
+  assert.deepEqual(grid[0], ['City', 'Population']);
+  assert.deepEqual(grid[1], ['Reno', '264165']);
+  assert.deepEqual(grid[2], ['Boise', '235684']);
+});
+
+test('html-table-to-csv example: the rendered HTML shows the input markup and the output grid', () => {
+  const html = exampleFor('html-table-to-csv');
+  assert.ok(html.includes('&lt;table&gt;'));
+  assert.ok(html.includes('<th scope="col">Population</th>'));
+  assert.ok(html.includes('<td>264165</td>'));
+});
+
+test('yaml-to-json example: the fixture converts to the expected JSON value, via the real js-yaml parse', () => {
+  const jsonText = yamlToJsonFixture();
+  const parsed = JSON.parse(jsonText);
+  assert.deepEqual(parsed, { name: 'Widget', price: 9.5, tags: ['hardware', 'sale'] });
+});
+
+test('yaml-to-json example: the rendered HTML shows the input YAML and the output JSON', () => {
+  const html = exampleFor('yaml-to-json');
+  assert.ok(html.includes('name: Widget'));
+  assert.ok(html.includes('&quot;price&quot;: 9.5'));
+});
+
+test('flatten-json example: the fixture flattens nested customer objects into dot-notation keys', () => {
+  const flatRecords = flattenFixture();
+  assert.equal(flatRecords.length, 2);
+  assert.deepEqual(flatRecords[0], { order: 'A1', 'customer.name': 'Priya', 'customer.city': 'Austin' });
+  assert.deepEqual(flatRecords[1], { order: 'A2', 'customer.name': 'Omar', 'customer.city': 'Reno' });
+});
+
+test('flatten-json example: the rendered HTML wraps every flattened key at weight-medium', () => {
+  const html = exampleFor('flatten-json');
+  assert.ok(html.includes('<span style="font-weight:var(--weight-medium)">&quot;customer.name&quot;</span>'));
+  assert.ok(html.includes('<span style="font-weight:var(--weight-medium)">&quot;customer.city&quot;</span>'));
+});
+
+test('xlsx-to-json example: the fixture keeps real JSON types (number, boolean), not stringified text', () => {
+  const { records } = xlsxToJsonFixture();
+  assert.equal(records.length, 2);
+  assert.deepEqual(records[0], { Product: 'Widget', Qty: 12, 'In Stock': true });
+  assert.equal(typeof records[0].Qty, 'number');
+  assert.equal(typeof records[0]['In Stock'], 'boolean');
+  assert.deepEqual(records[1], { Product: 'Gadget', Qty: 5, 'In Stock': false });
+});
+
+test('xlsx-to-json example: the rendered HTML shows the input grid and the typed output JSON', () => {
+  const html = exampleFor('xlsx-to-json');
+  assert.ok(html.includes('<th scope="col">In Stock</th>'));
+  assert.ok(html.includes('&quot;Qty&quot;: 12'));
+  assert.ok(html.includes('&quot;In Stock&quot;: true'));
 });

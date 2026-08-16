@@ -85,6 +85,13 @@ after(async () => {
   await new Promise((resolve) => server.close(resolve));
 });
 
+// '.extracted-table' locators below are scoped to '.table-block' (the live
+// result wrapper renderTableBlock()/run() append -- see
+// ../src/browser/htmlTableToCsv.client.js) rather than bare
+// '.extracted-table', because this tool's page now also renders a second,
+// static '.extracted-table' inside its build-time output-example panel
+// (see ../src/examples/html-table-to-csv.mjs) -- same scoping fix
+// test/csvDiff.e2e.test.mjs already applies for this exact class.
 test('html-table-to-csv: uploading an .html file extracts the table and downloads a matching CSV', async () => {
   const page = await browser.newPage({ acceptDownloads: true });
   const errors = collectPageErrors(page);
@@ -93,9 +100,9 @@ test('html-table-to-csv: uploading an .html file extracts the table and download
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'table.html'));
   await page.waitForSelector('.table-block');
 
-  const headerTexts = await page.locator('.extracted-table thead th').allTextContents();
+  const headerTexts = await page.locator('.table-block .extracted-table thead th').allTextContents();
   assert.deepEqual(headerTexts, ['Name', 'Amount']);
-  const bodyRowCount = await page.locator('.extracted-table tbody tr').count();
+  const bodyRowCount = await page.locator('.table-block .extracted-table tbody tr').count();
   assert.equal(bodyRowCount, 2);
 
   const [download] = await Promise.all([
@@ -141,7 +148,7 @@ test('html-table-to-csv: pasting markup and clicking convert produces the same r
   await page.locator('#paste-convert').click();
   await page.waitForSelector('.table-block');
 
-  const headerTexts = await page.locator('.extracted-table thead th').allTextContents();
+  const headerTexts = await page.locator('.table-block .extracted-table thead th').allTextContents();
   assert.deepEqual(headerTexts, ['City']);
   assert.deepEqual(errors, []);
   await page.close();
@@ -202,9 +209,9 @@ test('html-table-to-csv: dropping a row before download removes it from the expo
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'table.html'));
   await page.waitForSelector('.table-block');
 
-  assert.equal(await page.locator('.extracted-table tbody tr').count(), 2);
-  await page.locator('.extracted-table tbody tr').first().locator('.row-drop').click();
-  await page.waitForFunction(() => document.querySelectorAll('.extracted-table tbody tr').length === 1);
+  assert.equal(await page.locator('.table-block .extracted-table tbody tr').count(), 2);
+  await page.locator('.table-block .extracted-table tbody tr').first().locator('.row-drop').click();
+  await page.waitForFunction(() => document.querySelectorAll('.table-block .extracted-table tbody tr').length === 1);
 
   const [download] = await Promise.all([
     page.waitForEvent('download', { timeout: 15000 }),

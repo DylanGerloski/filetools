@@ -702,6 +702,21 @@ ${designTokensCss(DESIGN_TOKENS)}
   }
   @media (min-width: 768px) { .tool-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (min-width: 1440px) { .tool-grid { grid-template-columns: repeat(3, 1fr); } }
+
+  /* -------------------------------------------------------------------
+     Reduced motion (WCAG 2.2 SC 2.3.3) -- every transition/animation
+     declared above (skip-link reveal, dropzone drag-state change,
+     progress-fill width) is cut to near-zero for anyone who has asked
+     the OS for less motion, rather than left at its normal duration.
+     ------------------------------------------------------------------- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 `;
 
 module.exports = { SITE_CSS };

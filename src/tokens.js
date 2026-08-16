@@ -29,9 +29,21 @@ const DESIGN_TOKENS = {
   '--color-accent-contrast': '#ffffff',
   '--color-accent-tint': 'rgba(11, 95, 102, 0.06)',
   '--color-border': '#d8dde5',
-  '--color-border-strong': '#9aa5b4',
+  // Darkened from the original #9aa5b4 -- that value only hit ~2.3-2.5:1
+  // against --color-bg/--color-surface, short of the 3:1 WCAG 1.4.11
+  // non-text contrast this token needs since it draws the visible boundary
+  // of .btn-secondary and the dropzone (both real interactive controls).
+  // #7b8490 clears 3:1 against both with margin (verified 2026-08-16
+  // accessibility pass).
+  '--color-border-strong': '#7b8490',
 
-  '--color-success': '#1a7f4b',
+  // Darkened from the original #1a7f4b -- that value measured 4.43:1
+  // against --color-success-bg, just under the 4.5:1 WCAG AA text
+  // threshold (.alert-success and .dz-status[data-tone="success"] both
+  // render normal-size text in this color). #146b40 clears 4.5:1 against
+  // every background this token is used on, with margin (verified
+  // 2026-08-16 accessibility pass).
+  '--color-success': '#146b40',
   '--color-success-bg': '#e6f4ec',
   '--color-warn': '#8a5a00',
   '--color-warn-bg': '#fdf3e0',

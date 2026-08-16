@@ -73,6 +73,13 @@ after(async () => {
   await new Promise((resolve) => server.close(resolve));
 });
 
+// '.extracted-table' locators below are scoped to '.table-block' (the live
+// result wrapper renderResult() appends -- see
+// ../src/browser/jsonToCsv.client.js) rather than bare '.extracted-table',
+// because this tool's page now also renders a second, static
+// '.extracted-table' inside its build-time output-example panel (see
+// ../src/examples/json-to-csv.mjs) -- same scoping fix
+// test/csvDiff.e2e.test.mjs already applies for this exact class.
 test('json-to-csv: uploading a .json file converts it and downloads a CSV', async () => {
   const page = await browser.newPage({ acceptDownloads: true });
   const errors = collectPageErrors(page);
@@ -81,10 +88,10 @@ test('json-to-csv: uploading a .json file converts it and downloads a CSV', asyn
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'records.json'));
   await page.waitForSelector('.table-block');
 
-  const headerTexts = await page.locator('.extracted-table thead th').allTextContents();
+  const headerTexts = await page.locator('.table-block .extracted-table thead th').allTextContents();
   assert.deepEqual(headerTexts, ['name', 'price', 'address.city']);
 
-  const rowTexts = await page.locator('.extracted-table tbody tr').first().locator('td').allTextContents();
+  const rowTexts = await page.locator('.table-block .extracted-table tbody tr').first().locator('td').allTextContents();
   assert.deepEqual(rowTexts, ['Coffee', '4.5', 'Reno']);
 
   const [download] = await Promise.all([
@@ -111,7 +118,7 @@ test('json-to-csv: pasting a JSON array and clicking convert produces the same r
   await page.locator('#paste-convert').click();
   await page.waitForSelector('.table-block');
 
-  const headerTexts = await page.locator('.extracted-table thead th').allTextContents();
+  const headerTexts = await page.locator('.table-block .extracted-table thead th').allTextContents();
   assert.deepEqual(headerTexts, ['name', 'price']);
   assert.deepEqual(errors, []);
   await page.close();

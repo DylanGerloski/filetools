@@ -236,7 +236,7 @@ function renderTableBlock(container, tableState, cellsForRow, rowsToCsv, tableCo
   editor.className = 'boundary-editor';
   const editorLabel = document.createElement('p');
   editorLabel.className = 'caption';
-  editorLabel.textContent = 'Column boundaries — add, remove, or adjust if a column looks wrong:';
+  editorLabel.textContent = 'Column boundaries - add, remove, or adjust if a column looks wrong:';
   editor.appendChild(editorLabel);
 
   const list = document.createElement('div');
@@ -354,12 +354,12 @@ export async function run(ctx) {
     msg.className = 'alert alert-warn';
     msg.setAttribute('role', 'alert');
     msg.textContent = anyScan
-      ? 'This PDF looks like a scanned image — there is no text to extract. This tool does not do OCR.'
+      ? 'This PDF looks like a scanned image - there is no text to extract. This tool does not do OCR.'
       : 'No tables were found in this PDF. This tool looks for at least three rows of consistently aligned columns, so a document without that layout won’t produce a table here.';
     resultEl.appendChild(msg);
     resultEl.hidden = false;
     setState('done');
-    setStatus('Finished reading — no tables found.', 'error');
+    setStatus('Finished reading - no tables found.', 'error');
     return;
   }
 

@@ -61,7 +61,7 @@ test('jsonSafeValue: leaves a Date instance untouched (JSON.stringify handles it
 test('formatYamlError: keeps only the first line of a multi-line js-yaml message', () => {
   const err = { message: 'bad indentation of a mapping entry (2:4)\n\n 1 | a: b\n 2 |   c: d\n--------^' };
   const msg = formatYamlError(err);
-  assert.match(msg, /^That isn’t valid YAML — bad indentation of a mapping entry \(2:4\)\./);
+  assert.match(msg, /^That isn’t valid YAML - bad indentation of a mapping entry \(2:4\)\./);
   assert.doesNotMatch(msg, /\n/);
 });
 

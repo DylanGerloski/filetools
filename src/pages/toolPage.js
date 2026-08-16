@@ -137,7 +137,7 @@ function renderToolPage(tool, example = {}) {
         <div class="progress-track" aria-hidden="true"><div class="progress-fill"></div></div>
         <button type="button" class="btn-secondary dz-cancel">Cancel</button>
       </div>
-      <p class="dz-proof">Nothing is sent anywhere. Turn off your Wi-Fi and this page still works — try it.</p>
+      <p class="dz-proof">Nothing is sent anywhere. Turn off your Wi-Fi and this page still works - try it.</p>
       ${pasteHtml}
       <div class="dz-status" role="status" aria-live="polite"></div>
       <div class="result" hidden></div>

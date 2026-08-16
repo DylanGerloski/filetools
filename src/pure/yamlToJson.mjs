@@ -27,7 +27,7 @@
  */
 export function combineDocuments(docs) {
   if (!Array.isArray(docs) || docs.length === 0) {
-    return { ok: false, error: 'That YAML is empty — there’s nothing to convert.' };
+    return { ok: false, error: 'That YAML is empty - there’s nothing to convert.' };
   }
   if (docs.length === 1) {
     return { ok: true, value: docs[0], multiDoc: false };
@@ -87,5 +87,5 @@ export function formatYamlError(err) {
   const raw = err && typeof err.message === 'string' ? err.message : '';
   const reason = raw.split('\n')[0].trim();
   const detail = reason || 'the syntax couldn’t be parsed';
-  return `That isn’t valid YAML — ${detail}. Check the indentation and syntax there and try again.`;
+  return `That isn’t valid YAML - ${detail}. Check the indentation and syntax there and try again.`;
 }

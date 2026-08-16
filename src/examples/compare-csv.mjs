@@ -30,9 +30,9 @@ const FILE_A = `id,name,plan,seats
 
 const FILE_B = `id,name,plan,seats
 1001,Northwind,Team,12
+1005,Adventure Works,Team,7
 1002,Contoso,Business,9
 1004,Tailspin,Free,2
-1005,Adventure Works,Team,7
 `;
 
 /** Mirrors src/browser/csvDiff.client.js's STATUS_LABEL exactly, so the

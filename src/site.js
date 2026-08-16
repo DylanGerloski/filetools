@@ -6,15 +6,15 @@
  * grep-and-replace across every page. Pure data, no I/O -- safe to require
  * from anywhere, including from within a page module.
  *
- * A custom domain costs real money, so it is a human decision, not this
- * build's call -- this ships under a GitHub Pages project path for now.
- * When/if a domain is attached, this file changes SITE_ORIGIN/BASE_PATH and
+ * The site now lives at the custom domain usefiletools.com (attached
+ * 2026-08-16), served at the domain root -- not a GitHub Pages project
+ * path. If that ever changes, this file changes SITE_ORIGIN/BASE_PATH and
  * nothing else needs editing: every internal link and every canonical URL
  * goes through url()/absoluteUrl().
  */
 
-const SITE_ORIGIN = 'https://dylangerloski.github.io';
-const BASE_PATH = '/filetools/';
+const SITE_ORIGIN = 'https://usefiletools.com';
+const BASE_PATH = '/';
 const SITE_NAME = 'filetools';
 const SITE_TAGLINE = 'Free file utilities that run entirely in your browser. No account, no upload, no sign-up.';
 const BUILD_DATE = new Date().toISOString().slice(0, 10);

@@ -52,16 +52,30 @@ function adsTxtContent() {
   return `# ads.txt for filetools\n# Declares authorized sellers of this site's ad inventory.\n# See https://iabtechlab.com/ads-txt/ for the spec.\ngoogle.com, pub-9767914878112531, DIRECT, f08c47fec0942fa0\n`;
 }
 
-function build() {
+async function build() {
   rimraf(OUT_DIR);
   fs.mkdirSync(OUT_DIR, { recursive: true });
+
+  // Real, generated (not drawn) per-tool output-example panels -- see
+  // src/examples/index.mjs's header comment. This is the one place
+  // build() is async: everything else here is synchronous CJS, but
+  // loading an ESM module (src/examples/*.mjs, which import the pure
+  // ESM src/pure/*.mjs modules to compute a real result at build time)
+  // from CommonJS requires a dynamic import(). Resolved once, up front,
+  // not per tool page.
+  const { exampleFor, ariaLabelFor, noteFor } = await import('./examples/index.mjs');
 
   // 1. Pages
   writeHtml('', renderHomePage());
   writeHtml('how-this-works', renderHowThisWorksPage());
   writeHtml('privacy', renderPrivacyPage());
   TOOLS.forEach((tool) => {
-    writeHtml(path.join(tool.category, tool.slug), renderToolPage(tool));
+    const exampleHtml = exampleFor(tool.slug);
+    writeHtml(path.join(tool.category, tool.slug), renderToolPage(tool, {
+      exampleHtml,
+      exampleAriaLabel: ariaLabelFor(tool.slug),
+      exampleNote: noteFor(tool.slug),
+    }));
   });
   fs.writeFileSync(path.join(OUT_DIR, '404.html'), render404Page(), 'utf8');
 
@@ -139,7 +153,10 @@ function build() {
 }
 
 if (require.main === module) {
-  build();
+  build().catch((e) => {
+    console.error(e);
+    process.exitCode = 1;
+  });
 }
 
 module.exports = { build };

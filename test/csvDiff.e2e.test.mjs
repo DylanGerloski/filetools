@@ -87,7 +87,13 @@ test('compare-csv: reordered rows are matched by the auto-detected ID column, no
   assert.match(badgeText, /1 added/);
   assert.match(badgeText, /1 removed/);
 
-  const statuses = await page.locator('.extracted-table tbody tr').evaluateAll(
+  // Scoped to .table-block (the live result, appended inside .result by
+  // renderResult() -- see csvDiff.client.js), not just .extracted-table:
+  // the page's own output-example panel further down this same page also
+  // renders an .extracted-table with data-diff-status rows (a real,
+  // generated sample, not a mock -- see src/examples/compare-csv.mjs), so
+  // an unscoped selector here would double-count rows from both tables.
+  const statuses = await page.locator('.table-block .extracted-table tbody tr').evaluateAll(
     (trs) => trs.map((tr) => tr.getAttribute('data-diff-status'))
   );
   assert.deepEqual(statuses.sort(), ['added', 'changed', 'removed']);
@@ -105,7 +111,10 @@ test('compare-csv: a changed cell shows the old and new value', async () => {
   ]);
   await page.waitForSelector('.table-block');
 
-  const changedCell = page.locator('tr[data-diff-status="changed"] td[data-diff-cell="changed"]');
+  // Scoped to .table-block for the same reason as the test above -- the
+  // page's own output-example panel also has a data-diff-cell="changed"
+  // cell.
+  const changedCell = page.locator('.table-block tr[data-diff-status="changed"] td[data-diff-cell="changed"]');
   await changedCell.waitFor();
   const oldText = await changedCell.locator('.diff-cell-old').textContent();
   const newText = await changedCell.locator('.diff-cell-new').textContent();
@@ -149,7 +158,8 @@ test('compare-csv: "Swap A ↔ B" reverses which file is treated as the original
   // After the swap, the row that was "added" (ID 4, only in the original
   // File B) should now read as "removed" (File B is now diff-a.csv, which
   // doesn't have ID 4).
-  const statuses = await page.locator('.extracted-table tbody tr').evaluateAll(
+  // Scoped to .table-block for the same reason as above.
+  const statuses = await page.locator('.table-block .extracted-table tbody tr').evaluateAll(
     (trs) => trs.map((tr) => tr.getAttribute('data-diff-status'))
   );
   assert.deepEqual(statuses.sort(), ['added', 'changed', 'removed']);
@@ -177,7 +187,8 @@ test('compare-csv: "Match rows by" Row position still finds the changed row corr
     return badge && /1 changed/.test(badge.textContent);
   });
 
-  const statuses = await page.locator('.extracted-table tbody tr').evaluateAll(
+  // Scoped to .table-block for the same reason as above.
+  const statuses = await page.locator('.table-block .extracted-table tbody tr').evaluateAll(
     (trs) => trs.map((tr) => tr.getAttribute('data-diff-status'))
   );
   assert.deepEqual(statuses, ['changed']);

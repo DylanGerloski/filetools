@@ -6,6 +6,11 @@ import { fileURLToPath } from 'node:url';
 
 import { exampleFor, ariaLabelFor, noteFor } from '../src/examples/index.mjs';
 import { diffFixture } from '../src/examples/compare-csv.mjs';
+import { mergeFixture } from '../src/examples/merge-csv.mjs';
+import { splitFixture } from '../src/examples/split-csv.mjs';
+import { transposeFixture } from '../src/examples/transpose-csv.mjs';
+import { sortFixture } from '../src/examples/sort-lines.mjs';
+import { dedupeFixture } from '../src/examples/remove-duplicate-lines.mjs';
 import { SITE_CSS } from '../src/css.js';
 
 /**
@@ -150,4 +155,76 @@ test('compare-csv example: the rendered table shows old and new values for the c
   assert.ok(html.includes('data-diff-status="added"'));
   assert.ok(html.includes('data-diff-status="unchanged"'));
   assert.ok(html.includes('data-diff-status="changed"'));
+});
+
+/**
+ * Pattern B (before-after-tables) tool-specific tests: each asserts
+ * against the tool's OWN pure module's real return value for that
+ * module's fixture, same "assert against reality, not a re-derived copy"
+ * shape as compare-csv's tests above.
+ */
+
+test('merge-csv example: the fixture reconciles two different headers into one union, blank cell where a file lacks a column', () => {
+  const merged = mergeFixture();
+  assert.deepEqual(merged.headers, ['sku', 'qty', 'backorder']);
+  assert.deepEqual(merged.rows, [
+    ['A100', '12', ''],
+    ['A101', '30', ''],
+    ['B200', '', '0'],
+    ['B201', '', '5'],
+  ]);
+});
+
+test('merge-csv example: the rendered output table includes the union header row and a blank cell', () => {
+  const html = exampleFor('merge-csv');
+  assert.ok(html.includes('<th scope="col">backorder</th>'));
+  assert.ok(html.includes('<td></td>'), 'expected at least one blank reconciled cell in the rendered output');
+});
+
+test('split-csv example: the fixture splits 5 rows at 3 per file into two uneven files', () => {
+  const result = splitFixture();
+  assert.equal(result.files.length, 2);
+  assert.equal(result.files[0].dataRowCount, 3);
+  assert.equal(result.files[1].dataRowCount, 2);
+  assert.equal(result.totalDataRows, 5);
+  // The header row is repeated in every output file.
+  assert.deepEqual(result.files[0].rows[0], ['id', 'name', 'amount']);
+  assert.deepEqual(result.files[1].rows[0], ['id', 'name', 'amount']);
+});
+
+test('transpose-csv example: the fixture swaps a 3-row, 3-column table into 3 rows of 3 cells each', () => {
+  const outcome = transposeFixture();
+  assert.equal(outcome.inputRowCount, 3);
+  assert.equal(outcome.transposed.length, 3);
+  outcome.transposed.forEach((row) => assert.equal(row.length, 3));
+  // The header line is transposed too -- the tool has no header concept.
+  assert.deepEqual(outcome.transposed[0], ['name', 'Iris', 'Coral']);
+  assert.deepEqual(outcome.transposed[1], ['q1', '120', '90']);
+});
+
+test('sort-lines example: the fixture sorts numerically by score, descending, header pinned at the top', () => {
+  const outcome = sortFixture();
+  assert.deepEqual(outcome.sorted, ['name,score', 'Omar,95', 'Priya,88', 'Liu,72']);
+  assert.equal(outcome.resolvedType, 'numeric');
+});
+
+test('remove-duplicate-lines example: the fixture removes the second occurrence of each duplicate, keeping order', () => {
+  const outcome = dedupeFixture();
+  assert.deepEqual(outcome.kept, ['apple', 'banana', 'cherry']);
+  assert.deepEqual(outcome.removedIndices, [2, 4]);
+  assert.equal(outcome.duplicateCount, 2);
+});
+
+test('remove-duplicate-lines example: the rendered Input table marks duplicate rows removed, Output shows only kept lines', () => {
+  const html = exampleFor('remove-duplicate-lines');
+  assert.ok(html.includes('data-diff-status="removed"'));
+  assert.ok(html.includes('Duplicate'));
+  assert.ok(html.includes('Kept'));
+  // Scope to the Output column: "apple" and "banana" each appear exactly
+  // once there -- the duplicated second occurrences never reach it.
+  const outputHtml = html.slice(html.indexOf('>Output<'));
+  const appleCount = (outputHtml.match(/<td>apple<\/td>/g) || []).length;
+  const bananaCount = (outputHtml.match(/<td>banana<\/td>/g) || []).length;
+  assert.equal(appleCount, 1);
+  assert.equal(bananaCount, 1);
 });

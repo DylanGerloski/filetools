@@ -87,6 +87,13 @@ after(async () => {
   await new Promise((resolve) => server.close(resolve));
 });
 
+// '.extracted-table' locators below are scoped to '.table-block' (the live
+// result wrapper renderSheetBlock()/run() append -- see
+// ../src/browser/xlsxToJson.client.js) rather than bare '.extracted-table',
+// because this tool's page now also renders a second, static
+// '.extracted-table' inside its build-time output-example panel (see
+// ../src/examples/xlsx-to-json.mjs) -- same scoping fix
+// test/csvDiff.e2e.test.mjs already applies for this exact class.
 test('xlsx-to-json: uploading a single-sheet workbook previews it and downloads matching, typed JSON', async () => {
   const page = await browser.newPage({ acceptDownloads: true });
   const errors = collectPageErrors(page);
@@ -95,9 +102,9 @@ test('xlsx-to-json: uploading a single-sheet workbook previews it and downloads 
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'one-sheet.xlsx'));
   await page.waitForSelector('.table-block');
 
-  const headerTexts = await page.locator('.extracted-table thead th').allTextContents();
+  const headerTexts = await page.locator('.table-block .extracted-table thead th').allTextContents();
   assert.deepEqual(headerTexts, ['Name', 'Price', 'InStock']);
-  const bodyRowCount = await page.locator('.extracted-table tbody tr').count();
+  const bodyRowCount = await page.locator('.table-block .extracted-table tbody tr').count();
   assert.equal(bodyRowCount, 2);
 
   const [download] = await Promise.all([
@@ -122,7 +129,7 @@ test('xlsx-to-json: turning off "first row is a header" produces column_N keys i
   await page.waitForSelector('.table-block');
 
   await page.locator('.table-block-head input[type="checkbox"]').uncheck();
-  await page.waitForFunction(() => document.querySelectorAll('.extracted-table thead').length === 0);
+  await page.waitForFunction(() => document.querySelectorAll('.table-block .extracted-table thead').length === 0);
 
   const [download] = await Promise.all([
     page.waitForEvent('download', { timeout: 15000 }),

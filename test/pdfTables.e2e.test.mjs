@@ -110,13 +110,17 @@ test('pdf-to-csv: finds the table, treats the first row as a header, and downloa
   await page.waitForSelector('.table-block');
 
   assert.equal(await page.locator('.table-block').count(), 1, 'should find exactly one table');
+  // Scoped to .table-block (the live result), not just .extracted-table --
+  // this page's own output-example panel (src/examples/pdf-to-csv.mjs)
+  // also renders a real .extracted-table, from an unrelated fixture, same
+  // reason test/csvDiff.e2e.test.mjs already scopes this way.
   // A trailing sr-only "Row actions" <th> aligns the header with each data
   // row's row-drop button column -- not one of the extracted data columns.
-  assert.equal(await page.locator('.extracted-table thead th:not(.sr-only)').count(), 3, 'header row should have 3 columns');
-  const headerTexts = await page.locator('.extracted-table thead th:not(.sr-only)').allTextContents();
+  assert.equal(await page.locator('.table-block .extracted-table thead th:not(.sr-only)').count(), 3, 'header row should have 3 columns');
+  const headerTexts = await page.locator('.table-block .extracted-table thead th:not(.sr-only)').allTextContents();
   assert.deepEqual(headerTexts, ['Name', 'Qty', 'Price']);
 
-  const bodyRows = await page.locator('.extracted-table tbody tr').count();
+  const bodyRows = await page.locator('.table-block .extracted-table tbody tr').count();
   assert.equal(bodyRows, 3, 'three data rows (Apples/Bananas/Cherries) should render under the header');
 
   const [download] = await Promise.all([
@@ -151,11 +155,12 @@ test('pdf-to-csv: editing a column boundary recomputes the table cells live', as
   await firstBoundaryInput.fill('900');
   await firstBoundaryInput.dispatchEvent('change');
 
+  // Scoped to .table-block -- see the first test's comment.
   await page.waitForFunction(() => {
-    const th = document.querySelectorAll('.extracted-table thead th');
+    const th = document.querySelectorAll('.table-block .extracted-table thead th');
     return th.length > 0 && th[0].textContent.includes('Name') && th[0].textContent.includes('Qty');
   });
-  const headerTexts = await page.locator('.extracted-table thead th').allTextContents();
+  const headerTexts = await page.locator('.table-block .extracted-table thead th').allTextContents();
   assert.ok(headerTexts[0].includes('Name') && headerTexts[0].includes('Qty'), `expected merged first column, got "${headerTexts[0]}"`);
   await page.close();
 });
@@ -166,10 +171,11 @@ test('pdf-to-csv: dropping a row removes it from the rendered table', async () =
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'table.pdf'));
   await page.waitForSelector('.table-block');
 
-  assert.equal(await page.locator('.extracted-table tbody tr').count(), 3);
-  await page.locator('.extracted-table tbody tr').first().locator('.row-drop').click();
-  await page.waitForFunction(() => document.querySelectorAll('.extracted-table tbody tr').length === 2);
-  assert.equal(await page.locator('.extracted-table tbody tr').count(), 2);
+  // Scoped to .table-block -- see the first test's comment.
+  assert.equal(await page.locator('.table-block .extracted-table tbody tr').count(), 3);
+  await page.locator('.table-block .extracted-table tbody tr').first().locator('.row-drop').click();
+  await page.waitForFunction(() => document.querySelectorAll('.table-block .extracted-table tbody tr').length === 2);
+  assert.equal(await page.locator('.table-block .extracted-table tbody tr').count(), 2);
   await page.close();
 });
 

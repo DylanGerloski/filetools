@@ -5,6 +5,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { collectPageErrors } from './helpers/collectPageErrors.mjs';
 
 /**
  * End-to-end tests for the HTML-table-to-CSV/JSON tool: drive the built
@@ -86,9 +87,7 @@ after(async () => {
 
 test('html-table-to-csv: uploading an .html file extracts the table and downloads a matching CSV', async () => {
   const page = await browser.newPage({ acceptDownloads: true });
-  const errors = [];
-  page.on('pageerror', (err) => errors.push(err.message));
-  page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+  const errors = collectPageErrors(page);
 
   await page.goto(`${baseUrl}data/html-table-to-csv/`, { waitUntil: 'networkidle' });
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'table.html'));
@@ -135,9 +134,7 @@ test('html-table-to-csv: the same table downloads as valid, correctly-shaped JSO
 
 test('html-table-to-csv: pasting markup and clicking convert produces the same result as a file upload', async () => {
   const page = await browser.newPage({ acceptDownloads: true });
-  const errors = [];
-  page.on('pageerror', (err) => errors.push(err.message));
-  page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+  const errors = collectPageErrors(page);
 
   await page.goto(`${baseUrl}data/html-table-to-csv/`, { waitUntil: 'networkidle' });
   await page.fill('#paste-textarea', '<table><tr><th>City</th></tr><tr><td>Austin</td></tr></table>');

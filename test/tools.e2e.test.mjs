@@ -5,6 +5,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { collectPageErrors } from './helpers/collectPageErrors.mjs';
 import { PDFDocument, rgb } from 'pdf-lib';
 
 /**
@@ -82,9 +83,7 @@ after(async () => {
 
 test('merge-pdf: combines two files into one, in order, with no console errors', async () => {
   const page = await browser.newPage({ acceptDownloads: true });
-  const errors = [];
-  page.on('pageerror', (err) => errors.push(err.message));
-  page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+  const errors = collectPageErrors(page);
 
   await page.goto(`${baseUrl}pdf/merge-pdf/`, { waitUntil: 'networkidle' });
   await page.locator('#file-input').setInputFiles([path.join(TMP, 'a.pdf'), path.join(TMP, 'b.pdf')]);
@@ -105,9 +104,7 @@ test('merge-pdf: combines two files into one, in order, with no console errors',
 
 test('split-pdf: a typed page range extracts exactly those pages', async () => {
   const page = await browser.newPage({ acceptDownloads: true });
-  const errors = [];
-  page.on('pageerror', (err) => errors.push(err.message));
-  page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+  const errors = collectPageErrors(page);
 
   await page.goto(`${baseUrl}pdf/split-pdf/`, { waitUntil: 'networkidle' });
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'b.pdf'));
@@ -131,9 +128,7 @@ test('split-pdf: a typed page range extracts exactly those pages', async () => {
 
 test('rotate-pdf: rotating one page writes that rotation into the saved file', async () => {
   const page = await browser.newPage({ acceptDownloads: true });
-  const errors = [];
-  page.on('pageerror', (err) => errors.push(err.message));
-  page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+  const errors = collectPageErrors(page);
 
   await page.goto(`${baseUrl}pdf/rotate-pdf/`, { waitUntil: 'networkidle' });
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'a.pdf'));
@@ -161,9 +156,7 @@ test('cold path: still works offline even when the drop zone was never hovered/f
   // after load, so this must now succeed instead of showing a raw
   // "Failed to fetch dynamically imported module" error.
   const page = await browser.newPage({ acceptDownloads: true });
-  const errors = [];
-  page.on('pageerror', (err) => errors.push(err.message));
-  page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+  const errors = collectPageErrors(page);
 
   await page.goto(`${baseUrl}pdf/merge-pdf/`, { waitUntil: 'networkidle' });
   // Give the load-event/idle-callback warm a moment to actually fetch the

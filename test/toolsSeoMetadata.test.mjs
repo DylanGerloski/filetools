@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import { TOOLS } from '../src/tools/index.js';
 
 /**
- * Regression test for the 2026-08-16 SEO audit (task-mswe5o44-e5e775):
- * every newly-added tool page since the first SEO pass shipped with a
+ * Regression test for the 2026-08-16 SEO audit: every newly-added tool
+ * page since the first SEO pass shipped with a
  * title/metaDescription written without checking length against SERP
  * truncation limits, and none of the four most-recently-added tools
  * (compare-csv, transpose-csv, xlsx-to-csv, yaml-to-json) were added to

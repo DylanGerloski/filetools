@@ -70,6 +70,13 @@ after(async () => {
   await new Promise((resolve) => server.close(resolve));
 });
 
+// Every '.json-preview' locator below is scoped to '.table-block' (the
+// live result wrapper renderResult() appends -- see
+// ../src/browser/yamlToJson.client.js) rather than bare '.json-preview',
+// because this tool's page now also renders a second, static
+// '.json-preview' inside its build-time output-example panel (see
+// ../src/examples/yaml-to-json.mjs) -- same scoping fix
+// test/csvDiff.e2e.test.mjs already applies for '.extracted-table'.
 test('yaml-to-json: uploading a .yaml file converts it and downloads matching JSON', async () => {
   const page = await browser.newPage({ acceptDownloads: true });
   const errors = [];
@@ -78,9 +85,9 @@ test('yaml-to-json: uploading a .yaml file converts it and downloads matching JS
 
   await page.goto(`${baseUrl}data/yaml-to-json/`, { waitUntil: 'networkidle' });
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'doc.yaml'));
-  await page.waitForSelector('.json-preview');
+  await page.waitForSelector('.table-block .json-preview');
 
-  const previewText = await page.locator('.json-preview').textContent();
+  const previewText = await page.locator('.table-block .json-preview').textContent();
   assert.deepEqual(JSON.parse(previewText), { name: 'Coffee', price: 4.5, address: { city: 'Reno' } });
 
   const [download] = await Promise.all([
@@ -105,9 +112,9 @@ test('yaml-to-json: pasting YAML and clicking convert produces the same result',
   await page.goto(`${baseUrl}data/yaml-to-json/`, { waitUntil: 'networkidle' });
   await page.fill('#paste-textarea', 'name: Coffee\nprice: 4.5\ntags:\n  - hot\n  - drink\n');
   await page.locator('#paste-convert').click();
-  await page.waitForSelector('.json-preview');
+  await page.waitForSelector('.table-block .json-preview');
 
-  const previewText = await page.locator('.json-preview').textContent();
+  const previewText = await page.locator('.table-block .json-preview').textContent();
   assert.deepEqual(JSON.parse(previewText), { name: 'Coffee', price: 4.5, tags: ['hot', 'drink'] });
   assert.deepEqual(errors, []);
   await page.close();
@@ -155,9 +162,9 @@ test('yaml-to-json: multiple --- separated documents combine into one JSON array
   await page.goto(`${baseUrl}data/yaml-to-json/`, { waitUntil: 'networkidle' });
   await page.fill('#paste-textarea', 'a: 1\n---\nb: 2\n');
   await page.locator('#paste-convert').click();
-  await page.waitForSelector('.json-preview');
+  await page.waitForSelector('.table-block .json-preview');
 
-  const previewText = await page.locator('.json-preview').textContent();
+  const previewText = await page.locator('.table-block .json-preview').textContent();
   assert.deepEqual(JSON.parse(previewText), [{ a: 1 }, { b: 2 }]);
   await page.close();
 });
@@ -167,9 +174,9 @@ test('yaml-to-json: YAML special numbers (.inf, .nan) become visible JSON string
   await page.goto(`${baseUrl}data/yaml-to-json/`, { waitUntil: 'networkidle' });
   await page.fill('#paste-textarea', 'a: .inf\nb: -.inf\nc: .nan\n');
   await page.locator('#paste-convert').click();
-  await page.waitForSelector('.json-preview');
+  await page.waitForSelector('.table-block .json-preview');
 
-  const previewText = await page.locator('.json-preview').textContent();
+  const previewText = await page.locator('.table-block .json-preview').textContent();
   assert.deepEqual(JSON.parse(previewText), { a: 'Infinity', b: '-Infinity', c: 'NaN' });
   await page.close();
 });

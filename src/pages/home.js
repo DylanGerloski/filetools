@@ -42,7 +42,7 @@ function renderHomePage() {
 
   return renderPage({
     slug: null,
-    title: 'filetools — Free File Utilities, Right In Your Browser',
+    title: 'filetools - Free File Utilities, Right In Your Browser',
     metaDescription: SITE_TAGLINE,
     mainHtml,
     jsonLd: [websiteJsonLd()],

@@ -8,7 +8,7 @@ module.exports = {
   launchDate: '2026-08-13',
   navLabel: 'Rotate PDF',
   h1: 'Rotate a PDF',
-  title: 'Rotate PDF Pages Free — In Your Browser | filetools',
+  title: 'Rotate PDF Pages Free - In Your Browser | filetools',
   metaDescription: 'Rotate all or individual pages in a PDF, free, with no upload and no sign-up. Your files never leave your device.',
   deck: 'Rotate every page, or just the ones that need it. Nothing is uploaded.',
   clientEntry: 'pdfPages',
@@ -27,7 +27,7 @@ module.exports = {
     },
     {
       q: 'Is the rotation permanent, or just a display setting?',
-      answerHtml: 'It’s written into the downloaded file itself, so it opens right-side-up in any PDF viewer — not just in this browser tab.',
+      answerHtml: 'It’s written into the downloaded file itself, so it opens right-side-up in any PDF viewer - not just in this browser tab.',
     },
     {
       q: 'Do you upload my file anywhere?',
@@ -35,7 +35,7 @@ module.exports = {
     },
     {
       q: 'Does rotating reduce quality?',
-      answerHtml: 'No. Only the page orientation metadata changes — nothing is re-rendered or re-compressed.',
+      answerHtml: 'No. Only the page orientation metadata changes - nothing is re-rendered or re-compressed.',
     },
     {
       q: 'What if my PDF is password-protected?',

@@ -113,8 +113,8 @@ function renderResult(resultEl, parsed, mode, optionState, pure) {
     flatForJson = flatRecords;
     isEmpty = flatRecords.length === 0;
     badge.textContent = isEmpty
-      ? 'That array is empty — nothing to flatten'
-      : `${flatRecords.length} record${flatRecords.length === 1 ? '' : 's'} — ${columns.length} column${columns.length === 1 ? '' : 's'}`;
+      ? 'That array is empty - nothing to flatten'
+      : `${flatRecords.length} record${flatRecords.length === 1 ? '' : 's'} - ${columns.length} column${columns.length === 1 ? '' : 's'}`;
   } else {
     const flat = flattenValue(parsed, optionState);
     rows = singleToRows(flat);
@@ -197,7 +197,7 @@ function renderResult(resultEl, parsed, mode, optionState, pure) {
 
   const supportNote = document.createElement('p');
   supportNote.className = 'support-note';
-  supportNote.innerHTML = 'That ran entirely on your machine — no servers, no cost to run. If it saved you time, you can buy me a coffee: '
+  supportNote.innerHTML = 'That ran entirely on your machine - no servers, no cost to run. If it saved you time, you can buy me a coffee: '
     + '<a href="https://ko-fi.com/flavaa" target="_blank" rel="noopener noreferrer">Ko-fi</a>'
     + ' &middot; '
     + '<a href="https://buymeacoffee.com/dylanger254" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a>.';
@@ -228,11 +228,11 @@ export async function run(ctx) {
     const msg = document.createElement('div');
     msg.className = 'alert alert-warn';
     msg.setAttribute('role', 'alert');
-    msg.textContent = 'That file or pasted text is empty — there’s nothing to flatten.';
+    msg.textContent = 'That file or pasted text is empty - there’s nothing to flatten.';
     resultEl.appendChild(msg);
     resultEl.hidden = false;
     setState('done');
-    setStatus('Finished reading — no JSON found.', 'error');
+    setStatus('Finished reading - no JSON found.', 'error');
     return;
   }
 
@@ -248,7 +248,7 @@ export async function run(ctx) {
     resultEl.appendChild(msg);
     resultEl.hidden = false;
     setState('done');
-    setStatus('Finished reading — that wasn’t valid JSON.', 'error');
+    setStatus('Finished reading - that wasn’t valid JSON.', 'error');
     return;
   }
 
@@ -259,11 +259,11 @@ export async function run(ctx) {
     const msg = document.createElement('div');
     msg.className = 'alert alert-warn';
     msg.setAttribute('role', 'alert');
-    msg.textContent = 'That’s valid JSON, but there’s nothing to flatten — the top level needs to be an object ({...}) or an array ([...]), not a bare value.';
+    msg.textContent = 'That’s valid JSON, but there’s nothing to flatten - the top level needs to be an object ({...}) or an array ([...]), not a bare value.';
     resultEl.appendChild(msg);
     resultEl.hidden = false;
     setState('done');
-    setStatus('Finished reading — nothing to flatten.', 'error');
+    setStatus('Finished reading - nothing to flatten.', 'error');
     return;
   }
 

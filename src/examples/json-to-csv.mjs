@@ -20,7 +20,7 @@ export const slug = 'json-to-csv';
 
 export const ariaLabel = 'Example conversion of a small JSON array of objects into a CSV-ready grid';
 
-export const note = 'A 3-record JSON array converted into a 3-column grid. Nested objects become dot-notation columns.';
+export const note = 'A 3-record JSON array converted into a 3-column grid.';
 
 // 5 lines -- comfortably inside the 6-8 line hard cap the spec sets for the
 // input code block.

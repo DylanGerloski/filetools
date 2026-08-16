@@ -57,7 +57,7 @@ function documentHead(opts) {
 
   const robotsMeta = noindex ? '\n  <meta name="robots" content="noindex">' : '';
   const feedLink = feedUrl
-    ? `\n  <link rel="alternate" type="application/rss+xml" title="${escapeHtml(SITE_NAME)} — new tools" href="${escapeHtml(feedUrl)}">`
+    ? `\n  <link rel="alternate" type="application/rss+xml" title="${escapeHtml(SITE_NAME)} - new tools" href="${escapeHtml(feedUrl)}">`
     : '';
   const og = `\n  <meta property="og:title" content="${escapeHtml(title)}">` +
     `\n  <meta property="og:description" content="${escapeHtml(description)}">` +
@@ -145,7 +145,7 @@ function renderNewsletterSignup() {
   if (!NEWSLETTER_FORM_ACTION) {
     return `<div class="newsletter-signup newsletter-signup--pending">
       <h2 class="newsletter-heading">Hear about new tools</h2>
-      <p class="newsletter-description">Email sign-up isn&rsquo;t live yet &mdash; check back soon, or follow the <a href="${escapeHtml(url('feed.xml'))}">RSS feed</a> in the meantime.</p>
+      <p class="newsletter-description">Email sign-up isn&rsquo;t live yet. Check back soon, or follow the <a href="${escapeHtml(url('feed.xml'))}">RSS feed</a> in the meantime.</p>
     </div>`;
   }
   const embedTitle = 'Email signup for filetools updates';

@@ -90,19 +90,19 @@ export function collectColumns(flatRecords) {
 export function parseJsonArray(text) {
   const trimmed = String(text == null ? '' : text).trim();
   if (!trimmed) {
-    return { ok: false, error: 'That’s empty — paste or drop some JSON first.' };
+    return { ok: false, error: 'That’s empty - paste or drop some JSON first.' };
   }
   let parsed;
   try {
     parsed = JSON.parse(trimmed);
   } catch (err) {
-    return { ok: false, error: 'That isn’t valid JSON — check for a missing comma, bracket, or quote and try again.' };
+    return { ok: false, error: 'That isn’t valid JSON - check for a missing comma, bracket, or quote and try again.' };
   }
   if (!Array.isArray(parsed)) {
-    return { ok: false, error: 'The top-level JSON value needs to be an array, like [ {"name": "Coffee"}, {"name": "Tea"} ] — an object or a bare value on its own can’t become CSV rows.' };
+    return { ok: false, error: 'The top-level JSON value needs to be an array, like [ {"name": "Coffee"}, {"name": "Tea"} ] - an object or a bare value on its own can’t become CSV rows.' };
   }
   if (parsed.length === 0) {
-    return { ok: false, error: 'That JSON array is empty — there’s nothing to convert.' };
+    return { ok: false, error: 'That JSON array is empty - there’s nothing to convert.' };
   }
   return { ok: true, records: parsed };
 }

@@ -79,7 +79,7 @@ function renderResult(resultEl, jsonText, multiDoc) {
   badge.className = 'page-badge';
   const lineCount = jsonText.split('\n').length;
   badge.textContent = multiDoc
-    ? `Multiple YAML documents — combined into one JSON array, ${lineCount} line${lineCount === 1 ? '' : 's'}`
+    ? `Multiple YAML documents - combined into one JSON array, ${lineCount} line${lineCount === 1 ? '' : 's'}`
     : `${lineCount} line${lineCount === 1 ? '' : 's'} of JSON`;
   head.appendChild(badge);
   block.appendChild(head);
@@ -111,7 +111,7 @@ function renderResult(resultEl, jsonText, multiDoc) {
 
   const supportNote = document.createElement('p');
   supportNote.className = 'support-note';
-  supportNote.innerHTML = 'That ran entirely on your machine — no servers, no cost to run. If it saved you time, you can buy me a coffee: '
+  supportNote.innerHTML = 'That ran entirely on your machine - no servers, no cost to run. If it saved you time, you can buy me a coffee: '
     + '<a href="https://ko-fi.com/flavaa" target="_blank" rel="noopener noreferrer">Ko-fi</a>'
     + ' &middot; '
     + '<a href="https://buymeacoffee.com/dylanger254" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a>.';
@@ -143,11 +143,11 @@ export async function run(ctx) {
     const msg = document.createElement('div');
     msg.className = 'alert alert-warn';
     msg.setAttribute('role', 'alert');
-    msg.textContent = 'That’s empty — paste or drop some YAML first.';
+    msg.textContent = 'That’s empty - paste or drop some YAML first.';
     resultEl.appendChild(msg);
     resultEl.hidden = false;
     setState('error');
-    setStatus('That’s empty — paste or drop some YAML first.', 'error');
+    setStatus('That’s empty - paste or drop some YAML first.', 'error');
     return;
   }
 

@@ -337,7 +337,7 @@ export async function run(ctx) {
     entries = unzipSync(bytes);
   } catch (err) {
     setState('error');
-    setStatus(`"${file.name}" doesn’t look like a valid .xlsx file — it may be password-protected, a different format (like the older .xls), or corrupted.`, 'error');
+    setStatus(`"${file.name}" doesn’t look like a valid .xlsx file - it may be password-protected, a different format (like the older .xls), or corrupted.`, 'error');
     return;
   }
 
@@ -373,7 +373,7 @@ export async function run(ctx) {
     }
   } catch (err) {
     setState('error');
-    setStatus(err instanceof InvalidXlsxError ? err.message : `Could not read "${file.name}" — it doesn’t look like a valid .xlsx workbook.`, 'error');
+    setStatus(err instanceof InvalidXlsxError ? err.message : `Could not read "${file.name}" - it doesn’t look like a valid .xlsx workbook.`, 'error');
     return;
   }
 
@@ -387,7 +387,7 @@ export async function run(ctx) {
     resultEl.appendChild(msg);
     resultEl.hidden = false;
     setState('done');
-    setStatus('Finished reading — no sheets found.', 'error');
+    setStatus('Finished reading - no sheets found.', 'error');
     return;
   }
 
@@ -413,7 +413,7 @@ export async function run(ctx) {
 
   const supportNote = document.createElement('p');
   supportNote.className = 'support-note';
-  supportNote.innerHTML = 'That ran entirely on your machine — no servers, no cost to run. If it saved you time, you can buy me a coffee: '
+  supportNote.innerHTML = 'That ran entirely on your machine - no servers, no cost to run. If it saved you time, you can buy me a coffee: '
     + '<a href="https://ko-fi.com/flavaa" target="_blank" rel="noopener noreferrer">Ko-fi</a>'
     + ' &middot; '
     + '<a href="https://buymeacoffee.com/dylanger254" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a>.';

@@ -120,7 +120,7 @@ function renderResult(resultEl, fileInputs, optionState, diffCsvFiles, rowsToCsv
 
   const filesLine = document.createElement('p');
   filesLine.className = 'caption';
-  filesLine.textContent = `Comparing File A "${fileInputs[0].name}" against File B "${fileInputs[1].name}" — added/removed are relative to A → B.`;
+  filesLine.textContent = `Comparing File A "${fileInputs[0].name}" against File B "${fileInputs[1].name}" - added/removed are relative to A → B.`;
   block.appendChild(filesLine);
 
   const head = document.createElement('div');
@@ -157,7 +157,7 @@ function renderResult(resultEl, fileInputs, optionState, diffCsvFiles, rowsToCsv
   autoOpt.value = 'auto';
   autoOpt.textContent = outcome.autoKeyColumn !== null
     ? `Auto (detected: ${columnLabel(outcome, outcome.autoKeyColumn)})`
-    : 'Auto (no unique column found — uses row position)';
+    : 'Auto (no unique column found - uses row position)';
   keySelect.appendChild(autoOpt);
   const posOpt = document.createElement('option');
   posOpt.value = 'position';
@@ -220,7 +220,7 @@ function renderResult(resultEl, fileInputs, optionState, diffCsvFiles, rowsToCsv
     const note = document.createElement('div');
     note.className = 'alert alert-warn';
     note.setAttribute('role', 'alert');
-    note.textContent = 'That column has repeated values in at least one file, so it can’t be used as a unique key — comparing by row position instead.';
+    note.textContent = 'That column has repeated values in at least one file, so it can’t be used as a unique key - comparing by row position instead.';
     block.appendChild(note);
   }
 
@@ -236,7 +236,7 @@ function renderResult(resultEl, fileInputs, optionState, diffCsvFiles, rowsToCsv
     const msg = document.createElement('div');
     msg.className = 'alert alert-danger';
     msg.setAttribute('role', 'alert');
-    msg.textContent = `These files (${outcome.totalA} and ${outcome.totalB} rows) are too large to compare by row position. Pick a unique column above under “Match rows by” — that has no size limit — or use smaller files.`;
+    msg.textContent = `These files (${outcome.totalA} and ${outcome.totalB} rows) are too large to compare by row position. Pick a unique column above under “Match rows by” (that has no size limit), or use smaller files.`;
     block.appendChild(msg);
     resultEl.appendChild(block);
     resultEl.hidden = false;
@@ -249,13 +249,13 @@ function renderResult(resultEl, fileInputs, optionState, diffCsvFiles, rowsToCsv
     const msg = document.createElement('div');
     msg.className = 'alert alert-success';
     msg.setAttribute('role', 'alert');
-    msg.textContent = 'No differences found — every row matched exactly.';
+    msg.textContent = 'No differences found - every row matched exactly.';
     block.appendChild(msg);
   } else if (outcome.rows.length === 0) {
     const msg = document.createElement('div');
     msg.className = 'alert alert-warn';
     msg.setAttribute('role', 'alert');
-    msg.textContent = 'There’s nothing to compare — both files are empty.';
+    msg.textContent = 'There’s nothing to compare - both files are empty.';
     block.appendChild(msg);
   } else {
     const scrollWrap = document.createElement('div');
@@ -336,7 +336,7 @@ function renderResult(resultEl, fileInputs, optionState, diffCsvFiles, rowsToCsv
 
   const supportNote = document.createElement('p');
   supportNote.className = 'support-note';
-  supportNote.innerHTML = 'That ran entirely on your machine — no servers, no cost to run. If it saved you time, you can buy me a coffee: '
+  supportNote.innerHTML = 'That ran entirely on your machine - no servers, no cost to run. If it saved you time, you can buy me a coffee: '
     + '<a href="https://ko-fi.com/flavaa" target="_blank" rel="noopener noreferrer">Ko-fi</a>'
     + ' &middot; '
     + '<a href="https://buymeacoffee.com/dylanger254" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a>.';
@@ -354,7 +354,7 @@ export async function run(ctx) {
 
   if (files.length !== 2) {
     setState('error');
-    setStatus(`This tool compares exactly two CSV files — you selected ${files.length}. Choose (or drag) both files together, in one go.`, 'error');
+    setStatus(`This tool compares exactly two CSV files - you selected ${files.length}. Choose (or drag) both files together, in one go.`, 'error');
     return;
   }
 
@@ -400,7 +400,7 @@ export async function run(ctx) {
   }
 
   function summaryText(outcome) {
-    if (outcome.overLimit) return `Too many rows to compare by position (${outcome.totalA} × ${outcome.totalB}) — pick a key column above.`;
+    if (outcome.overLimit) return `Too many rows to compare by position (${outcome.totalA} × ${outcome.totalB}) - pick a key column above.`;
     return `${outcome.stats.changed} changed, ${outcome.stats.added} added, ${outcome.stats.removed} removed, ${outcome.stats.unchanged} unchanged. Review below, then download.`;
   }
 

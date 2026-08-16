@@ -10,7 +10,7 @@ module.exports = {
   launchDate: '2026-08-13',
   navLabel: 'Merge PDF',
   h1: 'Merge PDF Files',
-  title: 'Merge PDF Files Free — In Your Browser | filetools',
+  title: 'Merge PDF Files Free - In Your Browser | filetools',
   metaDescription: 'Combine multiple PDFs into one file, free, with no upload and no sign-up. Reorder pages before merging. Your files never leave your device.',
   deck: 'Combine two or more PDFs into a single file. Drag to reorder before merging. Nothing is uploaded.',
   clientEntry: 'pdfPages',

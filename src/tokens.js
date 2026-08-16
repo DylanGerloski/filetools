@@ -39,7 +39,15 @@ const DESIGN_TOKENS = {
   '--color-border': '#d8dde5',
   '--color-border-strong': '#9aa5b4',
 
-  '--color-success': '#1a7f4b',
+  // Darkened from #1a7f4b -- the original value cleared 3:1 (non-text) but
+  // measured 4.42:1 against --color-success-bg for text use (.alert-success,
+  // .dz-status[data-tone="success"], .diff-cell-new,
+  // .diff-status-cell[data-diff-status="added"]), just under the 4.5:1 AA
+  // floor for normal-size text. #197c4a clears 4.5:1 against every
+  // background it's actually paired with sitewide: 4.60:1 vs
+  // --color-success-bg, 4.87:1 vs --color-bg, 5.22:1 vs --color-surface
+  // (measured via a real sRGB relative-luminance calc, not approximated).
+  '--color-success': '#197c4a',
   '--color-success-bg': '#e6f4ec',
   '--color-warn': '#8a5a00',
   '--color-warn-bg': '#fdf3e0',

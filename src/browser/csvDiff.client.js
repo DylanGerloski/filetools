@@ -236,7 +236,7 @@ function renderResult(resultEl, fileInputs, optionState, diffCsvFiles, rowsToCsv
     const msg = document.createElement('div');
     msg.className = 'alert alert-danger';
     msg.setAttribute('role', 'alert');
-    msg.textContent = `These files (${outcome.totalA} and ${outcome.totalB} rows) are too large to compare by row position. Pick a unique column above under “Match rows by” - that has no size limit - or use smaller files.`;
+    msg.textContent = `These files (${outcome.totalA} and ${outcome.totalB} rows) are too large to compare by row position. Pick a unique column above under “Match rows by” (that has no size limit), or use smaller files.`;
     block.appendChild(msg);
     resultEl.appendChild(block);
     resultEl.hidden = false;

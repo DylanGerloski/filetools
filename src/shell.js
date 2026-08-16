@@ -145,7 +145,7 @@ function renderNewsletterSignup() {
   if (!NEWSLETTER_FORM_ACTION) {
     return `<div class="newsletter-signup newsletter-signup--pending">
       <h2 class="newsletter-heading">Hear about new tools</h2>
-      <p class="newsletter-description">Email sign-up isn&rsquo;t live yet &mdash; check back soon, or follow the <a href="${escapeHtml(url('feed.xml'))}">RSS feed</a> in the meantime.</p>
+      <p class="newsletter-description">Email sign-up isn&rsquo;t live yet. Check back soon, or follow the <a href="${escapeHtml(url('feed.xml'))}">RSS feed</a> in the meantime.</p>
     </div>`;
   }
   const embedTitle = 'Email signup for filetools updates';

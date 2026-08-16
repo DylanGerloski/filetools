@@ -19,7 +19,7 @@ module.exports = {
   howSteps: [
     'Choose or drop exactly two .csv files together - the first becomes “File A” (the original), the second “File B” (the changed version). Use the “Swap A ↔ B” button if you picked them in the wrong order.',
     'If a column has a unique value in every row (an ID, an email, an order number), it’s auto-detected as the match key, so rows still line up correctly even if their order changed between the two files. Override it under “Match rows by” if the wrong one was picked, or force plain row-position comparison.',
-    'Review the highlighted table - added rows, removed rows, and changed rows (with the specific old → new cell values shown) - then download a status-tagged CSV of the full comparison.',
+    'Review the highlighted table: added rows, removed rows, and changed rows (with the specific old → new cell values shown). Then download a status-tagged CSV of the full comparison.',
   ],
   faqs: [
     {
@@ -40,7 +40,7 @@ module.exports = {
     },
     {
       q: 'What’s in the downloaded diff.csv?',
-      answerHtml: 'Every row from the comparison - unchanged rows included, regardless of the on-page "show unchanged rows" toggle - with a "Status" column (Unchanged/Changed/Added/Removed) and, for any cell that changed, both values shown as "old → new" in that cell.',
+      answerHtml: 'Every row from the comparison (unchanged rows included, regardless of the on-page "show unchanged rows" toggle) with a "Status" column (Unchanged/Changed/Added/Removed) and, for any cell that changed, both values shown as "old → new" in that cell.',
     },
     {
       q: 'How are quoted fields with commas or embedded line breaks handled?',

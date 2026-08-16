@@ -33,7 +33,7 @@ module.exports = {
     },
     {
       q: 'What JSON shape does this expect?',
-      answerHtml: 'A top-level array of objects, like <code>[ {"name": "Coffee", "price": 4.50}, {"name": "Tea", "price": 3.25} ]</code>. A single object, or an array of anything else (numbers, strings), isn’t rejected outright - each non-object item just becomes a single-column row named "value" - but an array of flat objects is what produces the most useful spreadsheet.',
+      answerHtml: 'A top-level array of objects, like <code>[ {"name": "Coffee", "price": 4.50}, {"name": "Tea", "price": 3.25} ]</code>. A single object, or an array of anything else (numbers, strings), isn’t rejected outright (each non-object item just becomes a single-column row named "value"), but an array of flat objects is what produces the most useful spreadsheet.',
     },
     {
       q: 'What happens to nested objects and arrays?',

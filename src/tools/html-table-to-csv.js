@@ -9,7 +9,7 @@ module.exports = {
   navLabel: 'HTML Table to CSV/JSON',
   h1: 'Convert an HTML Table to CSV or JSON',
   title: 'HTML Table to CSV or JSON - In Your Browser | filetools',
-  metaDescription: 'Turn an HTML <table> - pasted markup or an .html file - into a CSV or JSON file, free and in your browser. No upload, no sign-up.',
+  metaDescription: 'Turn an HTML <table> (pasted markup or an .html file) into a CSV or JSON file, free and in your browser. No upload, no sign-up.',
   deck: 'Paste HTML markup or drop an .html file and get every table it contains as a CSV or JSON download. Nothing is sent anywhere.',
   clientEntry: 'htmlTableToCsv',
   mode: 'html-table',

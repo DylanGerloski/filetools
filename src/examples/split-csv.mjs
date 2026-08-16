@@ -19,7 +19,7 @@ import { splitCsv } from '../pure/splitCsv.mjs';
 
 export const slug = 'split-csv';
 
-export const ariaLabel = 'Example split of a 5-row CSV file into two smaller files of 3 rows per file';
+export const ariaLabel = 'Example split of a 5-row CSV file into two smaller files, 3 rows then 2';
 
 export const note = 'One file split into smaller ones by row count. The header row repeats in every output file.';
 

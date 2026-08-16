@@ -25,9 +25,9 @@ import { sortLines } from '../pure/sortLines.mjs';
 
 export const slug = 'sort-lines';
 
-export const ariaLabel = 'Example sort of a 3-row list by score, highest first';
+export const ariaLabel = 'Example sort of a 4-line list by score, highest first';
 
-export const note = 'Sorted numerically by the score column, highest first. The header line stays pinned at the top.';
+export const note = 'Sorted numerically by the score field, highest first. The header line stays pinned at the top.';
 
 const INPUT_LINES = ['name,score', 'Priya,88', 'Omar,95', 'Liu,72'];
 const SORT_OPTS = { column: 1, order: 'desc', type: 'numeric', hasHeader: true };

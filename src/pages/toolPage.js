@@ -4,7 +4,8 @@ const { renderPage, adSlot, escapeHtml } = require('../shell.js');
 const { breadcrumbJsonLd, softwareApplicationJsonLd, faqPageJsonLd } = require('../structuredData.js');
 const { toolBySlug } = require('../tools/index.js');
 const { url, absoluteUrl } = require('../site.js');
-const { iconFor } = require('../icons.js');
+const { markFor } = require('../icons.js');
+const { familyOf } = require('../families.js');
 const { diagramFor } = require('../diagrams.js');
 
 // Kept in sync BY HAND with src/browser/dropzone.client.js's own
@@ -70,7 +71,7 @@ function renderToolPage(tool) {
   const related = tool.relatedSlugs
     .map((slug) => toolBySlug(slug))
     .filter(Boolean)
-    .map((t) => `<a class="related-link" href="${escapeHtml(url(`${t.category}/${t.slug}/`))}">${iconFor(t.slug)}${escapeHtml(t.navLabel)}</a>`)
+    .map((t) => `<a class="related-link" href="${escapeHtml(url(`${t.category}/${t.slug}/`))}">${markFor(t.slug)}${escapeHtml(t.navLabel)}</a>`)
     .join('\n      ');
 
   const fileTypeLabel = tool.fileTypeLabel || 'PDF';
@@ -94,8 +95,8 @@ function renderToolPage(tool) {
     <section id="tool" aria-labelledby="tool-h" data-mode="${escapeHtml(tool.mode)}" data-client="${escapeHtml(tool.clientEntry)}" data-accept="${escapeHtml(tool.accepts)}"${tool.multiple ? ' data-multiple="true"' : ''}>
       <h2 id="tool-h" class="sr-only">${escapeHtml(tool.h1)}</h2>
       <div class="dropzone" data-state="idle">
-        <div class="dz-icon-wrap">
-          ${iconFor(tool.slug).replace('<svg ', '<svg class="dz-icon" ')}
+        <div class="dz-icon-wrap mark--${escapeHtml(familyOf(tool.slug))}">
+          ${markFor(tool.slug, 'dz-icon')}
           <svg class="dz-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 12.5 9.5 18 20 6"/></svg>
         </div>
         <p class="dz-title">${escapeHtml(dzTitle)}</p>

@@ -173,6 +173,10 @@ const DESIGN_TOKENS = {
   '--icon-sm': '24px',
   '--icon-md': '32px',
   '--icon-lg': '56px',
+  // The dropzone's mark-wash circle (see .dz-icon-wrap in src/css.js) --
+  // tokenized here rather than left as a raw px value in that stylesheet,
+  // per this file's own no-hardcoded-value rule.
+  '--icon-wrap-lg': '72px',
 };
 
 /**

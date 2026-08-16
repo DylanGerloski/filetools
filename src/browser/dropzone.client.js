@@ -139,7 +139,7 @@ if (toolSection) {
           // on, and clear the cached promise so the next file selection
           // gets a fresh attempt instead of the same stale rejection.
           processorPromise = null;
-          throw new Error('The tool’s code hasn’t finished downloading yet — reconnect for a moment, then try again.');
+          throw new Error('The tool’s code hasn’t finished downloading yet - reconnect for a moment, then try again.');
         });
     }
     return processorPromise;
@@ -209,7 +209,7 @@ if (toolSection) {
     const bad = files.find((f) => !fileMatchesAccept(f));
     if (bad) {
       setState('error');
-      setStatus(`"${bad.name}" isn't a PDF — this tool reads PDF files.`, 'error');
+      setStatus(`"${bad.name}" isn't a PDF - this tool reads PDF files.`, 'error');
       return;
     }
 
@@ -217,7 +217,7 @@ if (toolSection) {
     const tooBig = files.find((f) => f.size > maxBytes);
     if (tooBig) {
       setState('error');
-      setStatus(`"${tooBig.name}" is too large (${formatMb(tooBig.size)}). This tool handles files up to ${formatMb(maxBytes)} — anything bigger risks freezing your browser tab.`, 'error');
+      setStatus(`"${tooBig.name}" is too large (${formatMb(tooBig.size)}). This tool handles files up to ${formatMb(maxBytes)} - anything bigger risks freezing your browser tab.`, 'error');
       return;
     }
 

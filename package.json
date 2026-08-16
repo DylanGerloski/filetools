@@ -9,9 +9,10 @@
     "build": "node src/build.js",
     "vendor": "node scripts/copy-vendor.js",
     "serve": "node scripts/serve.js 8080",
+    "pretest": "node scripts/check-em-dash.js",
     "test": "node --test test/*.test.mjs",
     "visual-qa": "node scripts/visual-qa.js",
-    "check-em-dash": "node scripts/check-em-dash-density.js"
+    "check-em-dash": "node scripts/check-em-dash.js"
   },
   "engines": {
     "node": ">=18"

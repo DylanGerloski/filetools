@@ -8,7 +8,7 @@ module.exports = {
   launchDate: '2026-08-15',
   navLabel: 'YAML to JSON',
   h1: 'Convert YAML to JSON',
-  title: 'Convert YAML to JSON — In Your Browser | filetools',
+  title: 'Convert YAML to JSON - In Your Browser | filetools',
   metaDescription: 'Paste a YAML document or drop a .yaml/.yml file and get JSON back, free and in your browser. No upload, no sign-up.',
   deck: 'Paste YAML, or drop a .yaml/.yml file, and download it as pretty-printed JSON. Nothing is sent anywhere.',
   clientEntry: 'yamlToJson',
@@ -33,7 +33,7 @@ module.exports = {
     },
     {
       q: 'What YAML features are supported?',
-      answerHtml: 'Standard YAML 1.1/1.2 scalars, mappings, sequences, comments, multi-line strings, anchors/aliases, and timestamps (converted to ISO 8601 date strings, the same choice this site’s Excel-to-JSON tool makes for a date cell). Custom application-specific tags aren’t evaluated as code — only plain data comes out, never executable content.',
+      answerHtml: 'Standard YAML 1.1/1.2 scalars, mappings, sequences, comments, multi-line strings, anchors/aliases, and timestamps (converted to ISO 8601 date strings, the same choice this site’s Excel-to-JSON tool makes for a date cell). Custom application-specific tags aren’t evaluated as code - only plain data comes out, never executable content.',
     },
     {
       q: 'What if my YAML file has more than one document (separated by ---)?',
@@ -41,7 +41,7 @@ module.exports = {
     },
     {
       q: 'What happens to YAML’s special numbers like .inf or .nan?',
-      answerHtml: 'JSON itself has no way to represent infinity or “not a number” — most converters silently turn these into <code>null</code>, quietly losing the original value. This tool writes them out as the visible JSON strings <code>"Infinity"</code>, <code>"-Infinity"</code>, and <code>"NaN"</code> instead, so nothing disappears without a trace.',
+      answerHtml: 'JSON itself has no way to represent infinity or “not a number” - most converters silently turn these into <code>null</code>, quietly losing the original value. This tool writes them out as the visible JSON strings <code>"Infinity"</code>, <code>"-Infinity"</code>, and <code>"NaN"</code> instead, so nothing disappears without a trace.',
     },
     {
       q: 'What if my YAML has a syntax error?',

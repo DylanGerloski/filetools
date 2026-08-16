@@ -8,8 +8,8 @@ module.exports = {
   launchDate: '2026-08-15',
   navLabel: 'Excel to JSON',
   h1: 'Convert Excel (XLSX) to JSON',
-  title: 'Convert Excel XLSX to JSON — In Your Browser | filetools',
-  metaDescription: 'Drop an .xlsx file and get JSON back — every sheet becomes its own array of records, free and in your browser. No upload, no sign-up.',
+  title: 'Convert Excel XLSX to JSON - In Your Browser | filetools',
+  metaDescription: 'Drop an .xlsx file and get JSON back - every sheet becomes its own array of records, free and in your browser. No upload, no sign-up.',
   deck: 'Drop an Excel (.xlsx) file and download it as JSON. Every sheet in the workbook becomes its own array of records; nothing is sent anywhere.',
   clientEntry: 'xlsxToJson',
   mode: 'xlsx-to-json',
@@ -24,7 +24,7 @@ module.exports = {
   faqs: [
     {
       q: 'Is my spreadsheet sent anywhere?',
-      answerHtml: 'No. The file is read and converted entirely on your device — nothing is sent to a server. Turn off your Wi-Fi after the page loads and it still works.',
+      answerHtml: 'No. The file is read and converted entirely on your device - nothing is sent to a server. Turn off your Wi-Fi after the page loads and it still works.',
     },
     {
       q: 'What does a converted sheet look like?',
@@ -36,7 +36,7 @@ module.exports = {
     },
     {
       q: 'What about formulas and merged cells?',
-      answerHtml: 'A formula cell exports its last-calculated result, not the formula text itself — open the file in Excel first if you need it recalculated. A merged cell\'s value is only present in its top-left cell; the other cells the merge covers export as empty, matching how the file stores them.',
+      answerHtml: 'A formula cell exports its last-calculated result, not the formula text itself - open the file in Excel first if you need it recalculated. A merged cell\'s value is only present in its top-left cell; the other cells the merge covers export as empty, matching how the file stores them.',
     },
     {
       q: 'Does this handle every sheet in the workbook?',

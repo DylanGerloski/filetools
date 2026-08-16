@@ -270,7 +270,7 @@ export async function run(ctx) {
     resultEl.appendChild(msg);
     resultEl.hidden = false;
     setState('done');
-    setStatus('Finished reading — no table found.', 'error');
+    setStatus('Finished reading - no table found.', 'error');
     return;
   }
 

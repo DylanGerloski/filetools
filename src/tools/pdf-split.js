@@ -8,7 +8,7 @@ module.exports = {
   launchDate: '2026-08-13',
   navLabel: 'Split PDF',
   h1: 'Split a PDF',
-  title: 'Split a PDF — Extract or Separate Pages | filetools',
+  title: 'Split a PDF - Extract or Separate Pages | filetools',
   metaDescription: 'Pull specific pages out of a PDF, or split every page into its own file, free and in your browser. No upload, no sign-up.',
   deck: 'Pick the pages you want, or split every page into its own file. Nothing is uploaded.',
   clientEntry: 'pdfPages',
@@ -23,7 +23,7 @@ module.exports = {
   faqs: [
     {
       q: 'How do I extract just a few pages?',
-      answerHtml: 'Check the pages you want in the grid, or type a range such as “1-3, 7” into the range field — both stay in sync with each other.',
+      answerHtml: 'Check the pages you want in the grid, or type a range such as “1-3, 7” into the range field - both stay in sync with each other.',
     },
     {
       q: 'Can I get every page as its own separate PDF?',
@@ -35,7 +35,7 @@ module.exports = {
     },
     {
       q: 'Does this work on scanned PDFs?',
-      answerHtml: 'Yes — splitting doesn’t need to read any text, so it works on scanned/image-only PDFs the same as any other PDF.',
+      answerHtml: 'Yes - splitting doesn’t need to read any text, so it works on scanned/image-only PDFs the same as any other PDF.',
     },
     {
       q: 'What if my PDF is password-protected?',

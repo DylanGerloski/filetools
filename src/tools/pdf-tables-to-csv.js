@@ -8,7 +8,7 @@ module.exports = {
   launchDate: '2026-08-13',
   navLabel: 'PDF Tables to CSV',
   h1: 'Extract Tables from PDF to CSV',
-  title: 'Extract Tables from PDF to CSV — In Your Browser | filetools',
+  title: 'Extract Tables from PDF to CSV - In Your Browser | filetools',
   metaDescription: 'Pull tables out of a PDF into CSV files you can open in a spreadsheet, free and in your browser. No upload, no sign-up. Fix the columns before you export.',
   deck: 'Finds the tables in a PDF, shows you exactly what it found, and lets you fix a column before exporting to CSV. Nothing is uploaded.',
   clientEntry: 'pdfTables',
@@ -17,7 +17,7 @@ module.exports = {
   multiple: false,
   howSteps: [
     'Choose or drop one PDF file.',
-    'Review the tables it found — each one shown as a real table, with a toggle for whether the first row is a header and controls to fix a column boundary or drop a stray row.',
+    'Review the tables it found - each one shown as a real table, with a toggle for whether the first row is a header and controls to fix a column boundary or drop a stray row.',
     'Download the CSV for one table, or all of them at once.',
   ],
   faqs: [
@@ -31,7 +31,7 @@ module.exports = {
     },
     {
       q: 'Can I export to Excel (.xlsx) instead of CSV?',
-      answerHtml: 'Not yet — this tool exports CSV, which opens directly in Excel, Google Sheets, and Numbers. A native .xlsx export may come later.',
+      answerHtml: 'Not yet - this tool exports CSV, which opens directly in Excel, Google Sheets, and Numbers. A native .xlsx export may come later.',
     },
     {
       q: 'Is my file uploaded to a server?',
@@ -39,7 +39,7 @@ module.exports = {
     },
     {
       q: 'What if it finds the wrong number of columns?',
-      answerHtml: 'Use the column boundary controls under the table to add, remove, or nudge a boundary — the table updates immediately so you can check the result before downloading.',
+      answerHtml: 'Use the column boundary controls under the table to add, remove, or nudge a boundary - the table updates immediately so you can check the result before downloading.',
     },
   ],
   relatedSlugs: ['merge-pdf', 'split-pdf', 'bank-statement-to-csv'],

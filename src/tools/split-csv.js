@@ -8,9 +8,9 @@ module.exports = {
   launchDate: '2026-08-15',
   navLabel: 'Split CSV',
   h1: 'Split a CSV Into Multiple Files',
-  title: 'Split CSV Into Multiple Files Free — In Your Browser | filetools',
+  title: 'Split CSV Into Multiple Files Free - In Your Browser | filetools',
   metaDescription: 'Split a large CSV into smaller files of a set number of rows each, free, with no upload and no sign-up. The header row is repeated in every file, and everything downloads as one zip.',
-  deck: 'Drop a large CSV and download it split into smaller files of however many rows you choose — the header row repeated in each one, packaged as a single zip. Nothing is uploaded.',
+  deck: 'Drop a large CSV and download it split into smaller files of however many rows you choose - the header row repeated in each one, packaged as a single zip. Nothing is uploaded.',
   clientEntry: 'splitCsv',
   mode: 'split-csv',
   fileTypeLabel: 'CSV file',
@@ -23,22 +23,22 @@ module.exports = {
   },
   howSteps: [
     'Drop or choose a .csv file, or paste CSV text directly into the text box.',
-    'Set “Rows per file” — the file list updates immediately to show exactly which files you’ll get and how many rows land in each.',
+    'Set “Rows per file” - the file list updates immediately to show exactly which files you’ll get and how many rows land in each.',
     'Leave “First row is a header” on (the default) to repeat the header as the first row of every file, or turn it off to split purely by position.',
-    'Download the zip — every piece is a complete, standalone .csv.',
+    'Download the zip - every piece is a complete, standalone .csv.',
   ],
   faqs: [
     {
       q: 'Does the header row count toward the rows-per-file number?',
-      answerHtml: 'No. “Rows per file” counts data rows only — with the header option on, each file gets the header row <em>plus</em> up to that many data rows. Splitting 250 data rows into files of 100 gives you three files: 100, 100, and 50 rows, each with the header on top.',
+      answerHtml: 'No. “Rows per file” counts data rows only - with the header option on, each file gets the header row <em>plus</em> up to that many data rows. Splitting 250 data rows into files of 100 gives you three files: 100, 100, and 50 rows, each with the header on top.',
     },
     {
       q: 'What are the files in the zip called?',
-      answerHtml: 'They take the original file’s name with a numbered suffix — <code>orders.csv</code> split three ways becomes <code>orders-part-01.csv</code>, <code>orders-part-02.csv</code>, <code>orders-part-03.csv</code>. The numbers are zero-padded so the files sort in the right order in any file manager.',
+      answerHtml: 'They take the original file’s name with a numbered suffix - <code>orders.csv</code> split three ways becomes <code>orders-part-01.csv</code>, <code>orders-part-02.csv</code>, <code>orders-part-03.csv</code>. The numbers are zero-padded so the files sort in the right order in any file manager.',
     },
     {
       q: 'How are quoted fields with commas or line breaks inside them handled?',
-      answerHtml: 'Correctly — this tool reads the whole file with a full CSV parser, so a quoted field like <code>"Smith, John"</code> or a quoted field containing its own line break is kept as one field of one row. That matters more for splitting than almost any other CSV operation: a tool that split on raw line breaks would cut a multi-line field in half and corrupt both output files around it.',
+      answerHtml: 'Correctly - this tool reads the whole file with a full CSV parser, so a quoted field like <code>"Smith, John"</code> or a quoted field containing its own line break is kept as one field of one row. That matters more for splitting than almost any other CSV operation: a tool that split on raw line breaks would cut a multi-line field in half and corrupt both output files around it.',
     },
     {
       q: 'Why would I split a CSV at all?',
@@ -50,11 +50,11 @@ module.exports = {
     },
     {
       q: 'What happens to blank lines?',
-      answerHtml: 'Rows whose cells are all empty are dropped rather than carried into an output file — they’d otherwise waste a slot in a row-count split and show up as empty lines mid-file. Rows with any real content are kept exactly as they are.',
+      answerHtml: 'Rows whose cells are all empty are dropped rather than carried into an output file - they’d otherwise waste a slot in a row-count split and show up as empty lines mid-file. Rows with any real content are kept exactly as they are.',
     },
     {
       q: 'Is there a limit on file size or how many pieces I can make?',
-      answerHtml: 'The input file is capped at a generous size (shown on the drop zone) so a single huge file can’t freeze the tab, and one split is capped at 2,000 output files — if your settings would produce more, the tool says so and asks you to raise “Rows per file” rather than silently building a zip your browser can’t handle.',
+      answerHtml: 'The input file is capped at a generous size (shown on the drop zone) so a single huge file can’t freeze the tab, and one split is capped at 2,000 output files - if your settings would produce more, the tool says so and asks you to raise “Rows per file” rather than silently building a zip your browser can’t handle.',
     },
   ],
   relatedSlugs: ['sort-lines', 'remove-duplicate-lines', 'pdf-to-csv'],

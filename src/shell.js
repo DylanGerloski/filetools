@@ -57,7 +57,7 @@ function documentHead(opts) {
 
   const robotsMeta = noindex ? '\n  <meta name="robots" content="noindex">' : '';
   const feedLink = feedUrl
-    ? `\n  <link rel="alternate" type="application/rss+xml" title="${escapeHtml(SITE_NAME)} — new tools" href="${escapeHtml(feedUrl)}">`
+    ? `\n  <link rel="alternate" type="application/rss+xml" title="${escapeHtml(SITE_NAME)} - new tools" href="${escapeHtml(feedUrl)}">`
     : '';
   const og = `\n  <meta property="og:title" content="${escapeHtml(title)}">` +
     `\n  <meta property="og:description" content="${escapeHtml(description)}">` +

@@ -8,7 +8,7 @@ module.exports = {
   launchDate: '2026-08-16',
   navLabel: 'Transpose CSV',
   h1: 'Transpose CSV Rows and Columns',
-  title: 'Transpose CSV Rows to Columns — In Your Browser | filetools',
+  title: 'Transpose CSV Rows to Columns - In Your Browser | filetools',
   metaDescription: 'Paste CSV text or drop a .csv file and flip every row into a column and every column into a row, free and in your browser. No upload, no sign-up.',
   deck: 'Paste CSV text, or drop a .csv file, and download it back with every row turned into a column and every column turned into a row. Nothing is sent anywhere.',
   clientEntry: 'transposeCsv',
@@ -33,7 +33,7 @@ module.exports = {
     },
     {
       q: 'What does "transpose" actually mean here?',
-      answerHtml: 'Every row in your file becomes one column in the output, and every column becomes one row — the same operation as a spreadsheet\'s "Paste Special &gt; Transpose". A 3-row, 5-column table comes back as a 5-row, 3-column table, with the same values, just flipped along the diagonal.',
+      answerHtml: 'Every row in your file becomes one column in the output, and every column becomes one row - the same operation as a spreadsheet\'s "Paste Special &gt; Transpose". A 3-row, 5-column table comes back as a 5-row, 3-column table, with the same values, just flipped along the diagonal.',
     },
     {
       q: 'What happens if rows have different numbers of columns (a ragged CSV)?',

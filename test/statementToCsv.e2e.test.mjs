@@ -5,6 +5,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { collectPageErrors } from './helpers/collectPageErrors.mjs';
 import { PDFDocument, StandardFonts } from 'pdf-lib';
 
 /**
@@ -117,9 +118,7 @@ after(async () => {
 
 test('bank-statement-to-csv: merges a two-page statement into one table, drops the repeated header, downloads one combined CSV', async () => {
   const page = await browser.newPage({ acceptDownloads: true });
-  const errors = [];
-  page.on('pageerror', (err) => errors.push(err.message));
-  page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+  const errors = collectPageErrors(page);
 
   await page.goto(`${baseUrl}pdf/bank-statement-to-csv/`, { waitUntil: 'networkidle' });
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'statement.pdf'));

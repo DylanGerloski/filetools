@@ -5,6 +5,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { collectPageErrors } from './helpers/collectPageErrors.mjs';
 import ExcelJS from 'exceljs';
 
 /**
@@ -88,9 +89,7 @@ after(async () => {
 
 test('xlsx-to-json: uploading a single-sheet workbook previews it and downloads matching, typed JSON', async () => {
   const page = await browser.newPage({ acceptDownloads: true });
-  const errors = [];
-  page.on('pageerror', (err) => errors.push(err.message));
-  page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+  const errors = collectPageErrors(page);
 
   await page.goto(`${baseUrl}data/xlsx-to-json/`, { waitUntil: 'networkidle' });
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'one-sheet.xlsx'));

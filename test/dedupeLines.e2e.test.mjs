@@ -5,6 +5,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { collectPageErrors } from './helpers/collectPageErrors.mjs';
 
 /**
  * End-to-end tests for the remove-duplicate-lines tool: drive the built
@@ -69,9 +70,7 @@ after(async () => {
 
 test('remove-duplicate-lines: uploading a .txt file removes exact-match duplicates and downloads the result', async () => {
   const page = await browser.newPage({ acceptDownloads: true });
-  const errors = [];
-  page.on('pageerror', (err) => errors.push(err.message));
-  page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+  const errors = collectPageErrors(page);
 
   await page.goto(`${baseUrl}data/remove-duplicate-lines/`, { waitUntil: 'networkidle' });
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'list.txt'));
@@ -116,9 +115,7 @@ test('remove-duplicate-lines: a CSV file dedupes whole rows and downloads with a
 
 test('remove-duplicate-lines: pasting a list and clicking convert produces the same result as a file upload', async () => {
   const page = await browser.newPage({ acceptDownloads: true });
-  const errors = [];
-  page.on('pageerror', (err) => errors.push(err.message));
-  page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+  const errors = collectPageErrors(page);
 
   await page.goto(`${baseUrl}data/remove-duplicate-lines/`, { waitUntil: 'networkidle' });
   await page.fill('#paste-textarea', 'x\ny\nx\nz');

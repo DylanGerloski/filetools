@@ -5,6 +5,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { collectPageErrors } from './helpers/collectPageErrors.mjs';
 
 /**
  * End-to-end tests for the JSON-to-CSV tool: drive the built dist/ output
@@ -74,9 +75,7 @@ after(async () => {
 
 test('json-to-csv: uploading a .json file converts it and downloads a CSV', async () => {
   const page = await browser.newPage({ acceptDownloads: true });
-  const errors = [];
-  page.on('pageerror', (err) => errors.push(err.message));
-  page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+  const errors = collectPageErrors(page);
 
   await page.goto(`${baseUrl}data/json-to-csv/`, { waitUntil: 'networkidle' });
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'records.json'));
@@ -105,9 +104,7 @@ test('json-to-csv: uploading a .json file converts it and downloads a CSV', asyn
 
 test('json-to-csv: pasting a JSON array and clicking convert produces the same result', async () => {
   const page = await browser.newPage();
-  const errors = [];
-  page.on('pageerror', (err) => errors.push(err.message));
-  page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+  const errors = collectPageErrors(page);
 
   await page.goto(`${baseUrl}data/json-to-csv/`, { waitUntil: 'networkidle' });
   await page.fill('#paste-textarea', '[{"name":"Coffee","price":4.5},{"name":"Tea","price":3.25}]');

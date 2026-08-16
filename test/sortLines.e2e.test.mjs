@@ -5,6 +5,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { collectPageErrors } from './helpers/collectPageErrors.mjs';
 
 /**
  * End-to-end tests for the sort-by-column tool: drive the built dist/
@@ -69,9 +70,7 @@ after(async () => {
 
 test('sort-lines: uploading a plain-text list sorts it alphabetically and downloads the result', async () => {
   const page = await browser.newPage({ acceptDownloads: true });
-  const errors = [];
-  page.on('pageerror', (err) => errors.push(err.message));
-  page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+  const errors = collectPageErrors(page);
 
   await page.goto(`${baseUrl}data/sort-lines/`, { waitUntil: 'networkidle' });
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'sort-list.txt'));
@@ -140,9 +139,7 @@ test('sort-lines: a CSV file defaults to keeping the header pinned and sorts by 
 
 test('sort-lines: pasting a list and clicking sort produces the same result as a file upload', async () => {
   const page = await browser.newPage();
-  const errors = [];
-  page.on('pageerror', (err) => errors.push(err.message));
-  page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+  const errors = collectPageErrors(page);
 
   await page.goto(`${baseUrl}data/sort-lines/`, { waitUntil: 'networkidle' });
   await page.fill('#paste-textarea', '30\n4\n100');

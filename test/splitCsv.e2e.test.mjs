@@ -5,6 +5,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { collectPageErrors } from './helpers/collectPageErrors.mjs';
 import { unzipSync } from 'fflate';
 
 /**
@@ -89,9 +90,7 @@ async function downloadZip(page) {
 
 test('split-csv: uploading a CSV and setting rows-per-file downloads a zip of header-repeated chunks', async () => {
   const page = await browser.newPage({ acceptDownloads: true });
-  const errors = [];
-  page.on('pageerror', (err) => errors.push(err.message));
-  page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+  const errors = collectPageErrors(page);
 
   await page.goto(`${baseUrl}data/split-csv/`, { waitUntil: 'networkidle' });
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'orders.csv'));
@@ -124,9 +123,7 @@ test('split-csv: uploading a CSV and setting rows-per-file downloads a zip of he
 
 test('split-csv: pasted CSV goes through the same path and the header toggle switches to positional splitting', async () => {
   const page = await browser.newPage({ acceptDownloads: true });
-  const errors = [];
-  page.on('pageerror', (err) => errors.push(err.message));
-  page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+  const errors = collectPageErrors(page);
 
   await page.goto(`${baseUrl}data/split-csv/`, { waitUntil: 'networkidle' });
   await page.locator('.paste-textarea').fill('a,1\nb,2\nc,3\nd,4');

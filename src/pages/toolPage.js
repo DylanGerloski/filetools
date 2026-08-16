@@ -6,7 +6,6 @@ const { toolBySlug } = require('../tools/index.js');
 const { url, absoluteUrl } = require('../site.js');
 const { markFor } = require('../icons.js');
 const { familyOf } = require('../families.js');
-const { diagramFor } = require('../diagrams.js');
 
 // Kept in sync BY HAND with src/browser/dropzone.client.js's own
 // MAX_BYTES_BY_CLIENT/DEFAULT_MAX_BYTES (this file is Node/CommonJS
@@ -96,13 +95,16 @@ function renderToolPage(tool, example = {}) {
       </div>`
     : '';
 
-  const diagramHtml = diagramFor(tool.slug);
-
   // Real, generated (not drawn) live output example -- fills the empty
   // right half of the page at >=1024px. A tool with no example module yet
-  // renders the plain single-column how-steps list, unchanged.
+  // renders the plain single-column how-steps list, unchanged. Carries
+  // mark--<family> the same way .dz-icon-wrap below does, purely so the
+  // --mark-plate/--mark-wash custom properties are in scope here too --
+  // needed by Pattern D's page-strip diagrams (.td-accent, src/css.js), so
+  // an "after" page agrees with this tool's own family color rather than
+  // the site-wide accent teal.
   const outputExampleHtml = exampleHtml
-    ? `<figure class="output-example"${exampleAriaLabel ? ` aria-label="${escapeHtml(exampleAriaLabel)}"` : ''}>
+    ? `<figure class="output-example mark--${escapeHtml(familyOf(tool.slug))}"${exampleAriaLabel ? ` aria-label="${escapeHtml(exampleAriaLabel)}"` : ''}>
           <figcaption>Example output</figcaption>
           <div class="output-example-body">${exampleHtml}</div>
           <p class="output-example-note">${escapeHtml(exampleNote)}</p>
@@ -122,7 +124,6 @@ function renderToolPage(tool, example = {}) {
 
   const mainHtml = `    <h1>${escapeHtml(tool.h1)}</h1>
     <p class="deck">${escapeHtml(tool.deck)}</p>
-    ${diagramHtml}
     <section id="tool" aria-labelledby="tool-h" data-mode="${escapeHtml(tool.mode)}" data-client="${escapeHtml(tool.clientEntry)}" data-accept="${escapeHtml(tool.accepts)}"${tool.multiple ? ' data-multiple="true"' : ''}>
       <h2 id="tool-h" class="sr-only">${escapeHtml(tool.h1)}</h2>
       <div class="dropzone" data-state="idle">

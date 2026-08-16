@@ -16,6 +16,9 @@ import { convertFixture as htmlTableToCsvFixture } from '../src/examples/html-ta
 import { convertFixture as yamlToJsonFixture } from '../src/examples/yaml-to-json.mjs';
 import { flattenFixture } from '../src/examples/flatten-json.mjs';
 import { convertFixture as xlsxToJsonFixture } from '../src/examples/xlsx-to-json.mjs';
+import { extractFixture as pdfToCsvFixture } from '../src/examples/pdf-to-csv.mjs';
+import { mergeFixture as statementFixture } from '../src/examples/bank-statement-to-csv.mjs';
+import { gridFixture as xlsxToCsvFixture } from '../src/examples/xlsx-to-csv.mjs';
 import { SITE_CSS } from '../src/css.js';
 
 /**
@@ -319,4 +322,67 @@ test('xlsx-to-json example: the rendered HTML shows the input grid and the typed
   assert.ok(html.includes('<th scope="col">In Stock</th>'));
   assert.ok(html.includes('&quot;Qty&quot;: 12'));
   assert.ok(html.includes('&quot;In Stock&quot;: true'));
+});
+
+/**
+ * Pattern D ("page-strip") and Pattern E ("extract-to-grid") coverage.
+ * Pattern D (merge-pdf, split-pdf, rotate-pdf) has no computed result to
+ * assert against -- a PDF page-level operation produces page bytes, not
+ * data (see src/examples/merge-pdf.mjs's header comment) -- so those three
+ * get only the generic well-formed/styled coverage the slug loop above
+ * already runs. Pattern E DOES have a real computed result (a fixture run
+ * through the tool's own extraction pipeline), so each of those three
+ * asserts against that real return value directly, same "assert against
+ * reality" discipline as every pattern above.
+ */
+
+test('pdf-to-csv example: the fixture is found as one 3-column table with a detected header', () => {
+  const { tables } = pdfToCsvFixture();
+  assert.equal(tables.length, 1);
+  assert.equal(tables[0].headerRowIndex, 0);
+  assert.deepEqual(tables[0].rows, [
+    ['Item', 'Qty', 'Price'],
+    ['Widget A', '3', '$9.50'],
+    ['Widget B', '1', '$14.00'],
+    ['Widget C', '5', '$21.75'],
+  ]);
+});
+
+test('pdf-to-csv example: the rendered HTML shows the 3-column header and 3 data rows', () => {
+  const html = exampleFor('pdf-to-csv');
+  assert.ok(html.includes('<th scope="col">Item</th><th scope="col">Qty</th><th scope="col">Price</th>'));
+  assert.ok(html.includes('<td>Widget A</td><td>3</td><td>$9.50</td>'));
+  assert.equal((html.match(/<tr><td>/g) || []).length, 3, 'expected exactly 3 data rows');
+});
+
+test('bank-statement-to-csv example: two pages combine into 4 transactions, repeated header dropped', () => {
+  const { mainTable, otherTables } = statementFixture();
+  assert.equal(otherTables.length, 0);
+  assert.deepEqual(mainTable.headerRow, ['Date', 'Description', 'Amount']);
+  assert.equal(mainTable.rows.length, 4, 'a repeated per-page header should not be counted as a transaction row');
+  assert.deepEqual(mainTable.rows.map((r) => r[0]), ['03/02', '03/05', '03/09', '03/14']);
+  assert.deepEqual(mainTable.sourcePages, [1, 2]);
+});
+
+test('bank-statement-to-csv example: the rendered HTML shows exactly one header row and 4 transaction rows', () => {
+  const html = exampleFor('bank-statement-to-csv');
+  assert.equal((html.match(/<th scope="col">Date<\/th>/g) || []).length, 1, 'the repeated per-page header must not appear twice');
+  assert.equal((html.match(/<tr><td>/g) || []).length, 4);
+  assert.ok(html.includes('Combined (4 transactions)'));
+});
+
+test('xlsx-to-csv example: a merged A1:B1 cell duplicates its value into both columns, not a blank', () => {
+  const grid = xlsxToCsvFixture();
+  assert.deepEqual(grid, [
+    ['Region', 'Region', ''],
+    ['North', 'Widget', '120'],
+    ['North', 'Gadget', '75'],
+    ['South', 'Widget', '60'],
+  ]);
+});
+
+test('xlsx-to-csv example: the rendered HTML shows "Region" as both the first and second header cell', () => {
+  const html = exampleFor('xlsx-to-csv');
+  assert.ok(html.includes('<th scope="col">Region</th><th scope="col">Region</th><th scope="col"></th>'));
+  assert.equal((html.match(/<tr><td>/g) || []).length, 3);
 });

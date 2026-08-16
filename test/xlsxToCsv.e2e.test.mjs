@@ -167,7 +167,11 @@ test('xlsx-to-csv: reads the visible sheet, skips the hidden one, and shows it i
   const badgeText = await page.locator('.page-badge').first().textContent();
   assert.match(badgeText, /Expenses/);
 
-  const headerTexts = await page.locator('.extracted-table thead th').allTextContents();
+  // Scoped to .table-block (the live result), not just .extracted-table --
+  // this page's own output-example panel (src/examples/xlsx-to-csv.mjs)
+  // also renders a real .extracted-table, from an unrelated fixture, same
+  // reason test/csvDiff.e2e.test.mjs already scopes this way.
+  const headerTexts = await page.locator('.table-block .extracted-table thead th').allTextContents();
   assert.deepEqual(headerTexts, ['Item', 'Amount', 'Paid', 'Note']);
 
   assert.deepEqual(errors, []);

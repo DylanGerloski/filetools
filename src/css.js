@@ -740,17 +740,16 @@ ${designTokensCss(DESIGN_TOKENS)}
   }
 
   /* -------------------------------------------------------------------
-     Before -> after transformation diagram (Deliverable 6 -- see
-     src/diagrams.js). Sits between the deck and the dropzone; empty string
-     for tools with no diagram yet, so this block simply doesn't render.
+     Before -> after page-strip diagrams (Pattern D, and the drawn source
+     half of Pattern E -- see src/pageStripDiagrams.mjs and
+     src/examples/*.mjs). Rendered inline inside an .output-example figure
+     (below), so this is deliberately just the <svg> styling -- no card
+     background/border/padding of its own, since design-standards.md
+     forbids a card nested inside another card and .output-example is
+     already that card. (Formerly src/diagrams.js's own top-of-page
+     .transform-diagram div carried that card styling directly; retired
+     along with the file.)
      ------------------------------------------------------------------- */
-  .transform-diagram {
-    margin: var(--space-4) 0 var(--space-6);
-    padding: var(--space-4);
-    background: var(--color-surface);
-    border: var(--border-hairline) solid var(--color-border);
-    border-radius: var(--radius-lg);
-  }
   .transform-diagram-svg {
     display: block;
     width: 100%;
@@ -764,7 +763,12 @@ ${designTokensCss(DESIGN_TOKENS)}
     fill: var(--color-muted);
     stroke: none;
   }
-  .transform-diagram-svg .td-accent { color: var(--color-accent); }
+  /* The "after" state's accent -- was --color-accent (site-wide brand
+     teal); recolored to the tool's own family plate color so the diagram
+     agrees with that tool's mark/dropzone color rather than competing
+     with it. --color-accent keeps its monopoly on actions/links/focus
+     (design-standards.md's restraint-budget rule). */
+  .transform-diagram-svg .td-accent { color: var(--mark-plate); }
 
   /* -------------------------------------------------------------------
      Tool surface card
@@ -885,6 +889,18 @@ ${designTokensCss(DESIGN_TOKENS)}
       align-items: center;
     }
     .example-ba-col { flex: 1 1 0; min-width: 0; }
+    /* Pattern E (extract-to-grid, src/examples/pdf-to-csv.mjs and
+       siblings): the left column is always a small drawn source diagram,
+       never a table -- it doesn't need half the figure's width the way
+       Pattern B's two real tables do, and a real 3-column extracted table
+       given only half a narrow figure gets pushed into
+       .table-scroll's horizontal-scroll affordance, hiding a whole column
+       at first glance (exactly what src/examples/merge-csv.mjs's own
+       header comment says Pattern B avoids by keeping its fixtures to 2
+       columns). Fixed-width here instead, so the real table -- the
+       valuable half -- gets the rest of the space.
+       ------------------------------------------------------------------- */
+    .example-ba-col--source { flex: 0 0 130px; }
   }
   .example-ba-col { min-width: 0; }
   .example-ba-label {

@@ -75,6 +75,7 @@ if (toolSection) {
     csvMerge: () => import('./csvMerge.client.js'),
     csvDiff: () => import('./csvDiff.client.js'),
     splitCsv: () => import('./splitCsv.client.js'),
+    transposeCsv: () => import('./transposeCsv.client.js'),
   };
 
   // Per-tool file-size cap, checked before a file ever reaches its
@@ -101,6 +102,7 @@ if (toolSection) {
     csvMerge: 20 * 1024 * 1024, // multiple CSVs, all held in memory to merge
     csvDiff: 20 * 1024 * 1024, // two CSVs, both held in memory to diff
     splitCsv: 20 * 1024 * 1024, // whole CSV held in memory to chunk and zip
+    transposeCsv: 20 * 1024 * 1024, // whole CSV held in memory to flip
   };
   const DEFAULT_MAX_BYTES = 20 * 1024 * 1024;
 
@@ -121,6 +123,7 @@ if (toolSection) {
     jsonToCsv: { name: 'pasted-input.json', type: 'application/json' },
     yamlToJson: { name: 'pasted-input.yaml', type: 'application/yaml' },
     splitCsv: { name: 'pasted-input.csv', type: 'text/csv' },
+    transposeCsv: { name: 'pasted-input.csv', type: 'text/csv' },
   };
 
   let processorPromise = null;

@@ -80,6 +80,7 @@ function build() {
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'csvMerge.client.js'), path.join(jsDir, 'csvMerge.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'csvDiff.client.js'), path.join(jsDir, 'csvDiff.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'splitCsv.client.js'), path.join(jsDir, 'splitCsv.client.js'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'transposeCsv.client.js'), path.join(jsDir, 'transposeCsv.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'newsletter.client.js'), path.join(jsDir, 'newsletter.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'xlsxToCsv.client.js'), path.join(jsDir, 'xlsxToCsv.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'xlsxToJson.client.js'), path.join(jsDir, 'xlsxToJson.client.js'));
@@ -102,6 +103,7 @@ function build() {
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'csvMerge.mjs'), path.join(pureDir, 'csvMerge.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'csvDiff.mjs'), path.join(pureDir, 'csvDiff.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'splitCsv.mjs'), path.join(pureDir, 'splitCsv.mjs'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'transposeCsv.mjs'), path.join(pureDir, 'transposeCsv.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'yamlToJson.mjs'), path.join(pureDir, 'yamlToJson.mjs'));
 
   // 4. Vendor libraries (pdf-lib, pdfjs-dist, exceljs, fflate) -> dist/vendor/

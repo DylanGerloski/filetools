@@ -120,6 +120,59 @@ const DESIGN_TOKENS = {
   // assets' --ad-min-h-mobile/desktop tokens.
   '--ad-min-h-mobile': '100px',
   '--ad-min-h-desktop': '250px',
+
+  /* Family ramp -- a categorical color encoding of the tool taxonomy in
+   * src/families.js, not decoration. Shared perceptual lightness ladder,
+   * five hues run through it:
+   *   0:99  1:97  2:92  3:84  4:72  5:60  6:47  7:39  8:30  9:20
+   * Only indices 1 / 6 / 8 are emitted (wash / plate / ink) -- the full
+   * ladder above is what makes any future index mechanically derivable
+   * (same L from the ladder, same H, chroma scaled toward 0 as L
+   * approaches 99 or 20) without shipping 50 tokens to use 15.
+   *
+   * Role: 1 = wash (backgrounds only), 6 = plate (the filled mark),
+   * 8 = ink (pip ring + pip glyph stroke). Family hue appears in exactly
+   * two places sitewide: inside the icon mark, and as a --family-X-1 wash
+   * disc behind the mark on the tool-page dropzone. Never on text, links,
+   * buttons, borders, or focus rings -- --color-accent keeps sole
+   * ownership of every interactive control.
+   *
+   * CONTRAST -- measured, not the spec's approximate arithmetic (which
+   * treated OKLCH L as CIE L-star and flagged itself as approximate).
+   * Verified 2026-08-16 with a real OKLab/OKLCH -> linear-sRGB -> WCAG
+   * relative-luminance conversion (Bjorn Ottosson's published OKLab
+   * matrices; browser gamut-clamping applied before the luminance sum,
+   * matching how a CSS oklch() value actually renders). All pairs clear
+   * their requirement with margin, so no L adjustment was needed for any
+   * family (spec allowed +/-2 L, never a H change, if a pair had failed):
+   *   plate(6) vs white surface   (need >=3:1,  WCAG 1.4.11 non-text):
+   *     pdf 7.39:1 | csv 6.83:1 | json 7.35:1 | sheet 6.48:1 | text 6.80:1
+   *   ink(8) vs wash(1)           (need >=4.5:1, treated as text-grade):
+   *     pdf 12.92:1 | csv 12.49:1 | json 12.95:1 | sheet 12.20:1 | text 12.48:1
+   * pdf-1 and csv-8 render slightly outside the sRGB gamut at their exact
+   * OKLCH coordinates; browsers gamut-map (clamp) automatically per the
+   * CSS Color 4 spec, which is exactly what the measurement above already
+   * accounts for -- no separate action needed.
+   */
+  '--family-pdf-1':   'oklch(97% 0.018 27)',
+  '--family-pdf-6':   'oklch(47% 0.155 27)',
+  '--family-pdf-8':   'oklch(30% 0.105 27)',
+  '--family-csv-1':   'oklch(97% 0.016 250)',
+  '--family-csv-6':   'oklch(47% 0.130 250)',
+  '--family-csv-8':   'oklch(30% 0.090 250)',
+  '--family-json-1':  'oklch(97% 0.017 320)',
+  '--family-json-6':  'oklch(47% 0.140 320)',
+  '--family-json-8':  'oklch(30% 0.095 320)',
+  '--family-sheet-1': 'oklch(97% 0.014 150)',
+  '--family-sheet-6': 'oklch(47% 0.110 150)',
+  '--family-sheet-8': 'oklch(30% 0.075 150)',
+  '--family-text-1':  'oklch(97% 0.004 250)',
+  '--family-text-6':  'oklch(47% 0.030 250)',
+  '--family-text-8':  'oklch(30% 0.022 250)',
+
+  '--icon-sm': '24px',
+  '--icon-md': '32px',
+  '--icon-lg': '56px',
 };
 
 /**

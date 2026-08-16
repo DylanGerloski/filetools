@@ -83,6 +83,7 @@ function build() {
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'newsletter.client.js'), path.join(jsDir, 'newsletter.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'xlsxToCsv.client.js'), path.join(jsDir, 'xlsxToCsv.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'xlsxToJson.client.js'), path.join(jsDir, 'xlsxToJson.client.js'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'yamlToJson.client.js'), path.join(jsDir, 'yamlToJson.client.js'));
 
   // 3. Pure modules also loaded client-side -> dist/pure/
   const pureDir = path.join(OUT_DIR, 'pure');
@@ -101,6 +102,7 @@ function build() {
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'csvMerge.mjs'), path.join(pureDir, 'csvMerge.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'csvDiff.mjs'), path.join(pureDir, 'csvDiff.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'splitCsv.mjs'), path.join(pureDir, 'splitCsv.mjs'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'yamlToJson.mjs'), path.join(pureDir, 'yamlToJson.mjs'));
 
   // 4. Vendor libraries (pdf-lib, pdfjs-dist, exceljs, fflate) -> dist/vendor/
   copyVendor();

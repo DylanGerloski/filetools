@@ -85,6 +85,21 @@ function copyVendor() {
     path.join(VENDOR, 'fflate', 'LICENSE')
   );
 
+  // js-yaml -- MIT (verified: node_modules/js-yaml/LICENSE). Its own
+  // dist/js-yaml.mjs is a real, self-contained ES module with named
+  // exports and zero further imports of its own, so it's loaded with plain
+  // import() the same way pdf-lib/pdfjs-dist are above -- see
+  // ../src/browser/yamlToJson.client.js's header for why this is a real
+  // ESM build rather than a UMD one like exceljs.
+  copy(
+    path.join(nm, 'js-yaml', 'dist', 'js-yaml.mjs'),
+    path.join(VENDOR, 'js-yaml', 'js-yaml.mjs')
+  );
+  copy(
+    path.join(nm, 'js-yaml', 'LICENSE'),
+    path.join(VENDOR, 'js-yaml', 'LICENSE')
+  );
+
   // Space Grotesk (display typeface) -- SIL OFL 1.1 (verified:
   // node_modules/@fontsource-variable/space-grotesk/LICENSE). Latin subset
   // only, variable weight -- see src/css.js's @font-face block.
@@ -97,7 +112,7 @@ function copyVendor() {
     path.join(VENDOR, 'fonts', 'space-grotesk', 'LICENSE')
   );
 
-  console.log('vendor/ populated from node_modules (pdf-lib, pdfjs-dist, exceljs, fflate, space-grotesk).');
+  console.log('vendor/ populated from node_modules (pdf-lib, pdfjs-dist, exceljs, fflate, js-yaml, space-grotesk).');
 }
 
 if (require.main === module) {

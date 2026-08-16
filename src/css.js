@@ -864,6 +864,60 @@ ${designTokensCss(DESIGN_TOKENS)}
   }
 
   /* -------------------------------------------------------------------
+     Before/after example tables (Pattern B, src/examples/*.mjs) -- an
+     Input table then an Output table either side of an arrow, inside an
+     .output-example figure. Any row a tool actually removes or adds
+     reuses .extracted-table's own tr[data-diff-status] tinting above
+     (added zero new color rules) plus .diff-status-cell for the
+     accompanying text label, since color is never the sole carrier of
+     meaning. Stacked by default (DOM order Input then Output preserved);
+     side by side only once the .how-band itself is two columns, so this
+     never fights that wider breakpoint for space.
+     ------------------------------------------------------------------- */
+  .example-before-after {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  @media (min-width: 1024px) {
+    .example-before-after {
+      flex-direction: row;
+      align-items: center;
+    }
+    .example-ba-col { flex: 1 1 0; min-width: 0; }
+  }
+  .example-ba-col { min-width: 0; }
+  .example-ba-label {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .example-ba-col .table-scroll + .example-ba-label { margin-top: var(--space-3); }
+  .example-ba-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    color: var(--color-muted);
+    font-size: var(--text-lg);
+  }
+  @media (min-width: 1024px) {
+    .example-ba-arrow { padding: 0 var(--space-1); }
+  }
+  /* Each before/after column is roughly half of an already-narrow figure
+     (see .output-example-body above), so its table needs tighter cells
+     than the full-width diff table compare-csv's example uses -- smaller
+     text and padding, both still from the existing type/space scale. */
+  .example-ba-col .extracted-table th,
+  .example-ba-col .extracted-table td {
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--text-xs);
+  }
+
+  /* -------------------------------------------------------------------
      FAQ -- native <details>/<summary> disclosure (Deliverable 4). The
      first two items ship the open attribute; see src/pages/toolPage.js.
      ------------------------------------------------------------------- */

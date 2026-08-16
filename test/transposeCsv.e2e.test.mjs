@@ -77,7 +77,13 @@ test('transpose-csv: a 3-row 3-column CSV flips into 3 rows of the transposed va
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'transpose-in.csv'));
   await page.waitForSelector('.table-block');
 
-  const rows = await page.locator('.extracted-table tbody tr').evaluateAll(
+  // Every '.table-block .extracted-table' selector in this file (not just
+  // this one) is scoped to .table-block -- the live result -- rather than
+  // the bare '.extracted-table', because this page's own output-example
+  // panel further down also renders an .extracted-table (a real, generated
+  // sample -- see src/examples/transpose-csv.mjs); an unscoped selector
+  // would double-match rows from both tables.
+  const rows = await page.locator('.table-block .extracted-table tbody tr').evaluateAll(
     (trs) => trs.map((tr) => Array.from(tr.querySelectorAll('td')).map((td) => td.textContent))
   );
   assert.deepEqual(rows, [
@@ -112,7 +118,7 @@ test('transpose-csv: a ragged row is padded before transposing', async () => {
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'transpose-ragged.csv'));
   await page.waitForSelector('.table-block');
 
-  const rows = await page.locator('.extracted-table tbody tr').evaluateAll(
+  const rows = await page.locator('.table-block .extracted-table tbody tr').evaluateAll(
     (trs) => trs.map((tr) => Array.from(tr.querySelectorAll('td')).map((td) => td.textContent))
   );
   assert.deepEqual(rows, [['a', '1'], ['b', '2'], ['c', '']]);
@@ -125,18 +131,18 @@ test('transpose-csv: unchecking "Skip blank rows" restores a literal 1:1 transpo
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'transpose-blank.csv'));
   await page.waitForSelector('.table-block');
 
-  let rows = await page.locator('.extracted-table tbody tr').evaluateAll(
+  let rows = await page.locator('.table-block .extracted-table tbody tr').evaluateAll(
     (trs) => trs.map((tr) => Array.from(tr.querySelectorAll('td')).map((td) => td.textContent))
   );
   assert.deepEqual(rows, [['a', '1'], ['b', '2']]);
 
   await page.locator('.table-block-head input[type="checkbox"]').uncheck();
   await page.waitForFunction(() => {
-    const trs = document.querySelectorAll('.extracted-table tbody tr');
+    const trs = document.querySelectorAll('.table-block .extracted-table tbody tr');
     return trs.length && trs[0].querySelectorAll('td').length === 3;
   });
 
-  rows = await page.locator('.extracted-table tbody tr').evaluateAll(
+  rows = await page.locator('.table-block .extracted-table tbody tr').evaluateAll(
     (trs) => trs.map((tr) => Array.from(tr.querySelectorAll('td')).map((td) => td.textContent))
   );
   assert.deepEqual(rows, [['a', '', '1'], ['b', '', '2']]);
@@ -150,7 +156,7 @@ test('transpose-csv: pasted CSV text takes the same path as a file', async () =>
   await page.locator('.paste-convert-btn').click();
   await page.waitForSelector('.table-block');
 
-  const rows = await page.locator('.extracted-table tbody tr').evaluateAll(
+  const rows = await page.locator('.table-block .extracted-table tbody tr').evaluateAll(
     (trs) => trs.map((tr) => Array.from(tr.querySelectorAll('td')).map((td) => td.textContent))
   );
   assert.deepEqual(rows, [['x', '1', '3'], ['y', '2', '4']]);

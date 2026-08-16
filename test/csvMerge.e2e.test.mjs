@@ -81,10 +81,15 @@ test('merge-csv: two files with the same header merge into one aligned table', a
   ]);
   await page.waitForSelector('.table-block');
 
-  const headerTexts = await page.locator('.extracted-table thead th').allTextContents();
+  // Scoped to .table-block (the live result), not just .extracted-table:
+  // this page's own output-example panel further down also renders an
+  // .extracted-table (a real, generated sample -- see
+  // src/examples/merge-csv.mjs), so an unscoped selector here would
+  // double-match rows from both tables.
+  const headerTexts = await page.locator('.table-block .extracted-table thead th').allTextContents();
   assert.deepEqual(headerTexts, ['Name', 'Amount', 'Category']);
 
-  const rows = await page.locator('.extracted-table tbody tr').evaluateAll(
+  const rows = await page.locator('.table-block .extracted-table tbody tr').evaluateAll(
     (trs) => trs.map((tr) => Array.from(tr.querySelectorAll('td')).map((td) => td.textContent))
   );
   assert.deepEqual(rows, [
@@ -138,9 +143,9 @@ test('merge-csv: turning off "each file has a header row" merges positionally', 
   await page.waitForSelector('.table-block');
 
   await page.locator('.table-block-head input[type="checkbox"]').first().uncheck();
-  await page.waitForFunction(() => !document.querySelector('.extracted-table thead'));
+  await page.waitForFunction(() => !document.querySelector('.table-block .extracted-table thead'));
 
-  const rows = await page.locator('.extracted-table tbody tr').evaluateAll(
+  const rows = await page.locator('.table-block .extracted-table tbody tr').evaluateAll(
     (trs) => trs.map((tr) => Array.from(tr.querySelectorAll('td')).map((td) => td.textContent))
   );
   assert.deepEqual(rows, [['Rent', '1200'], ['Snacks', '3.25']]);
@@ -158,11 +163,11 @@ test('merge-csv: "Add a Source file column" prepends the originating file name',
 
   await page.locator('.table-block-head input[type="checkbox"]').nth(1).check();
   await page.waitForFunction(() => {
-    const ths = document.querySelectorAll('.extracted-table thead th');
+    const ths = document.querySelectorAll('.table-block .extracted-table thead th');
     return ths.length && ths[0].textContent === 'Source file';
   });
 
-  const firstDataRow = await page.locator('.extracted-table tbody tr').first().locator('td').allTextContents();
+  const firstDataRow = await page.locator('.table-block .extracted-table tbody tr').first().locator('td').allTextContents();
   assert.deepEqual(firstDataRow, ['merge-jan.csv', 'Rent', '1200', '']);
   await page.close();
 });

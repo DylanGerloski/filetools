@@ -39,13 +39,22 @@ function formatMb(bytes) {
 
 /**
  * @param {object} tool one entry from src/tools/index.js.
+ * @param {{exampleHtml?: string, exampleAriaLabel?: string, exampleNote?: string}} [example]
+ *   The tool's generated output-example panel (src/examples/index.mjs),
+ *   resolved by src/build.js before calling this function -- this file
+ *   stays synchronous and pure, so example resolution (which needs an
+ *   async import() of an ESM module) happens once in the caller, not
+ *   here. exampleHtml is '' for a tool with no example module yet, in
+ *   which case no .how-band / <figure> is rendered at all and the "how it
+ *   works" list renders as a plain single-column list.
  * @returns {string} the complete standalone HTML document for that tool's
  *   page. Shared by all three merge/split/rotate tool pages -- the client
  *   module (src/browser/pdfPages.client.js) reads data-mode off #tool to
  *   decide which controls to render/behave as, so this template does not
  *   fork per tool beyond copy and the accept/multiple attributes.
  */
-function renderToolPage(tool) {
+function renderToolPage(tool, example = {}) {
+  const { exampleHtml = '', exampleAriaLabel = '', exampleNote = '' } = example;
   const canonical = absoluteUrl(`${tool.category}/${tool.slug}/`);
 
   const howItems = tool.howSteps.map((s) => `<li>${escapeHtml(s)}</li>`).join('\n        ');
@@ -89,6 +98,28 @@ function renderToolPage(tool) {
 
   const diagramHtml = diagramFor(tool.slug);
 
+  // Real, generated (not drawn) live output example -- fills the empty
+  // right half of the page at >=1024px. A tool with no example module yet
+  // renders the plain single-column how-steps list, unchanged.
+  const outputExampleHtml = exampleHtml
+    ? `<figure class="output-example"${exampleAriaLabel ? ` aria-label="${escapeHtml(exampleAriaLabel)}"` : ''}>
+          <figcaption>Example output</figcaption>
+          <div class="output-example-body">${exampleHtml}</div>
+          <p class="output-example-note">${escapeHtml(exampleNote)}</p>
+        </figure>`
+    : '';
+
+  const howHtml = outputExampleHtml
+    ? `<div class="how-band">
+        <ol class="how-steps">
+        ${howItems}
+        </ol>
+        ${outputExampleHtml}
+      </div>`
+    : `<ol class="how-steps">
+        ${howItems}
+      </ol>`;
+
   const mainHtml = `    <h1>${escapeHtml(tool.h1)}</h1>
     <p class="deck">${escapeHtml(tool.deck)}</p>
     ${diagramHtml}
@@ -114,9 +145,7 @@ function renderToolPage(tool) {
 
     <section class="how" aria-labelledby="how-h">
       <h2 id="how-h">How it works</h2>
-      <ol class="how-steps">
-        ${howItems}
-      </ol>
+      ${howHtml}
     </section>
 
     <section class="faq" aria-labelledby="faq-h">

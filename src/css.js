@@ -820,6 +820,50 @@ ${designTokensCss(DESIGN_TOKENS)}
   }
 
   /* -------------------------------------------------------------------
+     Two-column "how it works" band -- steps left, a real generated output
+     example right (src/examples/*.mjs). Only rendered by toolPage.js when
+     an example exists for that tool, so tool pages with no example yet
+     keep the plain single-column .how-steps list unchanged. Below 1024px
+     this is a plain block: <ol> then <figure> stack in DOM order (steps
+     first, then example), which is why no separate mobile rule is needed.
+     ------------------------------------------------------------------- */
+  @media (min-width: 1024px) {
+    .how-band {
+      display: grid;
+      grid-template-columns: minmax(0, 34rem) minmax(0, 1fr);
+      gap: var(--space-7);
+      align-items: start;
+    }
+    .how-band .how-steps { margin-top: 0; }
+  }
+  .output-example {
+    margin: var(--space-5) 0 0;
+    padding: var(--space-4);
+    background: var(--color-surface);
+    border: var(--border-hairline) solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+  @media (min-width: 1024px) {
+    .output-example { margin-top: 0; }
+  }
+  .output-example figcaption {
+    font-weight: var(--weight-medium);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-3);
+  }
+  .output-example-body {
+    max-width: 100%;
+  }
+  @media (max-width: 768px) {
+    .output-example-body { overflow-x: auto; }
+  }
+  .output-example-note {
+    margin: var(--space-3) 0 0;
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+  }
+
+  /* -------------------------------------------------------------------
      FAQ -- native <details>/<summary> disclosure (Deliverable 4). The
      first two items ship the open attribute; see src/pages/toolPage.js.
      ------------------------------------------------------------------- */

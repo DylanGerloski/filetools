@@ -54,6 +54,10 @@ const ICONS = {
   // Three lines of ascending length, plus a down arrow -- reordering by
   // length/value.
   'sort-lines': `<svg ${ATTRS}><path d="M4 5h6"/><path d="M4 10h10"/><path d="M4 15h16"/><path d="M20 3v15"/><path d="M17 15 20 19l3-4"/></svg>`,
+
+  // A wide, short grid (3 columns x 2 rows) rotating into a tall, narrow
+  // grid (2 columns x 3 rows) -- rows becoming columns.
+  'transpose-csv': `<svg ${ATTRS}><rect x="2" y="4" width="15" height="8" rx="1"/><path d="M2 8h15M7 4v8M12 4v8"/><path d="M14 15.5a8 8 0 0 1 8-3.5" stroke-width="1.6"/><path d="M18.7 10.7l3.3 1.3-1 3.4" stroke-width="1.6"/></svg>`,
 };
 
 const DEFAULT_ICON = `<svg ${ATTRS}><path d="M6 3h8l6 6v11a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v6h6"/></svg>`;

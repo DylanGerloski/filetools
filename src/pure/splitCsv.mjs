@@ -190,7 +190,7 @@ export function splitCsv(text, opts) {
   const fileCount = Math.ceil(body.length / rowsPerFile);
   if (fileCount > maxFiles) {
     throw new RangeError(
-      `That would produce ${fileCount} files — this tool caps a split at ${maxFiles}. Raise “rows per file” and try again.`
+      `That would produce ${fileCount} files - this tool caps a split at ${maxFiles}. Raise “rows per file” and try again.`
     );
   }
 

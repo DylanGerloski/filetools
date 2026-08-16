@@ -8,8 +8,8 @@ module.exports = {
   launchDate: '2026-08-14',
   navLabel: 'HTML Table to CSV/JSON',
   h1: 'Convert an HTML Table to CSV or JSON',
-  title: 'HTML Table to CSV or JSON — In Your Browser | filetools',
-  metaDescription: 'Turn an HTML <table> — pasted markup or an .html file — into a CSV or JSON file, free and in your browser. No upload, no sign-up.',
+  title: 'HTML Table to CSV or JSON - In Your Browser | filetools',
+  metaDescription: 'Turn an HTML <table> (pasted markup or an .html file) into a CSV or JSON file, free and in your browser. No upload, no sign-up.',
   deck: 'Paste HTML markup or drop an .html file and get every table it contains as a CSV or JSON download. Nothing is sent anywhere.',
   clientEntry: 'htmlTableToCsv',
   mode: 'html-table',
@@ -23,13 +23,13 @@ module.exports = {
   },
   howSteps: [
     'Drop or choose an .html file, or paste HTML markup directly into the text box.',
-    'Review each table it found — a real preview, with a toggle for whether the first row is a header and a × button to drop a stray row.',
+    'Review each table it found - a real preview, with a toggle for whether the first row is a header and a × button to drop a stray row.',
     'Download one table as CSV or JSON, or download every table found at once.',
   ],
   faqs: [
     {
       q: 'Is my markup or file sent anywhere?',
-      answerHtml: 'No. Pasted markup and uploaded files are both read entirely on your device — the parsing happens in your browser’s own HTML engine, nothing is sent to a server. Turn off your Wi-Fi after the page loads and it still works.',
+      answerHtml: 'No. Pasted markup and uploaded files are both read entirely on your device - the parsing happens in your browser’s own HTML engine, nothing is sent to a server. Turn off your Wi-Fi after the page loads and it still works.',
     },
     {
       q: 'Does this handle merged cells (colspan/rowspan)?',
@@ -41,11 +41,11 @@ module.exports = {
     },
     {
       q: 'How does it know which row is the header?',
-      answerHtml: 'A row is treated as a header if every one of its cells is a <code>&lt;th&gt;</code>, which is how most real-world tables mark their header row. Use the checkbox above the table to override it either way — the JSON export uses whichever row is currently marked as the header for its field names.',
+      answerHtml: 'A row is treated as a header if every one of its cells is a <code>&lt;th&gt;</code>, which is how most real-world tables mark their header row. Use the checkbox above the table to override it either way - the JSON export uses whichever row is currently marked as the header for its field names.',
     },
     {
       q: 'Is my pasted markup run as code?',
-      answerHtml: 'No. Your markup is parsed as inert data only — any <code>&lt;script&gt;</code> tag inside it is never executed, and nothing from it is ever inserted into this page.',
+      answerHtml: 'No. Your markup is parsed as inert data only - any <code>&lt;script&gt;</code> tag inside it is never executed, and nothing from it is ever inserted into this page.',
     },
   ],
   relatedSlugs: ['pdf-to-csv', 'bank-statement-to-csv', 'merge-pdf'],

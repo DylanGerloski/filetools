@@ -20,12 +20,12 @@ function renderPrivacyPage() {
     <p>Pages on this site may include voluntary support links (<a href="https://ko-fi.com/flavaa" target="_blank" rel="noopener noreferrer">Ko-fi</a>, <a href="https://buymeacoffee.com/dylanger254" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a>). These are optional and have no effect on how any tool works.</p>
 
     <h2>What we don’t do</h2>
-    <p>We don’t run our own server-side tracking beyond the analytics above. We don’t sell data — there’s no file data to sell, since it never reaches us. We don’t require an account or any personal information to use any tool on this site.</p>
+    <p>We don’t run our own server-side tracking beyond the analytics above. We don’t sell data - there’s no file data to sell, since it never reaches us. We don’t require an account or any personal information to use any tool on this site.</p>
 `;
 
   return renderPage({
     slug: null,
-    title: 'Privacy — filetools',
+    title: 'Privacy - filetools',
     metaDescription: 'What data filetools collects, what it doesn’t, and exactly what happens to the files you process.',
     breadcrumb: [
       { name: 'Home', href: url() },

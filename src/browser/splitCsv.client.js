@@ -154,8 +154,8 @@ function renderResult(resultEl, fileInput, optionState, splitCsv, rowsToCsv, set
     msg.className = 'alert alert-warn';
     msg.setAttribute('role', 'alert');
     msg.textContent = outcome.header
-      ? 'There’s nothing to split — this file only has a header row.'
-      : 'There’s nothing to split — this file is empty.';
+      ? 'There’s nothing to split - this file only has a header row.'
+      : 'There’s nothing to split - this file is empty.';
     block.appendChild(msg);
   } else {
     badge.textContent = 'Too many files';
@@ -184,7 +184,7 @@ function renderResult(resultEl, fileInput, optionState, splitCsv, rowsToCsv, set
         entries[f.name] = encoder.encode('﻿' + rowsToCsv(f.rows));
       });
       downloadBlob(new Blob([zipSync(entries, { level: 6 })], { type: 'application/zip' }), zipName);
-      setStatus(`Saved ${zipName} — ${outcome.files.length} file${outcome.files.length === 1 ? '' : 's'} inside.`, 'success');
+      setStatus(`Saved ${zipName} - ${outcome.files.length} file${outcome.files.length === 1 ? '' : 's'} inside.`, 'success');
     } catch (err) {
       setStatus(err && err.message ? err.message : 'Something went wrong building the zip.', 'error');
     } finally {
@@ -196,7 +196,7 @@ function renderResult(resultEl, fileInput, optionState, splitCsv, rowsToCsv, set
 
   const supportNote = document.createElement('p');
   supportNote.className = 'support-note';
-  supportNote.innerHTML = 'That ran entirely on your machine — no servers, no cost to run. If it saved you time, you can buy me a coffee: '
+  supportNote.innerHTML = 'That ran entirely on your machine - no servers, no cost to run. If it saved you time, you can buy me a coffee: '
     + '<a href="https://ko-fi.com/flavaa" target="_blank" rel="noopener noreferrer">Ko-fi</a>'
     + ' &middot; '
     + '<a href="https://buymeacoffee.com/dylanger254" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a>.';
@@ -227,5 +227,5 @@ export async function run(ctx) {
   renderResult(resultEl, fileInput, optionState, splitCsv, rowsToCsv, setStatus);
 
   setState('done');
-  setStatus('Split preview ready — adjust rows per file below, then download the zip.', 'success');
+  setStatus('Split preview ready - adjust rows per file below, then download the zip.', 'success');
 }

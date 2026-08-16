@@ -118,7 +118,7 @@ function renderResult(resultEl, text, optionState, transposeCsv, rowsToCsv) {
     const msg = document.createElement('div');
     msg.className = 'alert alert-warn';
     msg.setAttribute('role', 'alert');
-    msg.textContent = 'There’s nothing to transpose — that file or pasted text is empty.';
+    msg.textContent = 'There’s nothing to transpose - that file or pasted text is empty.';
     block.appendChild(msg);
   }
 
@@ -137,7 +137,7 @@ function renderResult(resultEl, text, optionState, transposeCsv, rowsToCsv) {
 
   const supportNote = document.createElement('p');
   supportNote.className = 'support-note';
-  supportNote.innerHTML = 'That ran entirely on your machine — no servers, no cost to run. If it saved you time, you can buy me a coffee: '
+  supportNote.innerHTML = 'That ran entirely on your machine - no servers, no cost to run. If it saved you time, you can buy me a coffee: '
     + '<a href="https://ko-fi.com/flavaa" target="_blank" rel="noopener noreferrer">Ko-fi</a>'
     + ' &middot; '
     + '<a href="https://buymeacoffee.com/dylanger254" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a>.';
@@ -170,6 +170,6 @@ export async function run(ctx) {
   if (outcome.transposed.length) {
     setStatus(`Transposed ${outcome.inputRowCount} row${outcome.inputRowCount === 1 ? '' : 's'}. Review below, then download.`, 'success');
   } else {
-    setStatus('Finished reading — no rows found.', 'error');
+    setStatus('Finished reading - no rows found.', 'error');
   }
 }

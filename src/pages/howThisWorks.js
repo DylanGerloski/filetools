@@ -9,7 +9,7 @@ function renderHowThisWorksPage() {
 
     <h2>Nothing you process is ever sent anywhere</h2>
     <p>When you choose or drop a file, it’s read directly by your browser’s own JavaScript engine. The libraries that do the actual work (merging pages, splitting a document, rotating a page) are downloaded once from this site and then run on your device using your device’s own processing power. Your file’s contents never travel over the network at any point.</p>
-    <p>You can verify this yourself: open a tool page, let it finish loading, then turn off your Wi-Fi or unplug your network cable. The tool still works, because by that point your browser already has everything it needs downloaded and running locally — the network was only ever needed to fetch the page itself.</p>
+    <p>You can verify this yourself: open a tool page, let it finish loading, then turn off your Wi-Fi or unplug your network cable. The tool still works, because by that point your browser already has everything it needs downloaded and running locally - the network was only ever needed to fetch the page itself.</p>
 
     <h2>What does leave your device</h2>
     <p>Two things, and we’d rather say so plainly than let a privacy pitch overstate itself:</p>
@@ -25,7 +25,7 @@ function renderHowThisWorksPage() {
 
   return renderPage({
     slug: 'how-this-works',
-    title: 'How This Works — filetools',
+    title: 'How This Works - filetools',
     metaDescription: 'Exactly how filetools processes files entirely in your browser, what data actually leaves your device, and why it’s built this way.',
     breadcrumb: [
       { name: 'Home', href: url() },

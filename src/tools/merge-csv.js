@@ -9,7 +9,7 @@ module.exports = {
   navLabel: 'Merge CSV Files',
   h1: 'Merge Multiple CSV Files',
   title: 'Merge CSV Files Free - In Your Browser | filetools',
-  metaDescription: 'Combine two or more CSV files into one, free, with no upload and no sign-up. Columns with slightly different names still line up correctly.',
+  metaDescription: 'Combine two or more CSV files into one, free, with no upload and no sign-up. Files with different columns still line up, with blanks filled in.',
   deck: 'Drop two or more CSV files and download them combined into one - mismatched columns line up by name, with blanks filled in rather than data shifted into the wrong column. Nothing is uploaded.',
   clientEntry: 'csvMerge',
   mode: 'merge-csv',

@@ -9,7 +9,7 @@ module.exports = {
   navLabel: 'JSON to CSV',
   h1: 'Convert JSON to CSV',
   title: 'Convert JSON to CSV - In Your Browser | filetools',
-  metaDescription: 'Paste a JSON array or drop a .json file and get a CSV file back - nested objects flatten into dot-notation columns, free and in your browser. No upload, no sign-up.',
+  metaDescription: 'Paste a JSON array or drop a .json file and get a CSV back - nested objects flatten into dot-notation columns, free and in your browser.',
   deck: 'Paste a JSON array of objects, or drop a .json file, and download it as a CSV. Nested objects become dot-notation columns; nothing is sent anywhere.',
   clientEntry: 'jsonToCsv',
   mode: 'json-to-csv',
@@ -48,5 +48,5 @@ module.exports = {
       answerHtml: 'Yes - any cell value that would otherwise be interpreted as a spreadsheet formula (starting with <code>=</code>, <code>+</code>, <code>@</code>, or a tab) is automatically neutralized with a leading quote before download, the same protection used across every CSV export on this site.',
     },
   ],
-  relatedSlugs: ['html-table-to-csv', 'sort-lines', 'remove-duplicate-lines'],
+  relatedSlugs: ['html-table-to-csv', 'sort-lines', 'yaml-to-json'],
 };

@@ -8,8 +8,8 @@ module.exports = {
   launchDate: '2026-08-15',
   navLabel: 'Split CSV',
   h1: 'Split a CSV Into Multiple Files',
-  title: 'Split CSV Into Multiple Files Free - In Your Browser | filetools',
-  metaDescription: 'Split a large CSV into smaller files of a set number of rows each, free, with no upload and no sign-up. The header row is repeated in every file, and everything downloads as one zip.',
+  title: 'Split a CSV Into Multiple Files | filetools',
+  metaDescription: 'Split a large CSV into smaller files of a set number of rows each, free, with no upload and no sign-up. Downloads as one zip.',
   deck: 'Drop a large CSV and download it split into smaller files of however many rows you choose - the header row repeated in each one, packaged as a single zip. Nothing is uploaded.',
   clientEntry: 'splitCsv',
   mode: 'split-csv',
@@ -57,5 +57,5 @@ module.exports = {
       answerHtml: 'The input file is capped at a generous size (shown on the drop zone) so a single huge file can’t freeze the tab, and one split is capped at 2,000 output files - if your settings would produce more, the tool says so and asks you to raise “Rows per file” rather than silently building a zip your browser can’t handle.',
     },
   ],
-  relatedSlugs: ['sort-lines', 'remove-duplicate-lines', 'pdf-to-csv'],
+  relatedSlugs: ['sort-lines', 'remove-duplicate-lines', 'transpose-csv'],
 };

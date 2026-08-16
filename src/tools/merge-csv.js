@@ -9,7 +9,7 @@ module.exports = {
   navLabel: 'Merge CSV Files',
   h1: 'Merge Multiple CSV Files',
   title: 'Merge CSV Files Free - In Your Browser | filetools',
-  metaDescription: 'Combine two or more CSV files into one, free, with no upload and no sign-up. Files with slightly different columns still line up - missing values are filled blank instead of shifting your data.',
+  metaDescription: 'Combine two or more CSV files into one, free, with no upload and no sign-up. Files with different columns still line up, with blanks filled in.',
   deck: 'Drop two or more CSV files and download them combined into one - mismatched columns line up by name, with blanks filled in rather than data shifted into the wrong column. Nothing is uploaded.',
   clientEntry: 'csvMerge',
   mode: 'merge-csv',
@@ -52,5 +52,5 @@ module.exports = {
       answerHtml: 'Correctly - this tool reads the whole file with a full CSV parser, so a quoted field like <code>"Smith, John"</code> or a quoted field containing its own line break is read as one field, not split apart. The one thing not handled is a body row with MORE fields than that file’s own header row - the extra fields are dropped, since there’s no column for them to land in.',
     },
   ],
-  relatedSlugs: ['sort-lines', 'remove-duplicate-lines', 'html-table-to-csv'],
+  relatedSlugs: ['sort-lines', 'remove-duplicate-lines', 'compare-csv'],
 };

@@ -23,6 +23,7 @@ const MAX_BYTES_BY_CLIENT = {
   flattenJson: 20 * 1024 * 1024,
   xlsxToCsv: 25 * 1024 * 1024,
   xlsxToJson: 20 * 1024 * 1024,
+  yamlToJson: 20 * 1024 * 1024,
   jsonToCsv: 20 * 1024 * 1024,
   csvMerge: 20 * 1024 * 1024,
   csvDiff: 20 * 1024 * 1024,

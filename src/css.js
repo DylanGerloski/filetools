@@ -551,6 +551,25 @@ ${designTokensCss(DESIGN_TOKENS)}
     z-index: 1;
   }
   .extracted-table tbody tr:last-child td { border-bottom: none; }
+  /* Read-only JSON preview (YAML to JSON --
+     src/browser/yamlToJson.client.js). Reuses .table-scroll's border
+     treatment for a consistent contained-scroll box, but scrolls both axes
+     since JSON text (unlike a table) can have both long lines and many of
+     them. */
+  .json-preview {
+    max-height: 480px;
+    overflow: auto;
+    margin: 0;
+    padding: var(--space-3);
+    background: var(--color-surface-alt);
+    border: var(--border-hairline) solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    color: var(--color-text);
+    white-space: pre;
+  }
   .row-action-cell { width: 44px; text-align: center; }
   .boundary-editor { margin-top: var(--space-4); }
   .boundary-list {

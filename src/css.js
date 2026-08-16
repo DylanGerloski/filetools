@@ -237,6 +237,30 @@ ${designTokensCss(DESIGN_TOKENS)}
   .btn-icon:disabled { opacity: 0.4; cursor: not-allowed; }
 
   /* -------------------------------------------------------------------
+     Icon marks (src/icons.js) -- color context classes only. Every mark
+     is aria-hidden inline SVG that draws itself from three custom
+     properties (--mark-plate / --mark-wash / --mark-ink); these classes
+     are the only place those get a value, and the only place any
+     var(--family-*) token is referenced. By design, a family hue appears
+     in exactly two places sitewide -- inside the mark, and as this wash
+     behind it on the tool-page dropzone -- and nowhere else: never on
+     text, a link, a button, or a focus ring. .mark--(family) carries
+     plate + wash (the format); a second class, .mark-ink--(family),
+     carries ink (the pip) so a converter can mix two different families
+     on one mark.
+     ------------------------------------------------------------------- */
+  .mark--pdf   { --mark-plate: var(--family-pdf-6);   --mark-wash: var(--family-pdf-1); }
+  .mark--csv   { --mark-plate: var(--family-csv-6);   --mark-wash: var(--family-csv-1); }
+  .mark--json  { --mark-plate: var(--family-json-6);  --mark-wash: var(--family-json-1); }
+  .mark--sheet { --mark-plate: var(--family-sheet-6); --mark-wash: var(--family-sheet-1); }
+  .mark--text  { --mark-plate: var(--family-text-6);  --mark-wash: var(--family-text-1); }
+  .mark-ink--pdf   { --mark-ink: var(--family-pdf-8); }
+  .mark-ink--csv   { --mark-ink: var(--family-csv-8); }
+  .mark-ink--json  { --mark-ink: var(--family-json-8); }
+  .mark-ink--sheet { --mark-ink: var(--family-sheet-8); }
+  .mark-ink--text  { --mark-ink: var(--family-text-8); }
+
+  /* -------------------------------------------------------------------
      Drop zone (src/browser/dropzone.client.js)
      ------------------------------------------------------------------- */
   .dropzone {
@@ -282,17 +306,35 @@ ${designTokensCss(DESIGN_TOKENS)}
     100% { transform: translateX(0); }
   }
 
-  .dz-icon-wrap { position: relative; width: 48px; height: 48px; }
-  .dz-icon {
-    color: var(--color-border-strong);
-    width: 48px; height: 48px;
-    transition: color var(--motion-duration-fast) var(--motion-ease-standard),
-      transform var(--motion-duration-fast) var(--motion-ease-standard),
-      opacity var(--motion-duration-fast) var(--motion-ease-standard);
+  /* dz-icon-wrap is now a colored circle (var(--mark-wash), set by the
+     .mark--<family> class toolPage.js also puts on this element -- custom
+     properties inherit down to the .dz-icon svg inside it for
+     --mark-plate/--mark-ink) sized var(--icon-wrap-lg).
+     REGRESSION FIX: the mark is now multicolor (plate fill + pip stroke
+     via CSS vars), so it can no longer recolor itself through the color
+     property/currentColor the way the old single-stroke glyph did. State
+     moves to the WRAPPER instead -- the mark itself never changes color
+     for any state, only opacity (done) and a loop animation (working,
+     unchanged from before since opacity/animation were never
+     currentColor-dependent). */
+  .dz-icon-wrap {
+    position: relative;
+    width: var(--icon-wrap-lg); height: var(--icon-wrap-lg);
+    border-radius: var(--radius-pill);
+    background: var(--mark-wash);
+    display: flex; align-items: center; justify-content: center;
+    transition: background var(--motion-duration-fast) var(--motion-ease-standard),
+      box-shadow var(--motion-duration-fast) var(--motion-ease-standard);
   }
-  .dropzone[data-state="dragover"] .dz-icon { color: var(--color-accent); transform: scale(1.06); }
+  .dz-icon {
+    width: var(--icon-lg); height: var(--icon-lg);
+    transition: opacity var(--motion-duration-fast) var(--motion-ease-standard);
+  }
+  .dropzone[data-state="dragover"] .dz-icon-wrap {
+    background: var(--color-accent-tint);
+    box-shadow: 0 0 0 2px var(--color-accent);
+  }
   .dropzone[data-state="working"] .dz-icon {
-    color: var(--color-accent);
     opacity: 0.35;
     animation: dz-spin var(--motion-duration-loop) linear infinite;
   }
@@ -303,9 +345,15 @@ ${designTokensCss(DESIGN_TOKENS)}
   /* Check glyph draws in via stroke-dasharray/-offset on entering "done";
      invisible (dasharray fully offset) in every other state. */
   .dz-check {
+    /* Trivial adjacent fix while touching this block: dz-icon-wrap grew
+       from 48px to var(--icon-wrap-lg) (72px) above, so this now needs
+       margin: auto (with inset: 0) to stay centred in the larger circle --
+       previously inset: 0 alone happened to work only because wrap and
+       check were both exactly 48px. */
     position: absolute;
     inset: 0;
-    width: 48px; height: 48px;
+    margin: auto;
+    width: var(--icon-lg); height: var(--icon-lg);
     color: var(--color-success);
     opacity: 0;
     transition: opacity var(--motion-duration-fast) var(--motion-ease-standard);
@@ -831,9 +879,8 @@ ${designTokensCss(DESIGN_TOKENS)}
     text-decoration: none;
     font-weight: var(--weight-medium);
   }
-  .related-link svg { width: 20px; height: 20px; color: var(--color-muted); flex-shrink: 0; }
+  .related-link svg { width: var(--icon-sm); height: var(--icon-sm); flex-shrink: 0; }
   .related-link:hover { color: var(--color-accent); }
-  .related-link:hover svg { color: var(--color-accent); }
 
   /* -------------------------------------------------------------------
      Ad slot -- reserved height, never above/beside the tool.
@@ -955,8 +1002,6 @@ ${designTokensCss(DESIGN_TOKENS)}
 
   .tool-group { margin: var(--space-7) 0; padding: var(--space-4); border-radius: var(--radius-lg); }
   .tool-group h2 { margin-top: 0; margin-bottom: var(--space-4); }
-  .tool-group--pdf { background: var(--color-surface-alt); }
-  .tool-group--data { background: var(--color-accent-tint); }
 
   .tool-list { display: flex; flex-direction: column; }
   @media (min-width: 768px) {
@@ -975,8 +1020,7 @@ ${designTokensCss(DESIGN_TOKENS)}
   .tool-list > .tool-row:last-child,
   .tool-list > .tool-row:nth-last-child(2):nth-child(odd) { border-bottom: none; }
   .tool-row:hover .tool-row-name { color: var(--color-accent); }
-  .tool-row-icon { width: 24px; height: 24px; flex-shrink: 0; margin-top: 2px; color: var(--color-muted); }
-  .tool-row:hover .tool-row-icon { color: var(--color-accent); }
+  .tool-row-icon { width: var(--icon-md); height: var(--icon-md); flex-shrink: 0; margin-top: 2px; }
   .tool-row-text { display: flex; flex-direction: column; gap: 2px; }
   .tool-row-name {
     font-family: var(--font-display);

@@ -47,5 +47,5 @@ module.exports = {
       answerHtml: 'Files up to 20MB. A compressed .xlsx unpacks into much more verbose XML in memory, so a very large workbook can be slow or use a lot of memory in the tab; this cap keeps that from freezing your browser.',
     },
   ],
-  relatedSlugs: ['json-to-csv', 'html-table-to-csv', 'pdf-to-csv'],
+  relatedSlugs: ['json-to-csv', 'html-table-to-csv', 'xlsx-to-csv'],
 };

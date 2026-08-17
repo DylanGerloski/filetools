@@ -1,24 +1,29 @@
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
+
 /**
  * The TOOLS registry -- the one plug-in point every tool page derives from.
  * Header nav, footer "all tools", the related-tools grid, sitemap.xml,
  * breadcrumbs, and JSON-LD are all built FROM this array by src/shell.js
- * and src/build.js. Adding a new tool page is: (1) write
- * src/tools/<slug>.js exporting the same shape as these three, (2) add it
- * to this array. No other file needs to change.
+ * and src/build.js. Adding a new tool page is purely additive: write
+ * src/tools/<slug>.js exporting the same shape the other tool modules do
+ * (slug/category/etc, consumed identically by TOOLS.forEach and
+ * toolBySlug()/toolsByCategory()) -- it is auto-discovered from this
+ * directory below. No other file needs to change, so two tool PRs open at
+ * once can never conflict on this file.
+ *
+ * sort() makes discovery order deterministic (alphabetical by filename)
+ * rather than depending on filesystem enumeration order, which is not
+ * guaranteed to be stable across platforms.
  */
 
-const pdfMerge = require('./pdf-merge.js');
-const pdfSplit = require('./pdf-split.js');
-const pdfRotate = require('./pdf-rotate.js');
-const pdfTablesToCsv = require('./pdf-tables-to-csv.js');
-const statementToCsv = require('./statement-to-csv.js');
-const htmlTableToCsv = require('./html-table-to-csv.js');
-const dedupeLines = require('./dedupe-lines.js');
-const sortLines = require('./sort-lines.js');
-
-const TOOLS = [pdfMerge, pdfSplit, pdfRotate, pdfTablesToCsv, statementToCsv, htmlTableToCsv, dedupeLines, sortLines];
+const TOOLS = fs
+  .readdirSync(__dirname)
+  .filter((f) => f.endsWith('.js') && f !== 'index.js')
+  .sort()
+  .map((f) => require(path.join(__dirname, f)));
 
 const CATEGORY_LABELS = {
   pdf: 'PDF tools',

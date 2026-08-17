@@ -52,16 +52,30 @@ function adsTxtContent() {
   return `# ads.txt for filetools\n# Declares authorized sellers of this site's ad inventory.\n# See https://iabtechlab.com/ads-txt/ for the spec.\ngoogle.com, pub-9767914878112531, DIRECT, f08c47fec0942fa0\n`;
 }
 
-function build() {
+async function build() {
   rimraf(OUT_DIR);
   fs.mkdirSync(OUT_DIR, { recursive: true });
+
+  // Real, generated (not drawn) per-tool output-example panels -- see
+  // src/examples/index.mjs's header comment. This is the one place
+  // build() is async: everything else here is synchronous CJS, but
+  // loading an ESM module (src/examples/*.mjs, which import the pure
+  // ESM src/pure/*.mjs modules to compute a real result at build time)
+  // from CommonJS requires a dynamic import(). Resolved once, up front,
+  // not per tool page.
+  const { exampleFor, ariaLabelFor, noteFor } = await import('./examples/index.mjs');
 
   // 1. Pages
   writeHtml('', renderHomePage());
   writeHtml('how-this-works', renderHowThisWorksPage());
   writeHtml('privacy', renderPrivacyPage());
   TOOLS.forEach((tool) => {
-    writeHtml(path.join(tool.category, tool.slug), renderToolPage(tool));
+    const exampleHtml = exampleFor(tool.slug);
+    writeHtml(path.join(tool.category, tool.slug), renderToolPage(tool, {
+      exampleHtml,
+      exampleAriaLabel: ariaLabelFor(tool.slug),
+      exampleNote: noteFor(tool.slug),
+    }));
   });
   fs.writeFileSync(path.join(OUT_DIR, '404.html'), render404Page(), 'utf8');
 
@@ -75,7 +89,16 @@ function build() {
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'htmlTableToCsv.client.js'), path.join(jsDir, 'htmlTableToCsv.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'dedupeLines.client.js'), path.join(jsDir, 'dedupeLines.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'sortLines.client.js'), path.join(jsDir, 'sortLines.client.js'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'flattenJson.client.js'), path.join(jsDir, 'flattenJson.client.js'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'jsonToCsv.client.js'), path.join(jsDir, 'jsonToCsv.client.js'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'csvMerge.client.js'), path.join(jsDir, 'csvMerge.client.js'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'csvDiff.client.js'), path.join(jsDir, 'csvDiff.client.js'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'splitCsv.client.js'), path.join(jsDir, 'splitCsv.client.js'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'transposeCsv.client.js'), path.join(jsDir, 'transposeCsv.client.js'));
   fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'newsletter.client.js'), path.join(jsDir, 'newsletter.client.js'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'xlsxToCsv.client.js'), path.join(jsDir, 'xlsxToCsv.client.js'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'xlsxToJson.client.js'), path.join(jsDir, 'xlsxToJson.client.js'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'browser', 'yamlToJson.client.js'), path.join(jsDir, 'yamlToJson.client.js'));
 
   // 3. Pure modules also loaded client-side -> dist/pure/
   const pureDir = path.join(OUT_DIR, 'pure');
@@ -87,8 +110,17 @@ function build() {
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'htmlTableExtract.mjs'), path.join(pureDir, 'htmlTableExtract.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'dedupeLines.mjs'), path.join(pureDir, 'dedupeLines.mjs'));
   fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'sortLines.mjs'), path.join(pureDir, 'sortLines.mjs'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'flattenJson.mjs'), path.join(pureDir, 'flattenJson.mjs'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'xlsxGrid.mjs'), path.join(pureDir, 'xlsxGrid.mjs'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'xlsxExtract.mjs'), path.join(pureDir, 'xlsxExtract.mjs'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'jsonToCsv.mjs'), path.join(pureDir, 'jsonToCsv.mjs'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'csvMerge.mjs'), path.join(pureDir, 'csvMerge.mjs'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'csvDiff.mjs'), path.join(pureDir, 'csvDiff.mjs'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'splitCsv.mjs'), path.join(pureDir, 'splitCsv.mjs'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'transposeCsv.mjs'), path.join(pureDir, 'transposeCsv.mjs'));
+  fs.copyFileSync(path.join(ROOT, 'src', 'pure', 'yamlToJson.mjs'), path.join(pureDir, 'yamlToJson.mjs'));
 
-  // 4. Vendor libraries (pdf-lib, pdfjs-dist) -> dist/vendor/
+  // 4. Vendor libraries (pdf-lib, pdfjs-dist, exceljs, fflate) -> dist/vendor/
   copyVendor();
   copyDir(path.join(ROOT, 'vendor'), path.join(OUT_DIR, 'vendor'));
 
@@ -121,7 +153,10 @@ function build() {
 }
 
 if (require.main === module) {
-  build();
+  build().catch((e) => {
+    console.error(e);
+    process.exitCode = 1;
+  });
 }
 
 module.exports = { build };

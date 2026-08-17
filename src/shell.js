@@ -9,7 +9,7 @@
  */
 
 const { SITE_NAME, SITE_TAGLINE, BASE_PATH, url, absoluteUrl } = require('./site.js');
-const { SITE_CSS } = require('./css.js');
+const { SITE_CSS, FONT_WOFF2_URL } = require('./css.js');
 const { FAVICON_DATA_URI } = require('./icon.js');
 const { adSlot, adsScriptTag } = require('./ads.js');
 const adConfig = require('./adConfig.js');
@@ -36,7 +36,7 @@ const SOCIAL_ICON_SVG = '<svg width="18" height="18" viewBox="0 0 100 100" xmlns
  * docs/DESIGN_PLAYBOOK.md's "What stays shared across the portfolio".
  */
 function renderFooterCredit() {
-  return `<p class="footer-credit">Built by Dylan &mdash; also making <a href="https://repertoire-builder.com" rel="noopener noreferrer">Repertoire Builder</a> and <a href="https://lol-practice-system.com" rel="noopener noreferrer">Solo Queue Practice</a>. <a class="footer-social" href="https://x.com/builtittheycome" rel="noopener noreferrer">${SOCIAL_ICON_SVG}Follow @builtittheycome</a></p>`;
+  return `<p class="footer-credit">Built by Dylan, also making <a href="https://repertoire-builder.com" rel="noopener noreferrer">Repertoire Builder</a> and <a href="https://lol-practice-system.com" rel="noopener noreferrer">Solo Queue Practice</a>. <a class="footer-social" href="https://x.com/builtittheycome" rel="noopener noreferrer">${SOCIAL_ICON_SVG}Follow @builtittheycome</a></p>`;
 }
 
 function escapeHtml(str) {
@@ -57,7 +57,7 @@ function documentHead(opts) {
 
   const robotsMeta = noindex ? '\n  <meta name="robots" content="noindex">' : '';
   const feedLink = feedUrl
-    ? `\n  <link rel="alternate" type="application/rss+xml" title="${escapeHtml(SITE_NAME)} — new tools" href="${escapeHtml(feedUrl)}">`
+    ? `\n  <link rel="alternate" type="application/rss+xml" title="${escapeHtml(SITE_NAME)} - new tools" href="${escapeHtml(feedUrl)}">`
     : '';
   const og = `\n  <meta property="og:title" content="${escapeHtml(title)}">` +
     `\n  <meta property="og:description" content="${escapeHtml(description)}">` +
@@ -79,6 +79,7 @@ function documentHead(opts) {
   <meta name="description" content="${escapeHtml(description)}">
   <link rel="canonical" href="${escapeHtml(canonical)}">${robotsMeta}${og}${feedLink}
   <meta name="google-adsense-account" content="${escapeHtml(adConfig.client)}">
+  <link rel="preload" as="font" type="font/woff2" href="${escapeHtml(FONT_WOFF2_URL)}" crossorigin>
   <link rel="icon" href="${FAVICON_DATA_URI}">
   <link rel="icon" type="image/svg+xml" href="${escapeHtml(url('favicon.svg'))}">
   <link rel="apple-touch-icon" href="${escapeHtml(url('apple-touch-icon.png'))}">
@@ -144,15 +145,28 @@ function renderNewsletterSignup() {
   if (!NEWSLETTER_FORM_ACTION) {
     return `<div class="newsletter-signup newsletter-signup--pending">
       <h2 class="newsletter-heading">Hear about new tools</h2>
-      <p class="newsletter-description">Email sign-up isn&rsquo;t live yet &mdash; check back soon, or follow the <a href="${escapeHtml(url('feed.xml'))}">RSS feed</a> in the meantime.</p>
+      <p class="newsletter-description">Email sign-up isn&rsquo;t live yet. Check back soon, or follow the <a href="${escapeHtml(url('feed.xml'))}">RSS feed</a> in the meantime.</p>
     </div>`;
   }
   const embedTitle = 'Email signup for filetools updates';
+  // D1 fix: this slot used to render EMPTY by default -- styled with a
+  // visible border/background (see .newsletter-embed in src/css.js) but no
+  // content, because the Substack iframe only arrives via
+  // IntersectionObserver (src/browser/newsletter.client.js) once the
+  // footer nears the viewport. Any load failure, or JS not running fast
+  // enough, rendered as a large empty bordered box, and the <noscript>
+  // fallback below was unreachable whenever JS ran but the iframe didn't
+  // load. Fix: the slot's DEFAULT content is now the same visible working
+  // link the <noscript> fallback used to be the only path to -- so every
+  // failure mode (slow load, failed load, JS disabled) degrades to a real
+  // link, never an empty box. newsletter.client.js replaces this whole
+  // element with the iframe only once it actually loads.
   return `<div class="newsletter-signup">
       <h2 class="newsletter-heading">Hear about new tools</h2>
       <p class="newsletter-description">One email when a new tool ships. No spam, unsubscribe anytime.</p>
-      <div class="newsletter-embed" data-newsletter-slot data-newsletter-src="${escapeHtml(NEWSLETTER_FORM_ACTION)}" data-newsletter-title="${escapeHtml(embedTitle)}"></div>
-      <noscript><p class="newsletter-description"><a href="${escapeHtml(SUBSTACK_PUBLICATION_URL)}" target="_blank" rel="noopener noreferrer">Subscribe on Substack</a></p></noscript>
+      <div class="newsletter-slot" data-newsletter-slot data-newsletter-src="${escapeHtml(NEWSLETTER_FORM_ACTION)}" data-newsletter-title="${escapeHtml(embedTitle)}">
+        <a href="${escapeHtml(SUBSTACK_PUBLICATION_URL)}" target="_blank" rel="noopener noreferrer">Subscribe on Substack</a>
+      </div>
     </div>`;
 }
 

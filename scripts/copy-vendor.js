@@ -51,7 +51,68 @@ function copyVendor() {
     path.join(VENDOR, 'pdfjs-dist', 'LICENSE')
   );
 
-  console.log('vendor/ populated from node_modules (pdf-lib, pdfjs-dist).');
+  // exceljs -- MIT (verified: node_modules/exceljs/LICENSE). Its own
+  // pre-built browser bundle (the "browser" field in its package.json) --
+  // a UMD/browserify build, not ESM, hence xlsxToJson.client.js loading it
+  // via a classic <script> tag rather than import() like pdf-lib/pdf.js
+  // above (see that file's header comment for why).
+  copy(
+    path.join(nm, 'exceljs', 'dist', 'exceljs.min.js'),
+    path.join(VENDOR, 'exceljs', 'exceljs.min.js')
+  );
+  copy(
+    path.join(nm, 'exceljs', 'LICENSE'),
+    path.join(VENDOR, 'exceljs', 'LICENSE')
+  );
+
+  // fflate -- MIT (verified: node_modules/fflate/LICENSE). Self-contained
+  // ESM build with zero further imports (esm/browser.js), same reasoning
+  // as pdf-lib/pdfjs-dist above: self-hosted so every tool keeps working
+  // with Wi-Fi off, never a CDN. Copied to two filenames because two
+  // independently-built tools (xlsx-to-csv, split-csv) each import it
+  // under a different relative name -- see xlsxToCsv.client.js and
+  // splitCsv.client.js.
+  copy(
+    path.join(nm, 'fflate', 'esm', 'browser.js'),
+    path.join(VENDOR, 'fflate', 'fflate.esm.js')
+  );
+  copy(
+    path.join(nm, 'fflate', 'esm', 'browser.js'),
+    path.join(VENDOR, 'fflate', 'browser.js')
+  );
+  copy(
+    path.join(nm, 'fflate', 'LICENSE'),
+    path.join(VENDOR, 'fflate', 'LICENSE')
+  );
+
+  // js-yaml -- MIT (verified: node_modules/js-yaml/LICENSE). Its own
+  // dist/js-yaml.mjs is a real, self-contained ES module with named
+  // exports and zero further imports of its own, so it's loaded with plain
+  // import() the same way pdf-lib/pdfjs-dist are above -- see
+  // ../src/browser/yamlToJson.client.js's header for why this is a real
+  // ESM build rather than a UMD one like exceljs.
+  copy(
+    path.join(nm, 'js-yaml', 'dist', 'js-yaml.mjs'),
+    path.join(VENDOR, 'js-yaml', 'js-yaml.mjs')
+  );
+  copy(
+    path.join(nm, 'js-yaml', 'LICENSE'),
+    path.join(VENDOR, 'js-yaml', 'LICENSE')
+  );
+
+  // Space Grotesk (display typeface) -- SIL OFL 1.1 (verified:
+  // node_modules/@fontsource-variable/space-grotesk/LICENSE). Latin subset
+  // only, variable weight -- see src/css.js's @font-face block.
+  copy(
+    path.join(nm, '@fontsource-variable', 'space-grotesk', 'files', 'space-grotesk-latin-wght-normal.woff2'),
+    path.join(VENDOR, 'fonts', 'space-grotesk', 'space-grotesk-latin-wght-normal.woff2')
+  );
+  copy(
+    path.join(nm, '@fontsource-variable', 'space-grotesk', 'LICENSE'),
+    path.join(VENDOR, 'fonts', 'space-grotesk', 'LICENSE')
+  );
+
+  console.log('vendor/ populated from node_modules (pdf-lib, pdfjs-dist, exceljs, fflate, js-yaml, space-grotesk).');
 }
 
 if (require.main === module) {

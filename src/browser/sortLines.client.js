@@ -77,8 +77,8 @@ function renderResult(resultEl, rawLines, optionState, naming, sortLines, joinLi
   const badge = document.createElement('span');
   badge.className = 'page-badge';
   badge.textContent = outcome.columnCount > 1
-    ? `${outcome.totalCount} row${outcome.totalCount === 1 ? '' : 's'} — sorted ${outcome.resolvedType === 'numeric' ? 'numerically' : 'alphabetically'} by column ${optionState.column + 1}`
-    : `${outcome.totalCount} line${outcome.totalCount === 1 ? '' : 's'} — sorted ${outcome.resolvedType === 'numeric' ? 'numerically' : 'alphabetically'}`;
+    ? `${outcome.totalCount} row${outcome.totalCount === 1 ? '' : 's'} - sorted ${outcome.resolvedType === 'numeric' ? 'numerically' : 'alphabetically'} by column ${optionState.column + 1}`
+    : `${outcome.totalCount} line${outcome.totalCount === 1 ? '' : 's'} - sorted ${outcome.resolvedType === 'numeric' ? 'numerically' : 'alphabetically'}`;
   head.appendChild(badge);
 
   if (outcome.columnCount > 1) {
@@ -201,7 +201,7 @@ function renderResult(resultEl, rawLines, optionState, naming, sortLines, joinLi
     const msg = document.createElement('div');
     msg.className = 'alert alert-warn';
     msg.setAttribute('role', 'alert');
-    msg.textContent = 'There’s nothing to sort — that file or pasted text is empty.';
+    msg.textContent = 'There’s nothing to sort - that file or pasted text is empty.';
     block.appendChild(msg);
   }
 
@@ -220,7 +220,7 @@ function renderResult(resultEl, rawLines, optionState, naming, sortLines, joinLi
 
   const supportNote = document.createElement('p');
   supportNote.className = 'support-note';
-  supportNote.innerHTML = 'That ran entirely on your machine — no servers, no cost to run. If it saved you time, you can buy me a coffee: '
+  supportNote.innerHTML = 'That ran entirely on your machine, with no server and no hosting cost on my end. If it saved you time, you can buy me a coffee: '
     + '<a href="https://ko-fi.com/flavaa" target="_blank" rel="noopener noreferrer">Ko-fi</a>'
     + ' &middot; '
     + '<a href="https://buymeacoffee.com/dylanger254" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a>.';
@@ -251,11 +251,11 @@ export async function run(ctx) {
     const msg = document.createElement('div');
     msg.className = 'alert alert-warn';
     msg.setAttribute('role', 'alert');
-    msg.textContent = 'That file or pasted text is empty — there’s nothing to sort.';
+    msg.textContent = 'That file or pasted text is empty - there’s nothing to sort.';
     resultEl.appendChild(msg);
     resultEl.hidden = false;
     setState('done');
-    setStatus('Finished reading — no lines found.', 'error');
+    setStatus('Finished reading - no lines found.', 'error');
     return;
   }
 

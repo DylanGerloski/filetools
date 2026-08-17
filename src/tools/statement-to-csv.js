@@ -8,9 +8,9 @@ module.exports = {
   launchDate: '2026-08-13',
   navLabel: 'Bank Statement to CSV',
   h1: 'Convert a Bank or Card Statement PDF to CSV',
-  title: 'Bank Statement PDF to CSV — In Your Browser | filetools',
-  metaDescription: 'Turn a bank or card statement PDF into a CSV of transactions, free and in your browser. No upload, no sign-up — your financial data never leaves your device.',
-  deck: 'Reads the transaction table out of a statement PDF — even one that spans several pages — and combines it into a single CSV. Nothing is uploaded, ever.',
+  title: 'Bank Statement PDF to CSV - In Your Browser | filetools',
+  metaDescription: 'Turn a bank or card statement PDF into a CSV of transactions, free and in your browser. No upload, no sign-up - your financial data never leaves your device.',
+  deck: 'Reads the transaction table out of a statement PDF, including ones that span several pages, and combines it into a single CSV. Nothing is uploaded, ever.',
   clientEntry: 'statementToCsv',
   mode: 'statement',
   accepts: 'application/pdf',
@@ -18,16 +18,16 @@ module.exports = {
   howSteps: [
     'Choose or drop one statement PDF.',
     'This tool finds the transaction table on every page and combines them into one table, removing the repeated header row that most statements print on each page.',
-    'Review the combined table — drop any row that doesn’t belong — then download it as one CSV.',
+    'Review the combined table, drop any row that doesn’t belong, then download it as one CSV.',
   ],
   faqs: [
     {
       q: 'Is my statement uploaded anywhere?',
-      answerHtml: 'No. A bank or card statement carries real financial data, so this matters more here than almost anywhere else on this site — every table is found and extracted entirely on your device. Turn off your Wi-Fi after the page loads and it still works.',
+      answerHtml: 'No. A bank or card statement carries real financial data, so this matters more here than almost anywhere else on this site - every table is found and extracted entirely on your device. Turn off your Wi-Fi after the page loads and it still works.',
     },
     {
       q: 'Does this work with statements from any bank?',
-      answerHtml: 'It works with any statement PDF that has a real text layer laid out as a table — which covers most bank- and card-issuer-generated statements. It reads column positions the same way a person visually lines up a table, so an unusual layout may need a row or two corrected by hand; you will always see exactly what was found before downloading anything.',
+      answerHtml: 'It works with any statement PDF that has a real text layer laid out as a table - which covers most bank- and card-issuer-generated statements. It reads column positions the same way a person visually lines up a table, so an unusual layout may need a row or two corrected by hand; you will always see exactly what was found before downloading anything.',
     },
     {
       q: 'Does this work on scanned statements?',

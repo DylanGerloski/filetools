@@ -5,6 +5,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { collectPageErrors } from './helpers/collectPageErrors.mjs';
 
 /**
  * End-to-end tests for the remove-duplicate-lines tool: drive the built
@@ -69,9 +70,7 @@ after(async () => {
 
 test('remove-duplicate-lines: uploading a .txt file removes exact-match duplicates and downloads the result', async () => {
   const page = await browser.newPage({ acceptDownloads: true });
-  const errors = [];
-  page.on('pageerror', (err) => errors.push(err.message));
-  page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+  const errors = collectPageErrors(page);
 
   await page.goto(`${baseUrl}data/remove-duplicate-lines/`, { waitUntil: 'networkidle' });
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'list.txt'));
@@ -80,7 +79,12 @@ test('remove-duplicate-lines: uploading a .txt file removes exact-match duplicat
   const badgeText = await page.locator('.page-badge').textContent();
   assert.match(badgeText, /2 duplicates removed/);
 
-  const rowTexts = await page.locator('.extracted-table tbody tr td').allTextContents();
+  // Scoped to .table-block (the live result), not just .extracted-table:
+  // this page's own output-example panel further down also renders an
+  // .extracted-table (a real, generated sample -- see
+  // src/examples/remove-duplicate-lines.mjs), so an unscoped selector here
+  // would double-match rows from both tables.
+  const rowTexts = await page.locator('.table-block .extracted-table tbody tr td').allTextContents();
   assert.deepEqual(rowTexts, ['apple', 'banana', 'cherry']);
 
   const [download] = await Promise.all([
@@ -103,7 +107,7 @@ test('remove-duplicate-lines: a CSV file dedupes whole rows and downloads with a
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'rows.csv'));
   await page.waitForSelector('.table-block');
 
-  const rowTexts = await page.locator('.extracted-table tbody tr td').allTextContents();
+  const rowTexts = await page.locator('.table-block .extracted-table tbody tr td').allTextContents();
   assert.deepEqual(rowTexts, ['Name,Amount', 'Coffee,4.50', 'Rent,1200']);
 
   const [download] = await Promise.all([
@@ -116,16 +120,14 @@ test('remove-duplicate-lines: a CSV file dedupes whole rows and downloads with a
 
 test('remove-duplicate-lines: pasting a list and clicking convert produces the same result as a file upload', async () => {
   const page = await browser.newPage({ acceptDownloads: true });
-  const errors = [];
-  page.on('pageerror', (err) => errors.push(err.message));
-  page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+  const errors = collectPageErrors(page);
 
   await page.goto(`${baseUrl}data/remove-duplicate-lines/`, { waitUntil: 'networkidle' });
   await page.fill('#paste-textarea', 'x\ny\nx\nz');
   await page.locator('#paste-convert').click();
   await page.waitForSelector('.table-block');
 
-  const rowTexts = await page.locator('.extracted-table tbody tr td').allTextContents();
+  const rowTexts = await page.locator('.table-block .extracted-table tbody tr td').allTextContents();
   assert.deepEqual(rowTexts, ['x', 'y', 'z']);
   assert.deepEqual(errors, []);
   await page.close();
@@ -151,12 +153,12 @@ test('remove-duplicate-lines: turning on "ignore case" merges differently-cased 
   await page.locator('#paste-convert').click();
   await page.waitForSelector('.table-block');
 
-  let rowTexts = await page.locator('.extracted-table tbody tr td').allTextContents();
+  let rowTexts = await page.locator('.table-block .extracted-table tbody tr td').allTextContents();
   assert.deepEqual(rowTexts, ['Apple', 'apple', 'APPLE', 'Banana'], 'case-sensitive by default -- all four lines are distinct');
 
   await page.locator('label:has-text("Ignore case") input[type="checkbox"]').check();
-  await page.waitForFunction(() => document.querySelectorAll('.extracted-table tbody tr').length === 2);
-  rowTexts = await page.locator('.extracted-table tbody tr td').allTextContents();
+  await page.waitForFunction(() => document.querySelectorAll('.table-block .extracted-table tbody tr').length === 2);
+  rowTexts = await page.locator('.table-block .extracted-table tbody tr td').allTextContents();
   assert.deepEqual(rowTexts, ['Apple', 'Banana']);
   await page.close();
 });

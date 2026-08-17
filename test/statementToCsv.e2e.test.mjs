@@ -5,6 +5,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { collectPageErrors } from './helpers/collectPageErrors.mjs';
 import { PDFDocument, StandardFonts } from 'pdf-lib';
 
 /**
@@ -117,9 +118,7 @@ after(async () => {
 
 test('bank-statement-to-csv: merges a two-page statement into one table, drops the repeated header, downloads one combined CSV', async () => {
   const page = await browser.newPage({ acceptDownloads: true });
-  const errors = [];
-  page.on('pageerror', (err) => errors.push(err.message));
-  page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+  const errors = collectPageErrors(page);
 
   await page.goto(`${baseUrl}pdf/bank-statement-to-csv/`, { waitUntil: 'networkidle' });
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'statement.pdf'));
@@ -128,10 +127,14 @@ test('bank-statement-to-csv: merges a two-page statement into one table, drops t
   // Exactly one merged main table (no "other tables" block, since both
   // pages share the same 3-column shape) with 6 combined data rows.
   assert.equal(await page.locator('.table-block').count(), 1, 'should render exactly one merged table block');
-  const headerTexts = await page.locator('.extracted-table thead th').allTextContents();
+  // Scoped to .table-block (the live result), not just .extracted-table --
+  // this page's own output-example panel (src/examples/bank-statement-to-
+  // csv.mjs) also renders a real .extracted-table, from an unrelated
+  // fixture, same reason test/csvDiff.e2e.test.mjs already scopes this way.
+  const headerTexts = await page.locator('.table-block .extracted-table thead th').allTextContents();
   assert.deepEqual(headerTexts, ['Date', 'Description', 'Amount']);
 
-  const bodyRowCount = await page.locator('.extracted-table tbody tr').count();
+  const bodyRowCount = await page.locator('.table-block .extracted-table tbody tr').count();
   assert.equal(bodyRowCount, 6, 'six transaction rows across both pages, with the repeated header row removed');
 
   const [download] = await Promise.all([
@@ -166,9 +169,10 @@ test('bank-statement-to-csv: dropping a row before download removes it from the 
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'statement.pdf'));
   await page.waitForSelector('.table-block');
 
-  assert.equal(await page.locator('.extracted-table tbody tr').count(), 6);
-  await page.locator('.extracted-table tbody tr').first().locator('.row-drop').click();
-  await page.waitForFunction(() => document.querySelectorAll('.extracted-table tbody tr').length === 5);
+  // Scoped to .table-block -- see the previous test's comment.
+  assert.equal(await page.locator('.table-block .extracted-table tbody tr').count(), 6);
+  await page.locator('.table-block .extracted-table tbody tr').first().locator('.row-drop').click();
+  await page.waitForFunction(() => document.querySelectorAll('.table-block .extracted-table tbody tr').length === 5);
 
   const [download] = await Promise.all([
     page.waitForEvent('download', { timeout: 15000 }),
@@ -226,7 +230,8 @@ test('bank-statement-to-csv: a single-page statement works without any multi-pag
   await page2.goto(`${baseUrl}pdf/bank-statement-to-csv/`, { waitUntil: 'networkidle' });
   await page2.locator('#file-input').setInputFiles(path.join(TMP, 'single-page-statement.pdf'));
   await page2.waitForSelector('.table-block');
-  assert.equal(await page2.locator('.extracted-table tbody tr').count(), 3);
+  // Scoped to .table-block -- see the first test's comment.
+  assert.equal(await page2.locator('.table-block .extracted-table tbody tr').count(), 3);
   const caption = await page2.locator('.result > p.caption').first().textContent();
   assert.match(caption, /Found 3 rows on page 1/);
   await page2.close();

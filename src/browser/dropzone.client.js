@@ -26,6 +26,35 @@ if (toolSection) {
   const fileInput = toolSection.querySelector('#file-input');
   const statusEl = toolSection.querySelector('.dz-status');
   const resultEl = toolSection.querySelector('.result');
+  const cancelBtn = toolSection.querySelector('.dz-cancel');
+
+  // "working" state timing (design-standards.md's three response-time
+  // limits): a generation counter is bumped on every new file selection
+  // AND on Cancel, so a
+  // processor that's still running when the visitor cancels can finish
+  // its work in the background without ever touching the UI again --
+  // that's what makes Cancel real from the visitor's point of view, even
+  // though no per-processor AbortSignal plumbing exists to stop the
+  // in-flight CPU work itself (out of scope for this pass; noted here so
+  // it isn't assumed away).
+  let currentGeneration = 0;
+  let slowTimer = null;
+
+  function clearSlowTimer() {
+    if (slowTimer) { clearTimeout(slowTimer); slowTimer = null; }
+    delete dropzone.dataset.slow;
+  }
+
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', () => {
+      currentGeneration += 1;
+      clearSlowTimer();
+      setState('idle');
+      setStatus('Cancelled.');
+      resultEl.hidden = true;
+      resultEl.innerHTML = '';
+    });
+  }
 
   // Known, closed set of processor modules -- an explicit map rather than a
   // template-string import(`./${clientEntry}.client.js`) so an unexpected
@@ -38,6 +67,15 @@ if (toolSection) {
     htmlTableToCsv: () => import('./htmlTableToCsv.client.js'),
     dedupeLines: () => import('./dedupeLines.client.js'),
     sortLines: () => import('./sortLines.client.js'),
+    flattenJson: () => import('./flattenJson.client.js'),
+    xlsxToCsv: () => import('./xlsxToCsv.client.js'),
+    xlsxToJson: () => import('./xlsxToJson.client.js'),
+    yamlToJson: () => import('./yamlToJson.client.js'),
+    jsonToCsv: () => import('./jsonToCsv.client.js'),
+    csvMerge: () => import('./csvMerge.client.js'),
+    csvDiff: () => import('./csvDiff.client.js'),
+    splitCsv: () => import('./splitCsv.client.js'),
+    transposeCsv: () => import('./transposeCsv.client.js'),
   };
 
   // Per-tool file-size cap, checked before a file ever reaches its
@@ -56,6 +94,15 @@ if (toolSection) {
     htmlTableToCsv: 20 * 1024 * 1024, // parsed HTML/text, held in the DOM for preview
     dedupeLines: 20 * 1024 * 1024, // plain text lists
     sortLines: 20 * 1024 * 1024,
+    flattenJson: 20 * 1024 * 1024, // parsed and held in memory as a JS object
+    xlsxToCsv: 25 * 1024 * 1024, // unzipped + held in memory as parsed XML for preview
+    xlsxToJson: 20 * 1024 * 1024, // a compressed .xlsx unzips into verbose XML -- ExcelJS holds the whole parsed workbook in memory
+    yamlToJson: 20 * 1024 * 1024, // parsed YAML, held in memory for preview
+    jsonToCsv: 20 * 1024 * 1024, // parsed JSON, held in memory for preview
+    csvMerge: 20 * 1024 * 1024, // multiple CSVs, all held in memory to merge
+    csvDiff: 20 * 1024 * 1024, // two CSVs, both held in memory to diff
+    splitCsv: 20 * 1024 * 1024, // whole CSV held in memory to chunk and zip
+    transposeCsv: 20 * 1024 * 1024, // whole CSV held in memory to flip
   };
   const DEFAULT_MAX_BYTES = 20 * 1024 * 1024;
 
@@ -72,6 +119,11 @@ if (toolSection) {
     htmlTableToCsv: { name: 'pasted-table.html', type: 'text/html' },
     dedupeLines: { name: 'pasted-list.txt', type: 'text/plain' },
     sortLines: { name: 'pasted-list.txt', type: 'text/plain' },
+    flattenJson: { name: 'pasted-input.json', type: 'application/json' },
+    jsonToCsv: { name: 'pasted-input.json', type: 'application/json' },
+    yamlToJson: { name: 'pasted-input.yaml', type: 'application/yaml' },
+    splitCsv: { name: 'pasted-input.csv', type: 'text/csv' },
+    transposeCsv: { name: 'pasted-input.csv', type: 'text/csv' },
   };
 
   let processorPromise = null;
@@ -87,7 +139,7 @@ if (toolSection) {
           // on, and clear the cached promise so the next file selection
           // gets a fresh attempt instead of the same stale rejection.
           processorPromise = null;
-          throw new Error('The tool’s code hasn’t finished downloading yet — reconnect for a moment, then try again.');
+          throw new Error('The tool’s code hasn’t finished downloading yet - reconnect for a moment, then try again.');
         });
     }
     return processorPromise;
@@ -157,7 +209,7 @@ if (toolSection) {
     const bad = files.find((f) => !fileMatchesAccept(f));
     if (bad) {
       setState('error');
-      setStatus(`"${bad.name}" isn't a PDF — this tool reads PDF files.`, 'error');
+      setStatus(`"${bad.name}" isn't a PDF - this tool reads PDF files.`, 'error');
       return;
     }
 
@@ -165,8 +217,13 @@ if (toolSection) {
     const tooBig = files.find((f) => f.size > maxBytes);
     if (tooBig) {
       setState('error');
-      setStatus(`"${tooBig.name}" is too large (${formatMb(tooBig.size)}). This tool handles files up to ${formatMb(maxBytes)} — anything bigger risks freezing your browser tab.`, 'error');
+      setStatus(`"${tooBig.name}" is too large (${formatMb(tooBig.size)}). This tool handles files up to ${formatMb(maxBytes)} - anything bigger risks freezing your browser tab.`, 'error');
       return;
+    }
+
+    const myGeneration = ++currentGeneration;
+    function stillCurrent() {
+      return myGeneration === currentGeneration;
     }
 
     setState('working');
@@ -174,20 +231,38 @@ if (toolSection) {
     resultEl.hidden = true;
     resultEl.innerHTML = '';
 
+    // Past 10s of the SAME job still running, reveal the Cancel button
+    // (Nielsen's third response-time limit). Guarded by stillCurrent() so
+    // a fast job that already finished doesn't pop it back up late.
+    clearSlowTimer();
+    slowTimer = setTimeout(() => {
+      if (stillCurrent()) dropzone.dataset.slow = 'true';
+    }, 10000);
+
     try {
       const processor = await warmProcessor();
+      // setState/setStatus/resultEl are only ever touched by this
+      // generation's own processor.run() call below (a plain object, not a
+      // wrapped guard) -- the guard applies to the OUTER handling here, so
+      // a superseded generation's eventual resolution/rejection can't
+      // overwrite what a later (or cancelled) selection already put on
+      // screen.
       await processor.run({
         mode,
         files,
         section: toolSection,
         dropzone,
         resultEl,
-        setState,
-        setStatus,
+        setState: (s) => { if (stillCurrent()) setState(s); },
+        setStatus: (m, t) => { if (stillCurrent()) setStatus(m, t); },
       });
+      if (stillCurrent()) clearSlowTimer();
     } catch (err) {
-      setState('error');
-      setStatus(err && err.message ? err.message : 'Something went wrong reading that file.', 'error');
+      if (stillCurrent()) {
+        clearSlowTimer();
+        setState('error');
+        setStatus(err && err.message ? err.message : 'Something went wrong reading that file.', 'error');
+      }
     }
   }
 

@@ -75,8 +75,8 @@ function renderResult(resultEl, rawLines, optionState, naming, dedupeLines, join
   const badge = document.createElement('span');
   badge.className = 'page-badge';
   badge.textContent = outcome.duplicateCount > 0
-    ? `${outcome.duplicateCount} duplicate${outcome.duplicateCount === 1 ? '' : 's'} removed — ${outcome.kept.length} of ${outcome.totalCount} lines kept`
-    : `No duplicates found — all ${outcome.totalCount} lines kept`;
+    ? `${outcome.duplicateCount} duplicate${outcome.duplicateCount === 1 ? '' : 's'} removed - ${outcome.kept.length} of ${outcome.totalCount} lines kept`
+    : `No duplicates found - all ${outcome.totalCount} lines kept`;
   head.appendChild(badge);
 
   const options = [
@@ -160,7 +160,7 @@ function renderResult(resultEl, rawLines, optionState, naming, dedupeLines, join
 
   const supportNote = document.createElement('p');
   supportNote.className = 'support-note';
-  supportNote.innerHTML = 'That ran entirely on your machine — no servers, no cost to run. If it saved you time, you can buy me a coffee: '
+  supportNote.innerHTML = 'That ran entirely on your machine, with no server and no hosting cost on my end. If it saved you time, you can buy me a coffee: '
     + '<a href="https://ko-fi.com/flavaa" target="_blank" rel="noopener noreferrer">Ko-fi</a>'
     + ' &middot; '
     + '<a href="https://buymeacoffee.com/dylanger254" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a>.';
@@ -191,11 +191,11 @@ export async function run(ctx) {
     const msg = document.createElement('div');
     msg.className = 'alert alert-warn';
     msg.setAttribute('role', 'alert');
-    msg.textContent = 'That file or pasted text is empty — there’s nothing to deduplicate.';
+    msg.textContent = 'That file or pasted text is empty - there’s nothing to deduplicate.';
     resultEl.appendChild(msg);
     resultEl.hidden = false;
     setState('done');
-    setStatus('Finished reading — no lines found.', 'error');
+    setStatus('Finished reading - no lines found.', 'error');
     return;
   }
 

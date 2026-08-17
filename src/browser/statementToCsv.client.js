@@ -247,12 +247,12 @@ export async function run(ctx) {
     msg.className = 'alert alert-warn';
     msg.setAttribute('role', 'alert');
     msg.textContent = anyScan
-      ? 'This statement looks like a scanned image — there is no text to extract. This tool does not do OCR, and cannot read a statement that has no real text layer.'
+      ? 'This statement looks like a scanned image - there is no text to extract. This tool does not do OCR, and cannot read a statement that has no real text layer.'
       : 'No transaction table was found in this PDF. This tool looks for at least three rows of consistently aligned columns (the shape a statement’s transaction table normally has), so a document without that layout won’t produce a table here.';
     resultEl.appendChild(msg);
     resultEl.hidden = false;
     setState('done');
-    setStatus('Finished reading — no transaction table found.', 'error');
+    setStatus('Finished reading - no transaction table found.', 'error');
     return;
   }
 
@@ -329,7 +329,7 @@ export async function run(ctx) {
 
   const supportNote = document.createElement('p');
   supportNote.className = 'support-note';
-  supportNote.innerHTML = 'That ran entirely on your machine — no servers, no cost to run. Your statement was never sent anywhere. If it saved you time, you can buy me a coffee: '
+  supportNote.innerHTML = 'That ran entirely on your machine, with no server and no hosting cost on my end. Your statement was never sent anywhere. If it saved you time, you can buy me a coffee: '
     + '<a href="https://ko-fi.com/flavaa" target="_blank" rel="noopener noreferrer">Ko-fi</a>'
     + ' &middot; '
     + '<a href="https://buymeacoffee.com/dylanger254" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a>.';

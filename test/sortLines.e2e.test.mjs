@@ -5,6 +5,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { collectPageErrors } from './helpers/collectPageErrors.mjs';
 
 /**
  * End-to-end tests for the sort-by-column tool: drive the built dist/
@@ -69,15 +70,18 @@ after(async () => {
 
 test('sort-lines: uploading a plain-text list sorts it alphabetically and downloads the result', async () => {
   const page = await browser.newPage({ acceptDownloads: true });
-  const errors = [];
-  page.on('pageerror', (err) => errors.push(err.message));
-  page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+  const errors = collectPageErrors(page);
 
   await page.goto(`${baseUrl}data/sort-lines/`, { waitUntil: 'networkidle' });
   await page.locator('#file-input').setInputFiles(path.join(TMP, 'sort-list.txt'));
   await page.waitForSelector('.table-block');
 
-  const rowTexts = await page.locator('.extracted-table tbody tr td').allTextContents();
+  // Scoped to .table-block (the live result), not just .extracted-table:
+  // this page's own output-example panel further down also renders an
+  // .extracted-table (a real, generated sample -- see
+  // src/examples/sort-lines.mjs), so an unscoped selector here would
+  // double-match rows from both tables.
+  const rowTexts = await page.locator('.table-block .extracted-table tbody tr td').allTextContents();
   assert.deepEqual(rowTexts, ['apple', 'banana', 'cherry']);
 
   const [download] = await Promise.all([
@@ -102,10 +106,10 @@ test('sort-lines: switching order to descending live-resorts the preview without
 
   await page.locator('.table-block-head select').first().selectOption('desc');
   await page.waitForFunction(() => {
-    const cells = document.querySelectorAll('.extracted-table tbody tr td');
+    const cells = document.querySelectorAll('.table-block .extracted-table tbody tr td');
     return cells.length === 3 && cells[0].textContent === 'cherry';
   });
-  const rowTexts = await page.locator('.extracted-table tbody tr td').allTextContents();
+  const rowTexts = await page.locator('.table-block .extracted-table tbody tr td').allTextContents();
   assert.deepEqual(rowTexts, ['cherry', 'banana', 'apple']);
   await page.close();
 });
@@ -117,17 +121,17 @@ test('sort-lines: a CSV file defaults to keeping the header pinned and sorts by 
   await page.waitForSelector('.table-block');
 
   // Default column is 0 (Name) ascending, header pinned at top.
-  let rowTexts = await page.locator('.extracted-table tbody tr td').allTextContents();
+  let rowTexts = await page.locator('.table-block .extracted-table tbody tr td').allTextContents();
   assert.deepEqual(rowTexts, ['Name,Amount', 'Coffee,4.50', 'Rent,1200', 'Snacks,3.25']);
 
   // Switch to sorting by the Amount column (index 1) -- numeric ascending.
   const columnSelect = page.locator('.table-block-head select').first();
   await columnSelect.selectOption('1');
   await page.waitForFunction(() => {
-    const cells = document.querySelectorAll('.extracted-table tbody tr td');
+    const cells = document.querySelectorAll('.table-block .extracted-table tbody tr td');
     return cells.length === 4 && cells[1].textContent === 'Snacks,3.25';
   });
-  rowTexts = await page.locator('.extracted-table tbody tr td').allTextContents();
+  rowTexts = await page.locator('.table-block .extracted-table tbody tr td').allTextContents();
   assert.deepEqual(rowTexts, ['Name,Amount', 'Snacks,3.25', 'Coffee,4.50', 'Rent,1200']);
 
   const [download] = await Promise.all([
@@ -140,16 +144,14 @@ test('sort-lines: a CSV file defaults to keeping the header pinned and sorts by 
 
 test('sort-lines: pasting a list and clicking sort produces the same result as a file upload', async () => {
   const page = await browser.newPage();
-  const errors = [];
-  page.on('pageerror', (err) => errors.push(err.message));
-  page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
+  const errors = collectPageErrors(page);
 
   await page.goto(`${baseUrl}data/sort-lines/`, { waitUntil: 'networkidle' });
   await page.fill('#paste-textarea', '30\n4\n100');
   await page.locator('#paste-convert').click();
   await page.waitForSelector('.table-block');
 
-  const rowTexts = await page.locator('.extracted-table tbody tr td').allTextContents();
+  const rowTexts = await page.locator('.table-block .extracted-table tbody tr td').allTextContents();
   assert.deepEqual(rowTexts, ['4', '30', '100'], 'numeric auto-detection should sort 4 before 30 before 100');
   assert.deepEqual(errors, []);
   await page.close();

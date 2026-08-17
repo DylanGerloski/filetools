@@ -9,13 +9,42 @@
  */
 
 const { DESIGN_TOKENS, designTokensCss } = require('./tokens.js');
+const { url: sitePath } = require('./site.js');
+
+const FONT_WOFF2_PATH = 'vendor/fonts/space-grotesk/space-grotesk-latin-wght-normal.woff2';
+const FONT_WOFF2_URL = sitePath(FONT_WOFF2_PATH);
 
 const SITE_CSS = `
+  /* Space Grotesk (display face) -- self-hosted from vendor/fonts/, Latin
+     subset only. See tokens.js's --font-display comment for the license
+     and CLS notes. Variable-weight file covers 300-700 in one request. */
+  @font-face {
+    font-family: 'Space Grotesk Variable';
+    font-style: normal;
+    font-display: swap;
+    font-weight: 300 700;
+    src: url('${FONT_WOFF2_URL}') format('woff2-variations');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+
   :root {
 ${designTokensCss(DESIGN_TOKENS)}
   }
 
   * { box-sizing: border-box; }
+
+  /* prefers-reduced-motion: state changes (color/border/text) stay; only
+     their timing collapses. The one exception is the working-state
+     indeterminate progress loop below, which is an ongoing-work indicator
+     rather than decoration and is separately suppressed by name. */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 1ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 1ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 
   .sr-only {
     position: absolute;
@@ -79,9 +108,9 @@ ${designTokensCss(DESIGN_TOKENS)}
   a:hover { color: var(--color-accent-hover); }
 
   :focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-accent);
-    border-radius: var(--radius-sm);
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+    transition: outline-color var(--focus-ring-transition);
   }
 
   /* -------------------------------------------------------------------
@@ -96,7 +125,7 @@ ${designTokensCss(DESIGN_TOKENS)}
     padding: var(--space-2) var(--space-4);
     border-radius: var(--radius-sm);
     z-index: 100;
-    transition: top 0.15s ease;
+    transition: top var(--motion-duration-fast) var(--motion-ease-standard);
   }
   .skip-link:focus { top: var(--space-3); }
 
@@ -208,6 +237,30 @@ ${designTokensCss(DESIGN_TOKENS)}
   .btn-icon:disabled { opacity: 0.4; cursor: not-allowed; }
 
   /* -------------------------------------------------------------------
+     Icon marks (src/icons.js) -- color context classes only. Every mark
+     is aria-hidden inline SVG that draws itself from three custom
+     properties (--mark-plate / --mark-wash / --mark-ink); these classes
+     are the only place those get a value, and the only place any
+     var(--family-*) token is referenced. By design, a family hue appears
+     in exactly two places sitewide -- inside the mark, and as this wash
+     behind it on the tool-page dropzone -- and nowhere else: never on
+     text, a link, a button, or a focus ring. .mark--(family) carries
+     plate + wash (the format); a second class, .mark-ink--(family),
+     carries ink (the pip) so a converter can mix two different families
+     on one mark.
+     ------------------------------------------------------------------- */
+  .mark--pdf   { --mark-plate: var(--family-pdf-6);   --mark-wash: var(--family-pdf-1); }
+  .mark--csv   { --mark-plate: var(--family-csv-6);   --mark-wash: var(--family-csv-1); }
+  .mark--json  { --mark-plate: var(--family-json-6);  --mark-wash: var(--family-json-1); }
+  .mark--sheet { --mark-plate: var(--family-sheet-6); --mark-wash: var(--family-sheet-1); }
+  .mark--text  { --mark-plate: var(--family-text-6);  --mark-wash: var(--family-text-1); }
+  .mark-ink--pdf   { --mark-ink: var(--family-pdf-8); }
+  .mark-ink--csv   { --mark-ink: var(--family-csv-8); }
+  .mark-ink--json  { --mark-ink: var(--family-json-8); }
+  .mark-ink--sheet { --mark-ink: var(--family-sheet-8); }
+  .mark-ink--text  { --mark-ink: var(--family-text-8); }
+
+  /* -------------------------------------------------------------------
      Drop zone (src/browser/dropzone.client.js)
      ------------------------------------------------------------------- */
   .dropzone {
@@ -222,7 +275,9 @@ ${designTokensCss(DESIGN_TOKENS)}
     background: var(--color-surface);
     border: var(--border-drop) dashed var(--color-border-strong);
     border-radius: var(--radius-lg);
-    transition: border-color 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+    transition: border-color var(--motion-duration-fast) var(--motion-ease-standard),
+      background var(--motion-duration-fast) var(--motion-ease-standard),
+      box-shadow var(--motion-duration-fast) var(--motion-ease-standard);
   }
   @media (max-width: 768px) {
     .dropzone { min-height: 160px; padding: var(--space-5); }
@@ -233,13 +288,84 @@ ${designTokensCss(DESIGN_TOKENS)}
     background: var(--color-accent-tint);
     box-shadow: var(--shadow-drop);
   }
+  .dropzone[data-state="working"] {
+    border-style: solid;
+    border-color: var(--color-accent);
+  }
   .dropzone[data-state="error"] {
     border-color: var(--color-danger);
+    animation: dz-shake 200ms var(--motion-ease-standard);
   }
   .dropzone[data-state="done"] {
     border-color: var(--color-success);
   }
-  .dz-icon { color: var(--color-border-strong); width: 48px; height: 48px; }
+  @keyframes dz-shake {
+    0% { transform: translateX(0); }
+    30% { transform: translateX(-4px); }
+    70% { transform: translateX(4px); }
+    100% { transform: translateX(0); }
+  }
+
+  /* dz-icon-wrap is now a colored circle (var(--mark-wash), set by the
+     .mark--<family> class toolPage.js also puts on this element -- custom
+     properties inherit down to the .dz-icon svg inside it for
+     --mark-plate/--mark-ink) sized var(--icon-wrap-lg).
+     REGRESSION FIX: the mark is now multicolor (plate fill + pip stroke
+     via CSS vars), so it can no longer recolor itself through the color
+     property/currentColor the way the old single-stroke glyph did. State
+     moves to the WRAPPER instead -- the mark itself never changes color
+     for any state, only opacity (done) and a loop animation (working,
+     unchanged from before since opacity/animation were never
+     currentColor-dependent). */
+  .dz-icon-wrap {
+    position: relative;
+    width: var(--icon-wrap-lg); height: var(--icon-wrap-lg);
+    border-radius: var(--radius-pill);
+    background: var(--mark-wash);
+    display: flex; align-items: center; justify-content: center;
+    transition: background var(--motion-duration-fast) var(--motion-ease-standard),
+      box-shadow var(--motion-duration-fast) var(--motion-ease-standard);
+  }
+  .dz-icon {
+    width: var(--icon-lg); height: var(--icon-lg);
+    transition: opacity var(--motion-duration-fast) var(--motion-ease-standard);
+  }
+  .dropzone[data-state="dragover"] .dz-icon-wrap {
+    background: var(--color-accent-tint);
+    box-shadow: 0 0 0 2px var(--color-accent);
+  }
+  .dropzone[data-state="working"] .dz-icon {
+    opacity: 0.35;
+    animation: dz-spin var(--motion-duration-loop) linear infinite;
+  }
+  .dropzone[data-state="done"] .dz-icon { opacity: 0; }
+  @keyframes dz-spin {
+    to { transform: rotate(360deg); }
+  }
+  /* Check glyph draws in via stroke-dasharray/-offset on entering "done";
+     invisible (dasharray fully offset) in every other state. */
+  .dz-check {
+    /* Trivial adjacent fix while touching this block: dz-icon-wrap grew
+       from 48px to var(--icon-wrap-lg) (72px) above, so this now needs
+       margin: auto (with inset: 0) to stay centred in the larger circle --
+       previously inset: 0 alone happened to work only because wrap and
+       check were both exactly 48px. */
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: var(--icon-lg); height: var(--icon-lg);
+    color: var(--color-success);
+    opacity: 0;
+    transition: opacity var(--motion-duration-fast) var(--motion-ease-standard);
+  }
+  .dz-check path {
+    stroke-dasharray: 40;
+    stroke-dashoffset: 40;
+    transition: stroke-dashoffset var(--motion-duration-standard) var(--motion-ease-decelerate);
+  }
+  .dropzone[data-state="done"] .dz-check { opacity: 1; }
+  .dropzone[data-state="done"] .dz-check path { stroke-dashoffset: 0; }
+
   .dz-title {
     font-weight: var(--weight-medium);
     font-size: var(--text-md);
@@ -266,6 +392,7 @@ ${designTokensCss(DESIGN_TOKENS)}
   .dz-status[data-tone="success"] { color: var(--color-success); }
 
   .progress-track {
+    display: none;
     width: 100%;
     max-width: 320px;
     height: 8px;
@@ -273,12 +400,31 @@ ${designTokensCss(DESIGN_TOKENS)}
     background: var(--color-surface-alt);
     overflow: hidden;
   }
+  .dropzone[data-state="working"] .progress-track { display: block; }
   .progress-fill {
     height: 100%;
+    width: 40%;
     background: var(--color-accent);
     border-radius: var(--radius-pill);
-    transition: width 0.15s ease;
+    transition: width var(--motion-duration-fast) var(--motion-ease-standard);
   }
+  /* Indeterminate loop: no per-processor progress plumbing exists today, so
+     this is a "work is happening" signal, not a real percentage -- the
+     accompanying .dz-status text (already aria-live) carries the real
+     detail a processor knows (e.g. "Reading 4 pages on this device..."). */
+  .dropzone[data-state="working"] .progress-fill {
+    animation: dz-progress-loop var(--motion-duration-loop) linear infinite;
+  }
+  @keyframes dz-progress-loop {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(250%); }
+  }
+
+  .dz-cancel {
+    display: none;
+    margin-top: var(--space-1);
+  }
+  .dropzone[data-state="working"][data-slow="true"] .dz-cancel { display: inline-flex; }
 
   .alert {
     padding: var(--space-4);
@@ -410,6 +556,23 @@ ${designTokensCss(DESIGN_TOKENS)}
     outline: var(--border-control) solid var(--color-accent);
     outline-offset: 1px;
   }
+  /* Split-CSV's rows-per-file control (src/browser/splitCsv.client.js)
+     reuses this same options-row pattern with a number input. */
+  .table-block-head input[type="number"] {
+    width: 88px;
+    min-height: 36px;
+    padding: var(--space-1) var(--space-2);
+    border: var(--border-hairline) solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-variant-numeric: tabular-nums;
+    font-size: var(--text-sm);
+  }
+  .table-block-head input[type="number"]:focus-visible {
+    outline: var(--border-control) solid var(--color-accent);
+    outline-offset: 1px;
+  }
   /* Horizontally scrollable inside its OWN container so the page itself
      never scrolls horizontally at 360px, even for a wide extracted table. */
   .table-scroll {
@@ -436,6 +599,25 @@ ${designTokensCss(DESIGN_TOKENS)}
     z-index: 1;
   }
   .extracted-table tbody tr:last-child td { border-bottom: none; }
+  /* Read-only JSON preview (YAML to JSON --
+     src/browser/yamlToJson.client.js). Reuses .table-scroll's border
+     treatment for a consistent contained-scroll box, but scrolls both axes
+     since JSON text (unlike a table) can have both long lines and many of
+     them. */
+  .json-preview {
+    max-height: 480px;
+    overflow: auto;
+    margin: 0;
+    padding: var(--space-3);
+    background: var(--color-surface-alt);
+    border: var(--border-hairline) solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    color: var(--color-text);
+    white-space: pre;
+  }
   .row-action-cell { width: 44px; text-align: center; }
   .boundary-editor { margin-top: var(--space-4); }
   .boundary-list {
@@ -466,6 +648,33 @@ ${designTokensCss(DESIGN_TOKENS)}
     gap: var(--space-3);
     margin-top: var(--space-4);
   }
+
+  /* -------------------------------------------------------------------
+     Cell-level CSV diff table (compare-csv --
+     src/browser/csvDiff.client.js). Row-level tint from a shared
+     background token PLUS the .diff-status-cell text label in every row
+     (never color alone -- see design-standards.md's "color never the sole
+     carrier of meaning").
+     ------------------------------------------------------------------- */
+  .extracted-table tr[data-diff-status="added"] > td { background: var(--color-success-bg); }
+  .extracted-table tr[data-diff-status="removed"] > td { background: var(--color-danger-bg); }
+  .extracted-table tr[data-diff-status="changed"] > td { background: var(--color-warn-bg); }
+  .extracted-table td[data-diff-cell="changed"] { font-weight: var(--weight-bold); }
+  .diff-cell-old {
+    color: var(--color-danger);
+    text-decoration: line-through;
+    margin-right: var(--space-1);
+  }
+  .diff-cell-new { color: var(--color-success); }
+  .diff-status-cell {
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    white-space: nowrap;
+  }
+  .diff-status-cell[data-diff-status="added"] { color: var(--color-success); }
+  .diff-status-cell[data-diff-status="removed"] { color: var(--color-danger); }
+  .diff-status-cell[data-diff-status="changed"] { color: var(--color-warn); }
+  .diff-status-cell[data-diff-status="unchanged"] { color: var(--color-muted); }
 
   /* -------------------------------------------------------------------
      Second input path: "paste markup" (html-table-to-csv today; toolPage.js
@@ -531,6 +740,37 @@ ${designTokensCss(DESIGN_TOKENS)}
   }
 
   /* -------------------------------------------------------------------
+     Before -> after page-strip diagrams (Pattern D, and the drawn source
+     half of Pattern E -- see src/pageStripDiagrams.mjs and
+     src/examples/*.mjs). Rendered inline inside an .output-example figure
+     (below), so this is deliberately just the <svg> styling -- no card
+     background/border/padding of its own, since design-standards.md
+     forbids a card nested inside another card and .output-example is
+     already that card. (Formerly src/diagrams.js's own top-of-page
+     .transform-diagram div carried that card styling directly; retired
+     along with the file.)
+     ------------------------------------------------------------------- */
+  .transform-diagram-svg {
+    display: block;
+    width: 100%;
+    max-width: 480px;
+    height: auto;
+    color: var(--color-border-strong);
+  }
+  .transform-diagram-svg .td-label {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    fill: var(--color-muted);
+    stroke: none;
+  }
+  /* The "after" state's accent -- was --color-accent (site-wide brand
+     teal); recolored to the tool's own family plate color so the diagram
+     agrees with that tool's mark/dropzone color rather than competing
+     with it. --color-accent keeps its monopoly on actions/links/focus
+     (design-standards.md's restraint-budget rule). */
+  .transform-diagram-svg .td-accent { color: var(--mark-plate); }
+
+  /* -------------------------------------------------------------------
      Tool surface card
      ------------------------------------------------------------------- */
   #tool {
@@ -544,45 +784,217 @@ ${designTokensCss(DESIGN_TOKENS)}
   }
 
   /* -------------------------------------------------------------------
-     How-it-works / FAQ
+     How-it-works process rail -- CSS-only counter-generated step markers
+     on the genuinely-ordered <ol> (design-standards.md permits numbering an
+     element's own semantics; it rejects decorative numbering of sections,
+     a different thing).
      ------------------------------------------------------------------- */
   .how-steps {
-    padding-left: var(--space-5);
-  }
-  .how-steps li { max-width: var(--measure); }
-
-  .faq-item { margin-bottom: var(--space-5); max-width: var(--measure); }
-  .faq-item h3 { font-size: var(--text-md); margin-bottom: var(--space-2); }
-  .faq-item p { margin: 0; color: var(--color-text); }
-
-  /* -------------------------------------------------------------------
-     Related tools
-     ------------------------------------------------------------------- */
-  .related-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
+    list-style: none;
+    padding-left: 0;
+    counter-reset: how-step;
     margin: var(--space-5) 0;
   }
-  @media (min-width: 768px) {
-    .related-grid { grid-template-columns: repeat(2, 1fr); }
+  .how-steps li {
+    position: relative;
+    max-width: var(--measure);
+    padding-left: calc(28px + var(--space-4));
+    padding-bottom: var(--space-5);
+    border-left: var(--border-hairline) solid var(--color-border);
+    margin-left: 13px;
   }
-  @media (min-width: 1440px) {
-    .related-grid { grid-template-columns: repeat(3, 1fr); }
+  .how-steps li:last-child { border-left-color: transparent; padding-bottom: 0; }
+  .how-steps li::before {
+    counter-increment: how-step;
+    content: counter(how-step);
+    position: absolute;
+    left: -14px;
+    top: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-accent-tint);
+    color: var(--color-accent);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-display);
+    font-weight: var(--weight-bold);
+    font-size: var(--text-sm);
   }
-  .related-card {
-    display: block;
+
+  /* -------------------------------------------------------------------
+     Two-column "how it works" band -- steps left, a real generated output
+     example right (src/examples/*.mjs). Only rendered by toolPage.js when
+     an example exists for that tool, so tool pages with no example yet
+     keep the plain single-column .how-steps list unchanged. Below 1024px
+     this is a plain block: <ol> then <figure> stack in DOM order (steps
+     first, then example), which is why no separate mobile rule is needed.
+     ------------------------------------------------------------------- */
+  @media (min-width: 1024px) {
+    .how-band {
+      display: grid;
+      grid-template-columns: minmax(0, 34rem) minmax(0, 1fr);
+      gap: var(--space-7);
+      align-items: start;
+    }
+    .how-band .how-steps { margin-top: 0; }
+  }
+  .output-example {
+    margin: var(--space-5) 0 0;
     padding: var(--space-4);
     background: var(--color-surface);
-    border-top: 3px solid var(--color-accent);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
-    text-decoration: none;
-    color: var(--color-text);
+    border: var(--border-hairline) solid var(--color-border);
+    border-radius: var(--radius-lg);
   }
-  .related-card:hover { box-shadow: var(--shadow-md); color: var(--color-text); }
-  .related-card h3 { margin: 0 0 var(--space-2); font-size: var(--text-md); }
-  .related-card p { margin: 0; max-width: none; color: var(--color-muted); font-size: var(--text-sm); }
+  @media (min-width: 1024px) {
+    .output-example { margin-top: 0; }
+  }
+  .output-example figcaption {
+    font-weight: var(--weight-medium);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-3);
+  }
+  .output-example-body {
+    max-width: 100%;
+  }
+  @media (max-width: 768px) {
+    .output-example-body { overflow-x: auto; }
+  }
+  .output-example-note {
+    margin: var(--space-3) 0 0;
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+  }
+
+  /* -------------------------------------------------------------------
+     Before/after example tables (Pattern B, src/examples/*.mjs) -- an
+     Input table then an Output table either side of an arrow, inside an
+     .output-example figure. Any row a tool actually removes or adds
+     reuses .extracted-table's own tr[data-diff-status] tinting above
+     (added zero new color rules) plus .diff-status-cell for the
+     accompanying text label, since color is never the sole carrier of
+     meaning. Stacked by default (DOM order Input then Output preserved);
+     side by side only once the .how-band itself is two columns, so this
+     never fights that wider breakpoint for space.
+     ------------------------------------------------------------------- */
+  .example-before-after {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  @media (min-width: 1024px) {
+    .example-before-after {
+      flex-direction: row;
+      align-items: center;
+    }
+    .example-ba-col { flex: 1 1 0; min-width: 0; }
+    /* Pattern E (extract-to-grid, src/examples/pdf-to-csv.mjs and
+       siblings): the left column is always a small drawn source diagram,
+       never a table -- it doesn't need half the figure's width the way
+       Pattern B's two real tables do, and a real 3-column extracted table
+       given only half a narrow figure gets pushed into
+       .table-scroll's horizontal-scroll affordance, hiding a whole column
+       at first glance (exactly what src/examples/merge-csv.mjs's own
+       header comment says Pattern B avoids by keeping its fixtures to 2
+       columns). Fixed-width here instead, so the real table -- the
+       valuable half -- gets the rest of the space.
+       ------------------------------------------------------------------- */
+    .example-ba-col--source { flex: 0 0 130px; }
+  }
+  .example-ba-col { min-width: 0; }
+  .example-ba-label {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .example-ba-col .table-scroll + .example-ba-label { margin-top: var(--space-3); }
+  .example-ba-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    color: var(--color-muted);
+    font-size: var(--text-lg);
+  }
+  @media (min-width: 1024px) {
+    .example-ba-arrow { padding: 0 var(--space-1); }
+  }
+  /* Each before/after column is roughly half of an already-narrow figure
+     (see .output-example-body above), so its table needs tighter cells
+     than the full-width diff table compare-csv's example uses -- smaller
+     text and padding, both still from the existing type/space scale. */
+  .example-ba-col .extracted-table th,
+  .example-ba-col .extracted-table td {
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--text-xs);
+  }
+
+  /* -------------------------------------------------------------------
+     FAQ -- native <details>/<summary> disclosure (Deliverable 4). The
+     first two items ship the open attribute; see src/pages/toolPage.js.
+     ------------------------------------------------------------------- */
+  .faq-item {
+    max-width: var(--measure);
+    border-bottom: var(--border-hairline) solid var(--color-border);
+    padding: var(--space-4) 0;
+  }
+  .faq-item:first-of-type { border-top: var(--border-hairline) solid var(--color-border); }
+  .faq-item summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 44px;
+    padding-left: var(--space-5);
+    position: relative;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    border-right: var(--border-control) solid var(--color-muted);
+    border-bottom: var(--border-control) solid var(--color-muted);
+    transform: rotate(-45deg);
+    transition: transform var(--motion-duration-fast) var(--motion-ease-standard);
+  }
+  .faq-item[open] summary::before { transform: rotate(45deg); }
+  .faq-item[open] { border-left: var(--border-control) solid var(--color-accent); padding-left: var(--space-3); }
+  .faq-item summary h3 { display: inline; font-size: var(--text-md); margin: 0; }
+  .faq-item p { margin: var(--space-2) 0 0 var(--space-5); color: var(--color-text); }
+
+  /* -------------------------------------------------------------------
+     Related tools -- one inline glyph+text row under a hairline, not a
+     card grid (design-standards.md; see toolPage.js's comment).
+     ------------------------------------------------------------------- */
+  .related-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-6);
+    margin: var(--space-4) 0 0;
+    padding-top: var(--space-4);
+    border-top: var(--border-hairline) solid var(--color-border);
+    max-width: none;
+  }
+  .related-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 44px;
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: var(--weight-medium);
+  }
+  .related-link svg { width: var(--icon-sm); height: var(--icon-sm); flex-shrink: 0; }
+  .related-link:hover { color: var(--color-accent); }
 
   /* -------------------------------------------------------------------
      Ad slot -- reserved height, never above/beside the tool.
@@ -627,10 +1039,9 @@ ${designTokensCss(DESIGN_TOKENS)}
     .footer-groups { grid-template-columns: repeat(3, 1fr); }
   }
   .footer-group h3 {
-    font-size: var(--text-xs);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--color-muted);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-text);
     margin-bottom: var(--space-2);
   }
   .footer-group ul { list-style: none; margin: 0; padding: 0; }
@@ -673,6 +1084,11 @@ ${designTokensCss(DESIGN_TOKENS)}
     margin: 0 0 var(--space-3);
   }
   .newsletter-signup--pending .newsletter-description { margin-bottom: 0; }
+  /* D1 fix: the styled box (border/background/fixed height) now belongs
+     ONLY to the loaded iframe -- the default slot (.newsletter-slot,
+     src/shell.js) renders as a plain link with no box at all, so a load
+     that never happens degrades to a real link, not an empty rectangle. */
+  .newsletter-slot a { font-weight: var(--weight-medium); }
   .newsletter-embed {
     display: block;
     width: 100%;
@@ -689,34 +1105,44 @@ ${designTokensCss(DESIGN_TOKENS)}
   .not-found ul { padding-left: var(--space-5); }
 
   /* -------------------------------------------------------------------
-     Home page
+     Home page -- left-aligned hero directly above the first category
+     group (design-standards.md's Distinctiveness Gate names a centered
+     hero over a card grid an automatic NO-GO; this also makes the
+     homepage's silhouette differ from every tool page by construction).
      ------------------------------------------------------------------- */
-  .hero { padding: var(--space-6) 0 var(--space-5); text-align: center; }
-  .hero h1 { margin-bottom: var(--space-3); }
-  .hero .deck { margin: 0 auto var(--space-2); }
-  .tool-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-    margin: var(--space-6) 0;
-  }
-  @media (min-width: 768px) { .tool-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 1440px) { .tool-grid { grid-template-columns: repeat(3, 1fr); } }
+  .hero { padding: var(--space-6) 0 var(--space-4); text-align: left; }
+  .hero h1 { margin-bottom: var(--space-3); max-width: var(--measure); }
+  .hero .deck { margin: 0; }
 
-  /* -------------------------------------------------------------------
-     Reduced motion (WCAG 2.2 SC 2.3.3) -- every transition/animation
-     declared above (skip-link reveal, dropzone drag-state change,
-     progress-fill width) is cut to near-zero for anyone who has asked
-     the OS for less motion, rather than left at its normal duration.
-     ------------------------------------------------------------------- */
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-      animation-duration: 0.001ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.001ms !important;
-      scroll-behavior: auto !important;
-    }
+  .tool-group { margin: var(--space-7) 0; padding: var(--space-4); border-radius: var(--radius-lg); }
+  .tool-group h2 { margin-top: 0; margin-bottom: var(--space-4); }
+
+  .tool-list { display: flex; flex-direction: column; }
+  @media (min-width: 768px) {
+    .tool-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 var(--space-6); }
   }
+  .tool-row {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-3) 0;
+    border-bottom: var(--border-hairline) solid var(--color-border);
+    text-decoration: none;
+    color: var(--color-text);
+    min-height: 44px;
+  }
+  .tool-list > .tool-row:last-child,
+  .tool-list > .tool-row:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+  .tool-row:hover .tool-row-name { color: var(--color-accent); }
+  .tool-row-icon { width: var(--icon-md); height: var(--icon-md); flex-shrink: 0; margin-top: 2px; }
+  .tool-row-text { display: flex; flex-direction: column; gap: 2px; }
+  .tool-row-name {
+    font-family: var(--font-display);
+    font-weight: var(--weight-bold);
+    font-size: var(--text-md);
+    color: var(--color-text);
+  }
+  .tool-row-desc { font-size: var(--text-sm); color: var(--color-muted); }
 `;
 
-module.exports = { SITE_CSS };
+module.exports = { SITE_CSS, FONT_WOFF2_URL };

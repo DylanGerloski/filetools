@@ -20,7 +20,7 @@ test('renderRssXml produces a well-formed RSS 2.0 document, one <item> per tool,
   const splitIndex = xml.indexOf('Split PDF');
   const mergeIndex = xml.indexOf('Merge PDF');
   assert.ok(splitIndex < mergeIndex, 'newest tool should appear first');
-  assert.match(xml, /<link>https:\/\/dylangerloski\.github\.io\/filetools\/pdf\/split-pdf\/<\/link>/);
+  assert.match(xml, /<link>https:\/\/usefiletools\.com\/pdf\/split-pdf\/<\/link>/);
 });
 
 test('renderRssXml escapes special characters so the output stays well-formed XML', () => {

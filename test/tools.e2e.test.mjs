@@ -203,6 +203,80 @@ test('a dynamic-import failure surfaces a human-readable message, never a raw fe
   await page.close();
 });
 
+test('merge-pdf: selecting only one file shows a friendly "choose two or more" message, not a crash', async () => {
+  // Boundary case for runMerge's own length check (files.length < 2) --
+  // multiple selection is allowed for this tool, but a visitor can still
+  // pick just one file (or remove down to one). Never previously exercised.
+  const page = await browser.newPage({ acceptDownloads: true });
+  const errors = collectPageErrors(page);
+
+  await page.goto(`${baseUrl}pdf/merge-pdf/`, { waitUntil: 'networkidle' });
+  await page.locator('#file-input').setInputFiles(path.join(TMP, 'a.pdf'));
+
+  await page.waitForFunction(() => {
+    const el = document.querySelector('.dz-status');
+    return el && /choose two or more/i.test(el.textContent || '');
+  }, { timeout: 5000 });
+
+  const statusText = await page.locator('.dz-status').textContent();
+  assert.match(statusText, /choose two or more pdf files to merge/i);
+  assert.equal(await page.locator('.file-list').count(), 0, 'no merge-order UI should render for a single file');
+  assert.deepEqual(errors, []);
+  await page.close();
+});
+
+test('merge-pdf: a corrupt/non-PDF file among the selection is reported by name, without crashing the page', async () => {
+  // loadPdfLibDoc's "doesn't look like a valid PDF" branch (pdfPages.client.js)
+  // had no test coverage at all before this -- only the analogous xlsx/yaml
+  // "not really a workbook"/"invalid" error paths were exercised elsewhere.
+  const page = await browser.newPage({ acceptDownloads: true });
+  const errors = collectPageErrors(page);
+
+  const garbagePath = path.join(TMP, 'garbage.pdf');
+  fs.writeFileSync(garbagePath, Buffer.from('this is not a pdf file, just plain text pretending to be one'));
+
+  await page.goto(`${baseUrl}pdf/merge-pdf/`, { waitUntil: 'networkidle' });
+  await page.locator('#file-input').setInputFiles([path.join(TMP, 'a.pdf'), garbagePath]);
+  await page.waitForSelector('.file-list .file-row');
+  assert.equal(await page.locator('.file-list .file-row').count(), 2);
+
+  await page.locator('button:has-text("Merge PDFs")').click();
+  await page.waitForFunction(() => {
+    const el = document.querySelector('.dz-status');
+    return el && /doesn.t look like a valid pdf/i.test(el.textContent || '');
+  }, { timeout: 15000 });
+
+  const statusText = await page.locator('.dz-status').textContent();
+  assert.match(statusText, /"garbage\.pdf" doesn.t look like a valid pdf/i);
+  assert.deepEqual(errors, [], 'a corrupt file should produce a friendly status message, never an uncaught page error');
+  await page.close();
+});
+
+test('split-pdf: a corrupt/non-PDF file is reported by name at selection time, never reaches the page grid', async () => {
+  // Same untested error branch as above, but split-pdf's own code path:
+  // the pdf.js render-thumbnails step (runSplit), which fails independently
+  // of pdf-lib's loadPdfLibDoc used by merge/rotate's own initial catch.
+  const page = await browser.newPage({ acceptDownloads: true });
+  const errors = collectPageErrors(page);
+
+  const garbagePath = path.join(TMP, 'garbage2.pdf');
+  fs.writeFileSync(garbagePath, Buffer.from('also not a real pdf'));
+
+  await page.goto(`${baseUrl}pdf/split-pdf/`, { waitUntil: 'networkidle' });
+  await page.locator('#file-input').setInputFiles(garbagePath);
+
+  await page.waitForFunction(() => {
+    const el = document.querySelector('.dz-status');
+    return el && /doesn.t look like a valid pdf/i.test(el.textContent || '');
+  }, { timeout: 15000 });
+
+  const statusText = await page.locator('.dz-status').textContent();
+  assert.match(statusText, /"garbage2\.pdf" doesn.t look like a valid pdf/i);
+  assert.equal(await page.locator('.page-grid .page-card').count(), 0, 'no page thumbnails should render for an unparseable file');
+  assert.deepEqual(errors, []);
+  await page.close();
+});
+
 test('the word "upload" never appears inside the dropzone control itself (design-standard language rule)', async () => {
   // The rule scopes to control/status/error copy inside
   // the drop zone widget itself -- "choose", "add", "reading", etc. Plain

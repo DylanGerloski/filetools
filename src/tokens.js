@@ -37,17 +37,24 @@ const DESIGN_TOKENS = {
   '--color-accent-contrast': '#ffffff',
   '--color-accent-tint': 'rgba(11, 95, 102, 0.06)',
   '--color-border': '#d8dde5',
-  '--color-border-strong': '#9aa5b4',
+  // Darkened from the original #9aa5b4 -- that value only hit ~2.3-2.5:1
+  // against --color-bg/--color-surface, short of the 3:1 WCAG 1.4.11
+  // non-text contrast this token needs since it draws the visible boundary
+  // of .btn-secondary and the dropzone (both real interactive controls).
+  // #7b8490 clears 3:1 against both with margin (verified 2026-08-16
+  // accessibility pass).
+  '--color-border-strong': '#7b8490',
 
-  // Darkened from #1a7f4b -- the original value cleared 3:1 (non-text) but
-  // measured 4.42:1 against --color-success-bg for text use (.alert-success,
-  // .dz-status[data-tone="success"], .diff-cell-new,
-  // .diff-status-cell[data-diff-status="added"]), just under the 4.5:1 AA
-  // floor for normal-size text. #197c4a clears 4.5:1 against every
-  // background it's actually paired with sitewide: 4.60:1 vs
-  // --color-success-bg, 4.87:1 vs --color-bg, 5.22:1 vs --color-surface
-  // (measured via a real sRGB relative-luminance calc, not approximated).
-  '--color-success': '#197c4a',
+  // Darkened from the original #1a7f4b -- that value measured 4.43:1
+  // against --color-success-bg, just under the 4.5:1 WCAG AA text
+  // threshold (.alert-success, .dz-status[data-tone="success"],
+  // .diff-cell-new, .diff-status-cell[data-diff-status="added"] all render
+  // normal-size text in this color). A separate master-side pass (PR #22)
+  // independently darkened this same token to #197c4a; superseded here by
+  // #146b40, which clears 4.5:1 against every background this token is used
+  // on, with margin (verified 2026-08-16 accessibility pass, re-measured
+  // post-merge against PR #24's merged surfaces).
+  '--color-success': '#146b40',
   '--color-success-bg': '#e6f4ec',
   '--color-warn': '#8a5a00',
   '--color-warn-bg': '#fdf3e0',

@@ -85,7 +85,7 @@ function documentHead(opts) {
   <link rel="apple-touch-icon" href="${escapeHtml(url('apple-touch-icon.png'))}">
   <style>${SITE_CSS}</style>${jsonLdBlock}
   ${adsScriptTag()}
-  <script data-goatcounter="${GOATCOUNTER_URL}" async src="https://gc.zgo.at/count.js"></script>
+  <script data-goatcounter="${GOATCOUNTER_URL}" data-goatcounter-settings='{"allow_query":["utm_source","utm_medium","utm_campaign","utm_content","utm_term","ref"]}' async src="https://gc.zgo.at/count.js"></script>
 </head>`;
 }
 

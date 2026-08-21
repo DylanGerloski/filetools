@@ -15,6 +15,15 @@ repo's root - read it in full before anything else if this is the first run this
    ```
    `session-b` is the fixed agent name for this session - keep it stable across every run so
    the tier governor recognizes it as one ongoing session, not a new one each pass.
+
+   **Re-issue this same heartbeat command at every natural mid-build checkpoint**, not just
+   once here - before/after any step likely to take more than a few minutes (a test run, a
+   build, a visual-QA/Lighthouse pass, anything that runs a while). `chief_of_staff`'s reap
+   threshold is 5 minutes; a single build step running longer than that with no intervening
+   heartbeat gets this session's real in-progress work incorrectly flagged
+   `stale_for_review`/phantom-stall by the reaper - harmless (the claim survives), but it
+   costs chief-of-staff real investigation time to confirm nothing is actually stuck, every
+   single time it fires.
 3. **Pull this session's task list**, filtered to this repo's own scope:
    ```
    node "C:\Users\dylan\Dev\TheOrchestra\orchestrator\lib\cli.js" frontier --role builder --full

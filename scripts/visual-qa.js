@@ -38,7 +38,7 @@ const VIEWPORTS = [
   { name: '1440x900', width: 1440, height: 900 },
 ];
 const OUTPUT_DIR = path.join(__dirname, '..', 'visual-qa-output');
-const LIGHTHOUSE_CATEGORIES = ['performance', 'accessibility', 'seo'];
+const LIGHTHOUSE_CATEGORIES = ['performance', 'accessibility', 'best-practices', 'seo'];
 // A fixed CDP debug port for the Lighthouse pass. 0 (OS-assigned) isn't an
 // option here because Lighthouse needs to be told the port *before* Chrome
 // finishes starting; this port only needs to be free on localhost for the

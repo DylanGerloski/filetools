@@ -81,6 +81,7 @@ test('MARKS is exactly the fixed 18-row plate/verb/ink table, no more, no fewer'
     'sort-lines': { plate: 'text', verb: 'sort', ink: 'text' },
     'word-frequency-counter': { plate: 'text', verb: 'count', ink: 'text' },
     'url-encode-decode': { plate: 'text', verb: 'convert', ink: 'text' },
+    'base64-encode-decode': { plate: 'text', verb: 'convert', ink: 'text' },
   });
 });
 

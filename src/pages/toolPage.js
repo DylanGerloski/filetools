@@ -29,6 +29,7 @@ const MAX_BYTES_BY_CLIENT = {
   csvDiff: 20 * 1024 * 1024,
   splitCsv: 20 * 1024 * 1024,
   transposeCsv: 20 * 1024 * 1024,
+  wordFrequency: 20 * 1024 * 1024,
 };
 const DEFAULT_MAX_BYTES = 20 * 1024 * 1024;
 

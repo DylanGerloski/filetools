@@ -127,6 +127,11 @@ const VERB_PATHS = {
   sort: `<path ${PIP_STROKE} d="M21 21.8 26.5 21.8M21 24.5 25 24.5M21 27.2 23.5 27.2M27.6 21.3V27.3M26.1 25.8 27.6 27.3 29.1 25.8"/>`,
   transpose: `<path ${PIP_STROKE} d="M21.3 22.5 25.5 22.5 25.5 27.3M24.3 26.1 25.5 27.3 26.7 26.1"/>`,
   flatten: `<path ${PIP_STROKE} d="M21.7 23.3 23.2 21.5 24.7 23.3M25.3 23.3 26.8 21.5 28.3 23.3M21.7 27.3 28.3 27.3"/>`,
+  // Word-frequency-counter's verb: three descending bars on a shared
+  // baseline, reading as a mini ranked bar chart -- tallest bar first,
+  // shortest last -- the same shape the tool's own frequency table has
+  // (most-frequent word first).
+  count: `<path ${PIP_STROKE} d="M22 27V21.7M25 27V24M28 27V25.8"/>`,
 };
 
 /**
@@ -158,6 +163,7 @@ const MARKS = {
 
   'remove-duplicate-lines': { plate: 'text', verb: 'dedupe', ink: 'text' },
   'sort-lines': { plate: 'text', verb: 'sort', ink: 'text' },
+  'word-frequency-counter': { plate: 'text', verb: 'count', ink: 'text' },
 };
 
 // Never hit for a real registry slug (test/icons.test.mjs asserts that) --

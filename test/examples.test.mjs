@@ -20,6 +20,7 @@ import { convertFixture as xlsxToJsonFixture } from '../src/examples/xlsx-to-jso
 import { extractFixture as pdfToCsvFixture } from '../src/examples/pdf-to-csv.mjs';
 import { mergeFixture as statementFixture } from '../src/examples/bank-statement-to-csv.mjs';
 import { gridFixture as xlsxToCsvFixture } from '../src/examples/xlsx-to-csv.mjs';
+import { encodeFixture as base64Fixture } from '../src/examples/base64-encode-decode.mjs';
 import { SITE_CSS } from '../src/css.js';
 
 /**
@@ -397,4 +398,19 @@ test('xlsx-to-csv example: the rendered HTML shows "Region" as both the first an
   const html = exampleFor('xlsx-to-csv');
   assert.ok(html.includes('<th scope="col">Region</th><th scope="col">Region</th><th scope="col"></th>'));
   assert.equal((html.match(/<tr><td>/g) || []).length, 3);
+});
+
+test('base64-encode-decode example: the fixture encodes to the real Base64 of the UTF-8 text, including the accented character', () => {
+  const encoded = base64Fixture();
+  assert.equal(encoded, 'ZmlsZXRvb2xzOiBjYWbDqSBlZGl0aW9u');
+  // Round-trip through the browser's own atob() as an independent check
+  // that this isn't just re-asserting whatever the tool's own codec
+  // produced.
+  assert.equal(Buffer.from(encoded, 'base64').toString('utf8'), 'filetools: café edition');
+});
+
+test('base64-encode-decode example: the rendered HTML shows the input text and the output Base64', () => {
+  const html = exampleFor('base64-encode-decode');
+  assert.ok(html.includes('filetools: caf'));
+  assert.ok(html.includes('ZmlsZXRvb2xzOiBjYWbDqSBlZGl0aW9u'));
 });

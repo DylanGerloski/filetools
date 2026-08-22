@@ -48,6 +48,7 @@ const FAMILY_BY_SLUG = {
   'sort-lines': 'text',
   'word-frequency-counter': 'text',
   'url-encode-decode': 'text',
+  'base64-encode-decode': 'text',
 };
 
 const DEFAULT_FAMILY = 'text';

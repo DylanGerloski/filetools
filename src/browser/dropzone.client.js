@@ -79,6 +79,7 @@ if (toolSection) {
     wordFrequency: () => import('./wordFrequency.client.js'),
     urlEncode: () => import('./urlEncode.client.js'),
     base64: () => import('./base64.client.js'),
+    htmlEntity: () => import('./htmlEntity.client.js'),
   };
 
   // Per-tool file-size cap, checked before a file ever reaches its
@@ -109,6 +110,7 @@ if (toolSection) {
     wordFrequency: 20 * 1024 * 1024, // plain text, tokenized and held in memory as a Map of counts
     urlEncode: 20 * 1024 * 1024, // plain text, encoded/decoded and held in memory for both panels
     base64: 15 * 1024 * 1024, // encoded output runs ~4/3 larger, plus a live textarea preview
+    htmlEntity: 20 * 1024 * 1024, // plain text, held in memory to encode/decode and preview
   };
   const DEFAULT_MAX_BYTES = 20 * 1024 * 1024;
 
@@ -133,6 +135,7 @@ if (toolSection) {
     wordFrequency: { name: 'pasted-text.txt', type: 'text/plain' },
     urlEncode: { name: 'pasted-input.txt', type: 'text/plain' },
     base64: { name: 'pasted-input.txt', type: 'text/plain' },
+    htmlEntity: { name: 'pasted-input.txt', type: 'text/plain' },
   };
 
   let processorPromise = null;

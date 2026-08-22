@@ -32,6 +32,7 @@ const MAX_BYTES_BY_CLIENT = {
   wordFrequency: 20 * 1024 * 1024,
   urlEncode: 20 * 1024 * 1024,
   base64: 15 * 1024 * 1024,
+  htmlEntity: 20 * 1024 * 1024,
 };
 const DEFAULT_MAX_BYTES = 20 * 1024 * 1024;
 

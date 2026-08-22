@@ -649,6 +649,25 @@ ${designTokensCss(DESIGN_TOKENS)}
     margin-top: var(--space-4);
   }
 
+  /* Two live result panels side by side (URL encode/decode --
+     src/browser/urlEncode.client.js's encoded/decoded pair). Stacked by
+     default; side by side only at >=1024px, the same breakpoint and
+     stacked-first reasoning .how-band and .example-before-after already
+     use above, so a wide encoded or decoded string never has to share less
+     than half the viewport width until there is room to spare. */
+  .dual-result-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  @media (min-width: 1024px) {
+    .dual-result-row {
+      flex-direction: row;
+      align-items: start;
+    }
+    .dual-result-row > .table-block { flex: 1 1 0; min-width: 0; }
+  }
+
   /* -------------------------------------------------------------------
      Cell-level CSV diff table (compare-csv --
      src/browser/csvDiff.client.js). Row-level tint from a shared

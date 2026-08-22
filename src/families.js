@@ -47,6 +47,7 @@ const FAMILY_BY_SLUG = {
   'remove-duplicate-lines': 'text',
   'sort-lines': 'text',
   'word-frequency-counter': 'text',
+  'url-encode-decode': 'text',
 };
 
 const DEFAULT_FAMILY = 'text';

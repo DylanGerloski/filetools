@@ -48,5 +48,5 @@ module.exports = {
       answerHtml: 'By default, blank lines are deduped like any other line - five blank lines in a row become one. Turn on “skip blank lines” to remove all of them from the output instead.',
     },
   ],
-  relatedSlugs: ['html-table-to-csv', 'pdf-to-csv', 'bank-statement-to-csv'],
+  relatedSlugs: ['html-table-to-csv', 'pdf-to-csv', 'bank-statement-to-csv', 'url-encode-decode'],
 };

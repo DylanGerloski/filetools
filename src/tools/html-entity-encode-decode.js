@@ -12,6 +12,12 @@ module.exports = {
   metaDescription: 'Encode text to HTML entities or decode HTML entities back to plain text, free and in your browser. No upload, no sign-up.',
   deck: 'Paste text or entity-encoded markup and convert it either direction: escape the characters that are meaningful in HTML, or decode named and numeric entities back to plain text. Nothing is sent anywhere.',
   clientEntry: 'htmlEntity',
+  // Registration fragment -- see pdf-merge.js's comment above its own
+  // `family` field for what these mean and how they're assembled.
+  family: 'text',
+  mark: { verb: 'convert' },
+  maxBytes: 20 * 1024 * 1024,
+  pasteFile: { name: 'pasted-input.txt', type: 'text/plain' },
   mode: 'html-entity',
   fileTypeLabel: 'text or HTML file',
   accepts: '.txt,.html,.htm,text/plain,text/html',

@@ -12,6 +12,12 @@ module.exports = {
   metaDescription: 'Paste text or a URL and get both the percent-encoded and decoded versions instantly, free and in your browser. No upload, no sign-up.',
   deck: 'Paste any text, query string, or URL and see the percent-encoded and decoded versions side by side, updated instantly. Nothing is sent anywhere.',
   clientEntry: 'urlEncode',
+  // Registration fragment -- see pdf-merge.js's comment above its own
+  // `family` field for what these mean and how they're assembled.
+  family: 'text',
+  mark: { verb: 'convert' },
+  maxBytes: 20 * 1024 * 1024,
+  pasteFile: { name: 'pasted-input.txt', type: 'text/plain' },
   mode: 'url-encode-decode',
   fileTypeLabel: 'text file',
   accepts: '.txt,text/plain',

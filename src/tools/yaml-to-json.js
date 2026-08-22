@@ -12,6 +12,12 @@ module.exports = {
   metaDescription: 'Paste a YAML document or drop a .yaml/.yml file and get JSON back, free and in your browser. No upload, no sign-up.',
   deck: 'Paste YAML, or drop a .yaml/.yml file, and download it as pretty-printed JSON. Nothing is sent anywhere.',
   clientEntry: 'yamlToJson',
+  // Registration fragment -- see pdf-merge.js's comment above its own
+  // `family` field for what these mean and how they're assembled.
+  family: 'json',
+  mark: { verb: 'convert', ink: 'json' },
+  maxBytes: 20 * 1024 * 1024,
+  pasteFile: { name: 'pasted-input.yaml', type: 'application/yaml' },
   mode: 'yaml-to-json',
   fileTypeLabel: 'YAML file',
   accepts: '.yaml,.yml,application/yaml,text/yaml,text/plain',

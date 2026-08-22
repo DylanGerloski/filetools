@@ -12,6 +12,12 @@ module.exports = {
   metaDescription: 'Paste a list or drop a .txt/.csv file and get it back sorted by any column, ascending or descending, free and in your browser.',
   deck: 'Paste a list, or drop a .txt or .csv file, and download it back sorted - pick the column, numeric or alphabetic, ascending or descending. Nothing is sent anywhere.',
   clientEntry: 'sortLines',
+  // Registration fragment -- see pdf-merge.js's comment above its own
+  // `family` field for what these mean and how they're assembled.
+  family: 'text',
+  mark: { verb: 'sort', ink: 'text' },
+  maxBytes: 20 * 1024 * 1024,
+  pasteFile: { name: 'pasted-list.txt', type: 'text/plain' },
   mode: 'sort-lines',
   fileTypeLabel: 'text or CSV file',
   accepts: '.txt,.csv,text/plain,text/csv',

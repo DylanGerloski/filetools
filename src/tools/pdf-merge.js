@@ -14,6 +14,33 @@ module.exports = {
   metaDescription: 'Combine multiple PDFs into one file, free, with no upload and no sign-up. Reorder pages before merging. Your files never leave your device.',
   deck: 'Combine two or more PDFs into a single file. Drag to reorder before merging. Nothing is uploaded.',
   clientEntry: 'pdfPages',
+  // Registration fragment (2026-08-22 fragment-pattern refactor): this
+  // tool's own row in what used to be four hand-maintained shared maps
+  // (src/families.js's FAMILY_BY_SLUG, src/icons.js's MARKS,
+  // src/pages/toolPage.js + src/browser/dropzone.client.js's
+  // MAX_BYTES_BY_CLIENT/PASTE_FILE). src/families.js/icons.js/
+  // browserClients.js now assemble those structures FROM the TOOLS
+  // registry (src/tools/index.js already auto-discovers this file) --
+  // see those three files' own header comments for the assembly step and
+  // src/browser/dropzone.client.js's comment for why the browser-facing
+  // maps are generated at build time instead. A new tool adds its own
+  // src/tools/<slug>.js with these same fields; no existing tool's file
+  // changes, so two tool branches can never conflict here.
+  //   family: this tool's presentational family (families.js's
+  //     familyOf() rule: input format's family, else output's).
+  //   mark: { verb, ink?, motif? } -- icons.js's per-slug MARKS row,
+  //     minus `plate` (always === family, see icons.js). `ink` defaults
+  //     to `family` when omitted (a same-family tool like this one).
+  //   maxBytes: this tool's clientEntry's per-file size cap. Every other
+  //     tool sharing this same clientEntry (pdf-split.js, pdf-rotate.js)
+  //     must declare the identical value -- browserClients.js asserts
+  //     that at build time so a mismatch fails loudly, not silently.
+  //   pasteFile: only present on a tool with `pasteInput` below --
+  //     name/type of the synthetic File a pasted submission is wrapped
+  //     in before it reaches this clientEntry's processor.
+  family: 'pdf',
+  mark: { verb: 'merge', ink: 'pdf' },
+  maxBytes: 200 * 1024 * 1024,
   mode: 'merge',
   accepts: 'application/pdf',
   multiple: true,

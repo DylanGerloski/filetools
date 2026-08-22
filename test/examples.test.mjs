@@ -15,6 +15,7 @@ import { convertFixture as jsonToCsvFixture } from '../src/examples/json-to-csv.
 import { convertFixture as htmlTableToCsvFixture } from '../src/examples/html-table-to-csv.mjs';
 import { convertFixture as yamlToJsonFixture } from '../src/examples/yaml-to-json.mjs';
 import { encodeFixture as urlEncodeFixture, FIXTURE_TEXT as URL_ENCODE_FIXTURE_TEXT } from '../src/examples/url-encode-decode.mjs';
+import { convertFixture as htmlEntityFixture } from '../src/examples/html-entity-encode-decode.mjs';
 import { flattenFixture } from '../src/examples/flatten-json.mjs';
 import { convertFixture as xlsxToJsonFixture } from '../src/examples/xlsx-to-json.mjs';
 import { extractFixture as pdfToCsvFixture } from '../src/examples/pdf-to-csv.mjs';
@@ -306,6 +307,22 @@ test('url-encode-decode example: the rendered HTML shows the raw input and the p
   const html = exampleFor('url-encode-decode');
   assert.ok(html.includes('café &amp; code'), 'expected the raw fixture text (with & escaped) in the Input block');
   assert.ok(html.includes('caf%C3%A9%20%26%20code'));
+});
+
+test('html-entity-encode-decode example: the fixture escapes exactly the five reserved characters, using default (named) format', () => {
+  const outcome = htmlEntityFixture();
+  assert.equal(outcome.output, 'Tom &amp; Jerry&apos;s café &lt;b&gt;bold&lt;/b&gt; &quot;quote&quot;');
+  assert.equal(outcome.encodedCount, 8);
+});
+
+test('html-entity-encode-decode example: the accented letter is left untouched (default scope is "reserved", not "all-non-ascii")', () => {
+  const outcome = htmlEntityFixture();
+  assert.ok(outcome.output.includes('café'), 'café should appear literally, not as an entity, under the default scope');
+});
+
+test('html-entity-encode-decode example: the rendered HTML shows the raw input and the real encoded output', () => {
+  const html = exampleFor('html-entity-encode-decode');
+  assert.ok(html.includes('Tom &amp;amp; Jerry&amp;apos;s café &amp;lt;b&amp;gt;bold&amp;lt;/b&amp;gt; &amp;quot;quote&amp;quot;'), 'the encoded output, itself HTML-escaped for safe display in a <pre><code> block, should appear in the rendered example');
 });
 
 test('flatten-json example: the fixture flattens nested customer objects into dot-notation keys', () => {

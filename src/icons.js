@@ -166,6 +166,7 @@ const MARKS = {
   'word-frequency-counter': { plate: 'text', verb: 'count', ink: 'text' },
   'url-encode-decode': { plate: 'text', verb: 'convert', ink: 'text' },
   'base64-encode-decode': { plate: 'text', verb: 'convert', ink: 'text' },
+  'html-entity-encode-decode': { plate: 'text', verb: 'convert', ink: 'text' },
 };
 
 // Never hit for a real registry slug (test/icons.test.mjs asserts that) --

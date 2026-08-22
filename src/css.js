@@ -618,6 +618,27 @@ ${designTokensCss(DESIGN_TOKENS)}
     color: var(--color-text);
     white-space: pre;
   }
+  /* Read-only encode/decode result (HTML entity encoder/decoder --
+     src/browser/htmlEntity.client.js). Same monospace/scroll-box treatment
+     as .json-preview above, but wraps long lines instead of scrolling
+     horizontally -- encoded output is often one very long line with no
+     natural break points (a wall of "&#NNNN;" entities), unlike JSON's own
+     line-structured text where horizontal scroll is the better tradeoff. */
+  .entity-output {
+    max-height: 480px;
+    overflow: auto;
+    margin: var(--space-4) 0 0;
+    padding: var(--space-3);
+    background: var(--color-surface-alt);
+    border: var(--border-hairline) solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    color: var(--color-text);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
   .row-action-cell { width: 44px; text-align: center; }
   .boundary-editor { margin-top: var(--space-4); }
   .boundary-list {

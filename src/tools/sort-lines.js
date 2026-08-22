@@ -52,5 +52,5 @@ module.exports = {
       answerHtml: 'Yes, a field like <code>"Smith, John"</code> is treated as one column, not split on the comma inside the quotes. The one case this doesn’t handle is a quoted field containing a line break - that row is read as more than one line, the same way a plain text editor would show it.',
     },
   ],
-  relatedSlugs: ['remove-duplicate-lines', 'html-table-to-csv', 'pdf-to-csv'],
+  relatedSlugs: ['remove-duplicate-lines', 'html-table-to-csv', 'word-frequency-counter'],
 };

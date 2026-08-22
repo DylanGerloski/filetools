@@ -76,6 +76,7 @@ if (toolSection) {
     csvDiff: () => import('./csvDiff.client.js'),
     splitCsv: () => import('./splitCsv.client.js'),
     transposeCsv: () => import('./transposeCsv.client.js'),
+    wordFrequency: () => import('./wordFrequency.client.js'),
   };
 
   // Per-tool file-size cap, checked before a file ever reaches its
@@ -103,6 +104,7 @@ if (toolSection) {
     csvDiff: 20 * 1024 * 1024, // two CSVs, both held in memory to diff
     splitCsv: 20 * 1024 * 1024, // whole CSV held in memory to chunk and zip
     transposeCsv: 20 * 1024 * 1024, // whole CSV held in memory to flip
+    wordFrequency: 20 * 1024 * 1024, // plain text, tokenized and held in memory as a Map of counts
   };
   const DEFAULT_MAX_BYTES = 20 * 1024 * 1024;
 
@@ -124,6 +126,7 @@ if (toolSection) {
     yamlToJson: { name: 'pasted-input.yaml', type: 'application/yaml' },
     splitCsv: { name: 'pasted-input.csv', type: 'text/csv' },
     transposeCsv: { name: 'pasted-input.csv', type: 'text/csv' },
+    wordFrequency: { name: 'pasted-text.txt', type: 'text/plain' },
   };
 
   let processorPromise = null;

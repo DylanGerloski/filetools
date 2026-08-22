@@ -86,11 +86,21 @@ function pdfMotif(variant) {
   return fold + topLine + lowerLine;
 }
 
-function jsonMotif() {
-  const open = `<path d="M9.5 9c-2 0-2.5 1.2-2.5 2.8v2.2c0 1-.5 1.7-1.5 2 1 .3 1.5 1 1.5 2v2.2c0 1.6.5 2.8 2.5 2.8" ${MOTIF_STROKE}/>`;
-  const close = `<path d="M14.5 9c2 0 2.5 1.2 2.5 2.8v2.2c0 1 .5 1.7 1.5 2-1 .3-1.5 1-1.5 2v2.2c0 1.6-.5 2.8-2.5 2.8" ${MOTIF_STROKE}/>`;
+/**
+ * @param {'default'|'xml'} variant `xml` (xml-to-json) swaps the curly-
+ *   brace strokes for an angle-bracket pair -- a json plate whose INPUT is
+ *   XML markup, not already-JSON data, distinguishing it from
+ *   yaml-to-json (which would otherwise render an identical
+ *   json/convert/json mark -- same "two near-duplicate marks" reasoning
+ *   csvMotif's `html` variant documents above for html-table-to-csv).
+ */
+function jsonMotif(variant) {
+  const brackets = variant === 'xml'
+    ? `<path d="M10.5 9.5 7 16 10.5 22.5M13.5 9.5 17 16 13.5 22.5" ${MOTIF_STROKE}/>`
+    : `<path d="M9.5 9c-2 0-2.5 1.2-2.5 2.8v2.2c0 1-.5 1.7-1.5 2 1 .3 1.5 1 1.5 2v2.2c0 1.6.5 2.8 2.5 2.8" ${MOTIF_STROKE}/>`
+      + `<path d="M14.5 9c2 0 2.5 1.2 2.5 2.8v2.2c0 1 .5 1.7 1.5 2-1 .3-1.5 1-1.5 2v2.2c0 1.6-.5 2.8-2.5 2.8" ${MOTIF_STROKE}/>`;
   const dot = `<circle cx="12" cy="16.5" r="1" fill="${SURFACE}"/>`;
-  return open + close + dot;
+  return brackets + dot;
 }
 
 function sheetMotif() {
@@ -157,6 +167,7 @@ const MARKS = {
   'json-to-csv': { plate: 'json', verb: 'convert', ink: 'csv' },
   'flatten-json': { plate: 'json', verb: 'flatten', ink: 'json' },
   'yaml-to-json': { plate: 'json', verb: 'convert', ink: 'json' },
+  'xml-to-json': { plate: 'json', verb: 'convert', ink: 'json', motif: 'xml' },
 
   'xlsx-to-csv': { plate: 'sheet', verb: 'convert', ink: 'csv' },
   'xlsx-to-json': { plate: 'sheet', verb: 'convert', ink: 'json' },

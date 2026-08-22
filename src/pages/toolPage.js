@@ -24,6 +24,7 @@ const MAX_BYTES_BY_CLIENT = {
   xlsxToCsv: 25 * 1024 * 1024,
   xlsxToJson: 20 * 1024 * 1024,
   yamlToJson: 20 * 1024 * 1024,
+  xmlToJson: 20 * 1024 * 1024,
   jsonToCsv: 20 * 1024 * 1024,
   csvMerge: 20 * 1024 * 1024,
   csvDiff: 20 * 1024 * 1024,

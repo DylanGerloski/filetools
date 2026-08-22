@@ -12,6 +12,12 @@ module.exports = {
   metaDescription: 'Paste a list or drop a .txt/.csv file and get it back with duplicate lines removed, free and in your browser. No upload, no sign-up.',
   deck: 'Paste a list, or drop a .txt or .csv file, and download it back with every duplicate line removed. Nothing is sent anywhere.',
   clientEntry: 'dedupeLines',
+  // Registration fragment -- see pdf-merge.js's comment above its own
+  // `family` field for what these mean and how they're assembled.
+  family: 'text',
+  mark: { verb: 'dedupe', ink: 'text' },
+  maxBytes: 20 * 1024 * 1024,
+  pasteFile: { name: 'pasted-list.txt', type: 'text/plain' },
   mode: 'dedupe-lines',
   fileTypeLabel: 'text or CSV file',
   accepts: '.txt,.csv,text/plain,text/csv',

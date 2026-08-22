@@ -6,35 +6,18 @@ const { toolBySlug } = require('../tools/index.js');
 const { url, absoluteUrl } = require('../site.js');
 const { markFor } = require('../icons.js');
 const { familyOf } = require('../families.js');
+const { assembleBrowserClients } = require('../browserClients.js');
 
-// Kept in sync BY HAND with src/browser/dropzone.client.js's own
-// MAX_BYTES_BY_CLIENT/DEFAULT_MAX_BYTES (this file is Node/CommonJS
-// build-time code, that one is a browser ES module copied verbatim into
-// dist/ -- see src/build.js -- so there's no single runtime-shared module
-// today). Only used here to render an honest per-tool caption; the actual
-// enforcement is dropzone.client.js's job. If you change one, change both.
-const MAX_BYTES_BY_CLIENT = {
-  pdfPages: 200 * 1024 * 1024,
-  pdfTables: 100 * 1024 * 1024,
-  statementToCsv: 100 * 1024 * 1024,
-  htmlTableToCsv: 20 * 1024 * 1024,
-  dedupeLines: 20 * 1024 * 1024,
-  sortLines: 20 * 1024 * 1024,
-  flattenJson: 20 * 1024 * 1024,
-  xlsxToCsv: 25 * 1024 * 1024,
-  xlsxToJson: 20 * 1024 * 1024,
-  yamlToJson: 20 * 1024 * 1024,
-  xmlToJson: 20 * 1024 * 1024,
-  jsonToCsv: 20 * 1024 * 1024,
-  csvMerge: 20 * 1024 * 1024,
-  csvDiff: 20 * 1024 * 1024,
-  splitCsv: 20 * 1024 * 1024,
-  transposeCsv: 20 * 1024 * 1024,
-  wordFrequency: 20 * 1024 * 1024,
-  urlEncode: 20 * 1024 * 1024,
-  base64: 15 * 1024 * 1024,
-  htmlEntity: 20 * 1024 * 1024,
-};
+// Assembled (2026-08-22 fragment-pattern refactor) from each tool's own
+// `maxBytes` field (src/browserClients.js), the same source
+// src/build.js's generated dropzone.registry.generated.js draws its own
+// copy of this map from -- see that file's header comment for why the
+// browser-facing copy still has to be generated separately rather than
+// shared as one runtime module (this file is Node/CommonJS build-time
+// code; the browser copy is a plain ES module with no bundler). Only used
+// here to render an honest per-tool caption; the actual enforcement is
+// dropzone.client.js's job.
+const { MAX_BYTES_BY_CLIENT } = assembleBrowserClients();
 const DEFAULT_MAX_BYTES = 20 * 1024 * 1024;
 
 function formatMb(bytes) {

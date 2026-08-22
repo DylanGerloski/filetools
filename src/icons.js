@@ -34,6 +34,7 @@
  */
 
 const { familyOf } = require('./families.js');
+const { TOOLS } = require('./tools/index.js');
 
 const SURFACE = 'var(--color-surface)';
 const MOTIF_STROKE = `stroke="${SURFACE}" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" fill="none"`;
@@ -150,35 +151,19 @@ const VERB_PATHS = {
  * family for a converter, so the pip literally reads "becomes"). `motif`
  * names one of the two special-case plate variants -- a swapped motif
  * detail on an existing plate, never a whole new plate.
+ *
+ * Assembled (2026-08-22 fragment-pattern refactor), not hand-typed: each
+ * row now lives as the `mark` field on that tool's own
+ * src/tools/<slug>.js (`plate` is never declared there since it's always
+ * === that tool's own `family`, see pdf-merge.js's comment above its own
+ * `family` field, and test/icons.test.mjs's own consistency check below).
+ * A newly merged tool adds its own file; no existing file, this one
+ * included, changes.
  */
-const MARKS = {
-  'merge-pdf': { plate: 'pdf', verb: 'merge', ink: 'pdf' },
-  'split-pdf': { plate: 'pdf', verb: 'split', ink: 'pdf' },
-  'rotate-pdf': { plate: 'pdf', verb: 'rotate', ink: 'pdf' },
-  'pdf-to-csv': { plate: 'pdf', verb: 'convert', ink: 'csv' },
-  'bank-statement-to-csv': { plate: 'pdf', verb: 'convert', ink: 'csv', motif: 'bank' },
-
-  'merge-csv': { plate: 'csv', verb: 'merge', ink: 'csv' },
-  'compare-csv': { plate: 'csv', verb: 'compare', ink: 'csv' },
-  'split-csv': { plate: 'csv', verb: 'split', ink: 'csv' },
-  'transpose-csv': { plate: 'csv', verb: 'transpose', ink: 'csv' },
-  'html-table-to-csv': { plate: 'csv', verb: 'convert', ink: 'csv', motif: 'html' },
-
-  'json-to-csv': { plate: 'json', verb: 'convert', ink: 'csv' },
-  'flatten-json': { plate: 'json', verb: 'flatten', ink: 'json' },
-  'yaml-to-json': { plate: 'json', verb: 'convert', ink: 'json' },
-  'xml-to-json': { plate: 'json', verb: 'convert', ink: 'json', motif: 'xml' },
-
-  'xlsx-to-csv': { plate: 'sheet', verb: 'convert', ink: 'csv' },
-  'xlsx-to-json': { plate: 'sheet', verb: 'convert', ink: 'json' },
-
-  'remove-duplicate-lines': { plate: 'text', verb: 'dedupe', ink: 'text' },
-  'sort-lines': { plate: 'text', verb: 'sort', ink: 'text' },
-  'word-frequency-counter': { plate: 'text', verb: 'count', ink: 'text' },
-  'url-encode-decode': { plate: 'text', verb: 'convert', ink: 'text' },
-  'base64-encode-decode': { plate: 'text', verb: 'convert', ink: 'text' },
-  'html-entity-encode-decode': { plate: 'text', verb: 'convert', ink: 'text' },
-};
+const MARKS = Object.fromEntries(TOOLS.map((t) => [
+  t.slug,
+  { plate: t.family, verb: t.mark.verb, ink: t.mark.ink || t.family, ...(t.mark.motif ? { motif: t.mark.motif } : {}) },
+]));
 
 // Never hit for a real registry slug (test/icons.test.mjs asserts that) --
 // exists only so an unmapped/new slug fails safe instead of throwing.

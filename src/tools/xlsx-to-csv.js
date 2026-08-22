@@ -12,6 +12,11 @@ module.exports = {
   metaDescription: 'Turn an .xlsx spreadsheet into a CSV file for every sheet it contains, free and in your browser. No upload, no sign-up, no Excel needed.',
   deck: 'Drop an .xlsx workbook and get a real, correctable preview of every sheet it contains, then download each one as CSV. Nothing is sent anywhere.',
   clientEntry: 'xlsxToCsv',
+  // Registration fragment -- see pdf-merge.js's comment above its own
+  // `family` field for what these mean and how they're assembled.
+  family: 'sheet',
+  mark: { verb: 'convert', ink: 'csv' },
+  maxBytes: 25 * 1024 * 1024,
   mode: 'xlsx',
   fileTypeLabel: '.xlsx file',
   accepts: '.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

@@ -14,6 +14,20 @@
 // or error string here. Nothing this site does is actually an upload (the
 // whole point is that files never leave the device), so using that word in
 // the UI would be actively misleading, not just off-brand.
+//
+// PROCESSORS/MAX_BYTES_BY_CLIENT/PASTE_FILE (2026-08-22 fragment-pattern
+// refactor): these three maps used to be hand-typed consts right here, one
+// line added per new tool to each of them. They're now generated at build
+// time (src/build.js's writeDropzoneRegistry(), from each tool's own
+// clientEntry/maxBytes/pasteFile fields -- see src/tools/pdf-merge.js's
+// comment above its own `family` field, and src/browserClients.js) into
+// dropzone.registry.generated.js, a sibling module written alongside this
+// file's own copy into dist/js/ -- never checked into git, exactly like
+// every other file under dist/. This file itself still needs zero build
+// step to run in a browser; only its generated sibling is codegen'd. A
+// newly merged tool adds its own src/tools/<slug>.js; this file (the
+// hand-authored controller logic) never changes.
+import { PROCESSORS, MAX_BYTES_BY_CLIENT, PASTE_FILE } from './dropzone.registry.generated.js';
 
 const toolSection = document.getElementById('tool');
 if (toolSection) {
@@ -56,90 +70,18 @@ if (toolSection) {
     });
   }
 
-  // Known, closed set of processor modules -- an explicit map rather than a
-  // template-string import(`./${clientEntry}.client.js`) so an unexpected
-  // or malformed data-client value fails loudly (see the catch in
-  // handleFileList) instead of silently attempting an arbitrary import.
-  const PROCESSORS = {
-    pdfPages: () => import('./pdfPages.client.js'),
-    pdfTables: () => import('./pdfTables.client.js'),
-    statementToCsv: () => import('./statementToCsv.client.js'),
-    htmlTableToCsv: () => import('./htmlTableToCsv.client.js'),
-    dedupeLines: () => import('./dedupeLines.client.js'),
-    sortLines: () => import('./sortLines.client.js'),
-    flattenJson: () => import('./flattenJson.client.js'),
-    xlsxToCsv: () => import('./xlsxToCsv.client.js'),
-    xlsxToJson: () => import('./xlsxToJson.client.js'),
-    yamlToJson: () => import('./yamlToJson.client.js'),
-    xmlToJson: () => import('./xmlToJson.client.js'),
-    jsonToCsv: () => import('./jsonToCsv.client.js'),
-    csvMerge: () => import('./csvMerge.client.js'),
-    csvDiff: () => import('./csvDiff.client.js'),
-    splitCsv: () => import('./splitCsv.client.js'),
-    transposeCsv: () => import('./transposeCsv.client.js'),
-    wordFrequency: () => import('./wordFrequency.client.js'),
-    urlEncode: () => import('./urlEncode.client.js'),
-    base64: () => import('./base64.client.js'),
-    htmlEntity: () => import('./htmlEntity.client.js'),
-  };
-
-  // Per-tool file-size cap, checked before a file ever reaches its
-  // processor. Without this, a large-enough PDF (or a huge pasted/dropped
-  // text file) just hangs the tab -- there was no cap of any kind before
-  // this. Sizes are generous (these are legitimate client-side PDF/text
-  // operations, not something that should refuse ordinary real-world
-  // files) but bounded, keyed by clientEntry since a PDF and a plain-text
-  // list have very different realistic sizes. Kept here rather than per
-  // tool-registry entry so every file-accepting tool is covered by one
-  // change, matching PROCESSORS' key space above.
-  const MAX_BYTES_BY_CLIENT = {
-    pdfPages: 200 * 1024 * 1024, // merge/split/rotate -- can legitimately be a large scanned PDF
-    pdfTables: 100 * 1024 * 1024, // renders each page to extract tables -- more work per byte
-    statementToCsv: 100 * 1024 * 1024,
-    htmlTableToCsv: 20 * 1024 * 1024, // parsed HTML/text, held in the DOM for preview
-    dedupeLines: 20 * 1024 * 1024, // plain text lists
-    sortLines: 20 * 1024 * 1024,
-    flattenJson: 20 * 1024 * 1024, // parsed and held in memory as a JS object
-    xlsxToCsv: 25 * 1024 * 1024, // unzipped + held in memory as parsed XML for preview
-    xlsxToJson: 20 * 1024 * 1024, // a compressed .xlsx unzips into verbose XML -- ExcelJS holds the whole parsed workbook in memory
-    yamlToJson: 20 * 1024 * 1024, // parsed YAML, held in memory for preview
-    xmlToJson: 20 * 1024 * 1024, // parsed as a DOM tree, held in memory for preview
-    jsonToCsv: 20 * 1024 * 1024, // parsed JSON, held in memory for preview
-    csvMerge: 20 * 1024 * 1024, // multiple CSVs, all held in memory to merge
-    csvDiff: 20 * 1024 * 1024, // two CSVs, both held in memory to diff
-    splitCsv: 20 * 1024 * 1024, // whole CSV held in memory to chunk and zip
-    transposeCsv: 20 * 1024 * 1024, // whole CSV held in memory to flip
-    wordFrequency: 20 * 1024 * 1024, // plain text, tokenized and held in memory as a Map of counts
-    urlEncode: 20 * 1024 * 1024, // plain text, encoded/decoded and held in memory for both panels
-    base64: 15 * 1024 * 1024, // encoded output runs ~4/3 larger, plus a live textarea preview
-    htmlEntity: 20 * 1024 * 1024, // plain text, held in memory to encode/decode and preview
-  };
+  // PROCESSORS, MAX_BYTES_BY_CLIENT, and PASTE_FILE are imported at the
+  // top of this file -- see the comment there for why they're generated
+  // rather than hand-typed here now. PROCESSORS stays a known, closed map
+  // (codegen'd as one, not a template-string import(`./${clientEntry}.
+  // client.js`)) so an unexpected or malformed data-client value fails
+  // loudly (see the catch in handleFileList) instead of silently
+  // attempting an arbitrary import.
   const DEFAULT_MAX_BYTES = 20 * 1024 * 1024;
 
   function formatMb(bytes) {
     return `${Math.round(bytes / (1024 * 1024))}MB`;
   }
-
-  // The synthetic File a "paste" submission is wrapped in (see the
-  // pasteButton handler below) needs a name/type each pasteInput-enabled
-  // processor recognizes -- keyed by clientEntry, same key space as
-  // PROCESSORS above, so adding a new pasteInput tool is a one-line
-  // addition here, not a hardcoded name shared by every tool.
-  const PASTE_FILE = {
-    htmlTableToCsv: { name: 'pasted-table.html', type: 'text/html' },
-    dedupeLines: { name: 'pasted-list.txt', type: 'text/plain' },
-    sortLines: { name: 'pasted-list.txt', type: 'text/plain' },
-    flattenJson: { name: 'pasted-input.json', type: 'application/json' },
-    jsonToCsv: { name: 'pasted-input.json', type: 'application/json' },
-    yamlToJson: { name: 'pasted-input.yaml', type: 'application/yaml' },
-    xmlToJson: { name: 'pasted-input.xml', type: 'application/xml' },
-    splitCsv: { name: 'pasted-input.csv', type: 'text/csv' },
-    transposeCsv: { name: 'pasted-input.csv', type: 'text/csv' },
-    wordFrequency: { name: 'pasted-text.txt', type: 'text/plain' },
-    urlEncode: { name: 'pasted-input.txt', type: 'text/plain' },
-    base64: { name: 'pasted-input.txt', type: 'text/plain' },
-    htmlEntity: { name: 'pasted-input.txt', type: 'text/plain' },
-  };
 
   let processorPromise = null;
   function warmProcessor() {

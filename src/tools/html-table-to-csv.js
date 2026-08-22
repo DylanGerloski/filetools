@@ -12,6 +12,12 @@ module.exports = {
   metaDescription: 'Turn an HTML <table> (pasted markup or an .html file) into a CSV or JSON file, free and in your browser. No upload, no sign-up.',
   deck: 'Paste HTML markup or drop an .html file and get every table it contains as a CSV or JSON download. Nothing is sent anywhere.',
   clientEntry: 'htmlTableToCsv',
+  // Registration fragment -- see pdf-merge.js's comment above its own
+  // `family` field for what these mean and how they're assembled.
+  family: 'csv',
+  mark: { verb: 'convert', ink: 'csv', motif: 'html' },
+  maxBytes: 20 * 1024 * 1024,
+  pasteFile: { name: 'pasted-table.html', type: 'text/html' },
   mode: 'html-table',
   fileTypeLabel: 'HTML file',
   accepts: 'text/html,.html,.htm',

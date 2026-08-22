@@ -12,6 +12,12 @@ module.exports = {
   metaDescription: 'Paste CSV text or drop a .csv file and flip every row into a column and every column into a row, free and in your browser. No upload, no sign-up.',
   deck: 'Paste CSV text, or drop a .csv file, and download it back with every row turned into a column and every column turned into a row. Nothing is sent anywhere.',
   clientEntry: 'transposeCsv',
+  // Registration fragment -- see pdf-merge.js's comment above its own
+  // `family` field for what these mean and how they're assembled.
+  family: 'csv',
+  mark: { verb: 'transpose', ink: 'csv' },
+  maxBytes: 20 * 1024 * 1024,
+  pasteFile: { name: 'pasted-input.csv', type: 'text/csv' },
   mode: 'transpose-csv',
   fileTypeLabel: 'CSV file',
   accepts: '.csv,text/csv,.txt,text/plain',

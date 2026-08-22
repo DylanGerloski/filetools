@@ -12,6 +12,11 @@ module.exports = {
   metaDescription: 'Compare two CSV files free, cell by cell, with no upload and no sign-up. Added, removed, and changed rows are highlighted, even when row order differs.',
   deck: 'Drop two CSV files and see exactly what changed, cell by cell - added rows, removed rows, and edited values, all highlighted. Pick a unique column and reordered rows still match up correctly. Nothing is uploaded.',
   clientEntry: 'csvDiff',
+  // Registration fragment -- see pdf-merge.js's comment above its own
+  // `family` field for what these mean and how they're assembled.
+  family: 'csv',
+  mark: { verb: 'compare', ink: 'csv' },
+  maxBytes: 20 * 1024 * 1024,
   mode: 'compare-csv',
   fileTypeLabel: 'CSV',
   accepts: '.csv,text/csv',

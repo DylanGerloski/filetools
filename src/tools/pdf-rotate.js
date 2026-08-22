@@ -12,6 +12,11 @@ module.exports = {
   metaDescription: 'Rotate all or individual pages in a PDF, free, with no upload and no sign-up. Your files never leave your device.',
   deck: 'Rotate every page, or just the ones that need it. Nothing is uploaded.',
   clientEntry: 'pdfPages',
+  // Registration fragment -- see pdf-merge.js's comment above its own
+  // `family` field for what these mean and how they're assembled.
+  family: 'pdf',
+  mark: { verb: 'rotate', ink: 'pdf' },
+  maxBytes: 200 * 1024 * 1024,
   mode: 'rotate',
   accepts: 'application/pdf',
   multiple: false,

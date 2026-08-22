@@ -12,6 +12,12 @@ module.exports = {
   metaDescription: 'Paste a JSON array or drop a .json file and get a CSV back - nested objects flatten into dot-notation columns, free and in your browser.',
   deck: 'Paste a JSON array of objects, or drop a .json file, and download it as a CSV. Nested objects become dot-notation columns; nothing is sent anywhere.',
   clientEntry: 'jsonToCsv',
+  // Registration fragment -- see pdf-merge.js's comment above its own
+  // `family` field for what these mean and how they're assembled.
+  family: 'json',
+  mark: { verb: 'convert', ink: 'csv' },
+  maxBytes: 20 * 1024 * 1024,
+  pasteFile: { name: 'pasted-input.json', type: 'application/json' },
   mode: 'json-to-csv',
   fileTypeLabel: 'JSON file',
   accepts: '.json,application/json,text/plain',

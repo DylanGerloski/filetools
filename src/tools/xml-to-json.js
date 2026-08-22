@@ -12,6 +12,12 @@ module.exports = {
   metaDescription: 'Paste an XML document or drop a .xml file and get JSON back, free and in your browser. No upload, no sign-up.',
   deck: 'Paste XML, or drop a .xml file, and download it as pretty-printed JSON. Nothing is sent anywhere.',
   clientEntry: 'xmlToJson',
+  // Registration fragment -- see pdf-merge.js's comment above its own
+  // `family` field for what these mean and how they're assembled.
+  family: 'json',
+  mark: { verb: 'convert', ink: 'json', motif: 'xml' },
+  maxBytes: 20 * 1024 * 1024,
+  pasteFile: { name: 'pasted-input.xml', type: 'application/xml' },
   mode: 'xml-to-json',
   fileTypeLabel: 'XML file',
   accepts: '.xml,application/xml,text/xml,text/plain',

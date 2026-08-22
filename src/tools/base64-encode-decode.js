@@ -12,6 +12,12 @@ module.exports = {
   metaDescription: 'Paste text or Base64, or drop a file, and encode or decode it, free and in your browser. No upload, no sign-up.',
   deck: 'Paste text or Base64, or drop a file, and switch between encode and decode instantly. Nothing is sent anywhere.',
   clientEntry: 'base64',
+  // Registration fragment -- see pdf-merge.js's comment above its own
+  // `family` field for what these mean and how they're assembled.
+  family: 'text',
+  mark: { verb: 'convert' },
+  maxBytes: 15 * 1024 * 1024,
+  pasteFile: { name: 'pasted-input.txt', type: 'text/plain' },
   mode: 'base64',
   fileTypeLabel: 'file',
   accepts: '',

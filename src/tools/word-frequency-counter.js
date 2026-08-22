@@ -12,6 +12,12 @@ module.exports = {
   metaDescription: 'Paste or drop a text file and get every word ranked by how often it appears, plus quick stats, free and in your browser. No upload, no sign-up.',
   deck: 'Paste any text, or drop a .txt file, and see every word ranked by how often it appears, plus quick stats on length and repetition. Nothing is sent anywhere.',
   clientEntry: 'wordFrequency',
+  // Registration fragment -- see pdf-merge.js's comment above its own
+  // `family` field for what these mean and how they're assembled.
+  family: 'text',
+  mark: { verb: 'count' },
+  maxBytes: 20 * 1024 * 1024,
+  pasteFile: { name: 'pasted-text.txt', type: 'text/plain' },
   mode: 'word-frequency',
   fileTypeLabel: 'text file',
   accepts: '.txt,.md,text/plain,text/markdown',

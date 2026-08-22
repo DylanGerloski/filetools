@@ -12,6 +12,11 @@ module.exports = {
   metaDescription: 'Pull tables out of a PDF into CSV files you can open in a spreadsheet, free and in your browser. No upload, no sign-up. Fix the columns before you export.',
   deck: 'Finds the tables in a PDF, shows you exactly what it found, and lets you fix a column before exporting to CSV. Nothing is uploaded.',
   clientEntry: 'pdfTables',
+  // Registration fragment -- see pdf-merge.js's comment above its own
+  // `family` field for what these mean and how they're assembled.
+  family: 'pdf',
+  mark: { verb: 'convert', ink: 'csv' },
+  maxBytes: 100 * 1024 * 1024,
   mode: 'tables',
   accepts: 'application/pdf',
   multiple: false,

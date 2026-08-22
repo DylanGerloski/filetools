@@ -12,6 +12,12 @@ module.exports = {
   metaDescription: 'Split a large CSV into smaller files of a set number of rows each, free, with no upload and no sign-up. Downloads as one zip.',
   deck: 'Drop a large CSV and download it split into smaller files of however many rows you choose - the header row repeated in each one, packaged as a single zip. Nothing is uploaded.',
   clientEntry: 'splitCsv',
+  // Registration fragment -- see pdf-merge.js's comment above its own
+  // `family` field for what these mean and how they're assembled.
+  family: 'csv',
+  mark: { verb: 'split', ink: 'csv' },
+  maxBytes: 20 * 1024 * 1024,
+  pasteFile: { name: 'pasted-input.csv', type: 'text/csv' },
   mode: 'split-csv',
   fileTypeLabel: 'CSV file',
   accepts: '.csv,text/csv,.txt,text/plain',

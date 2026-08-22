@@ -12,6 +12,12 @@ module.exports = {
   metaDescription: 'Paste nested JSON or drop a .json file and get it back flattened to dot-notation keys, downloadable as JSON or CSV, free and in your browser.',
   deck: 'Paste nested JSON, or drop a .json file, and download it flattened to dot-notation keys (or your own delimiter), as JSON or CSV. Nothing is sent anywhere.',
   clientEntry: 'flattenJson',
+  // Registration fragment -- see pdf-merge.js's comment above its own
+  // `family` field for what these mean and how they're assembled.
+  family: 'json',
+  mark: { verb: 'flatten', ink: 'json' },
+  maxBytes: 20 * 1024 * 1024,
+  pasteFile: { name: 'pasted-input.json', type: 'application/json' },
   mode: 'flatten-json',
   fileTypeLabel: 'JSON file',
   accepts: '.json,application/json,text/plain',

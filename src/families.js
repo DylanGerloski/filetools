@@ -15,43 +15,25 @@
  * resolve by the fallback half of the rule and take their output's family
  * (csv, json respectively).
  *
- * FAMILY_BY_SLUG is deliberately an explicit per-slug map, not derived
- * automatically from each tool's declared accepts/output shape. Eight tool
- * branches are open in this repo as of this file's writing -- a newly
- * merged tool must add its own row here, and test/families.test.mjs
- * asserts every registry slug has one. That test is the regression check
- * that would have caught the pre-existing bug the design review found:
- * 8 of the 17 tools were silently rendering a generic fallback icon
- * because no per-tool color/family axis existed at all before this file.
+ * FAMILY_BY_SLUG is an explicit per-slug map, one row per tool -- still
+ * true after the 2026-08-22 fragment-pattern refactor, just no longer
+ * hand-typed HERE. Each row now lives as the `family` field on that tool's
+ * own src/tools/<slug>.js (see pdf-merge.js's comment above its own
+ * `family` field), and this file assembles them by re-keying the already-
+ * auto-discovered TOOLS registry (src/tools/index.js) from `slug` ->
+ * `family` -- mirroring src/tools/index.js's own discovery mechanism
+ * rather than adding a second one. A newly merged tool adds its own file
+ * with a `family` field; no existing file (this one included) changes, so
+ * two tool branches can never conflict on a shared family row. This is
+ * still a fully explicit, no-inference assignment -- test/families.test.mjs
+ * asserts every registry slug resolves to one, the regression check that
+ * would have caught the pre-existing bug the design review found: 8 of the
+ * 17 tools were silently rendering a generic fallback icon because no
+ * per-tool color/family axis existed at all before this system.
  */
-const FAMILY_BY_SLUG = {
-  'merge-pdf': 'pdf',
-  'split-pdf': 'pdf',
-  'rotate-pdf': 'pdf',
-  'pdf-to-csv': 'pdf',
-  'bank-statement-to-csv': 'pdf',
+const { TOOLS } = require('./tools/index.js');
 
-  'merge-csv': 'csv',
-  'compare-csv': 'csv',
-  'split-csv': 'csv',
-  'transpose-csv': 'csv',
-  'html-table-to-csv': 'csv',
-
-  'json-to-csv': 'json',
-  'flatten-json': 'json',
-  'yaml-to-json': 'json',
-  'xml-to-json': 'json',
-
-  'xlsx-to-csv': 'sheet',
-  'xlsx-to-json': 'sheet',
-
-  'remove-duplicate-lines': 'text',
-  'sort-lines': 'text',
-  'word-frequency-counter': 'text',
-  'url-encode-decode': 'text',
-  'base64-encode-decode': 'text',
-  'html-entity-encode-decode': 'text',
-};
+const FAMILY_BY_SLUG = Object.fromEntries(TOOLS.map((t) => [t.slug, t.family]));
 
 const DEFAULT_FAMILY = 'text';
 

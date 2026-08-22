@@ -12,6 +12,11 @@ module.exports = {
   metaDescription: 'Drop an .xlsx file and get JSON back - every sheet becomes its own array of records, free and in your browser. No upload, no sign-up.',
   deck: 'Drop an Excel (.xlsx) file and download it as JSON. Every sheet in the workbook becomes its own array of records; nothing is sent anywhere.',
   clientEntry: 'xlsxToJson',
+  // Registration fragment -- see pdf-merge.js's comment above its own
+  // `family` field for what these mean and how they're assembled.
+  family: 'sheet',
+  mark: { verb: 'convert', ink: 'json' },
+  maxBytes: 20 * 1024 * 1024,
   mode: 'xlsx-to-json',
   fileTypeLabel: 'Excel file',
   accepts: '.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

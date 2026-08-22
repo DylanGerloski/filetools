@@ -48,5 +48,5 @@ module.exports = {
       answerHtml: 'Yes - any cell value that would otherwise be interpreted as a spreadsheet formula (starting with <code>=</code>, <code>+</code>, <code>@</code>, or a tab) is automatically neutralized with a leading quote before download, the same protection used across every CSV export on this site.',
     },
   ],
-  relatedSlugs: ['html-table-to-csv', 'sort-lines', 'yaml-to-json'],
+  relatedSlugs: ['xml-to-json', 'sort-lines', 'yaml-to-json'],
 };

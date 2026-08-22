@@ -40,6 +40,7 @@ const FAMILY_BY_SLUG = {
   'json-to-csv': 'json',
   'flatten-json': 'json',
   'yaml-to-json': 'json',
+  'xml-to-json': 'json',
 
   'xlsx-to-csv': 'sheet',
   'xlsx-to-json': 'sheet',

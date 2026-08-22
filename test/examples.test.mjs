@@ -16,6 +16,7 @@ import { convertFixture as htmlTableToCsvFixture } from '../src/examples/html-ta
 import { convertFixture as yamlToJsonFixture } from '../src/examples/yaml-to-json.mjs';
 import { encodeFixture as urlEncodeFixture, FIXTURE_TEXT as URL_ENCODE_FIXTURE_TEXT } from '../src/examples/url-encode-decode.mjs';
 import { convertFixture as htmlEntityFixture } from '../src/examples/html-entity-encode-decode.mjs';
+import { convertFixture as xmlToJsonFixture } from '../src/examples/xml-to-json.mjs';
 import { flattenFixture } from '../src/examples/flatten-json.mjs';
 import { convertFixture as xlsxToJsonFixture } from '../src/examples/xlsx-to-json.mjs';
 import { extractFixture as pdfToCsvFixture } from '../src/examples/pdf-to-csv.mjs';
@@ -323,6 +324,19 @@ test('html-entity-encode-decode example: the accented letter is left untouched (
 test('html-entity-encode-decode example: the rendered HTML shows the raw input and the real encoded output', () => {
   const html = exampleFor('html-entity-encode-decode');
   assert.ok(html.includes('Tom &amp;amp; Jerry&amp;apos;s café &amp;lt;b&amp;gt;bold&amp;lt;/b&amp;gt; &amp;quot;quote&amp;quot;'), 'the encoded output, itself HTML-escaped for safe display in a <pre><code> block, should appear in the rendered example');
+});
+
+test('xml-to-json example: the fixture converts to the expected JSON value, attribute as @id and elements as their own keys', () => {
+  const jsonText = xmlToJsonFixture();
+  const parsed = JSON.parse(jsonText);
+  assert.deepEqual(parsed, { order: { '@id': '1', item: 'Coffee', price: '4.50' } });
+});
+
+test('xml-to-json example: the rendered HTML shows the input XML and the output JSON', () => {
+  const html = exampleFor('xml-to-json');
+  assert.ok(html.includes('&lt;order id=&quot;1&quot;&gt;'));
+  assert.ok(html.includes('&quot;@id&quot;: &quot;1&quot;'));
+  assert.ok(html.includes('&quot;item&quot;: &quot;Coffee&quot;'));
 });
 
 test('flatten-json example: the fixture flattens nested customer objects into dot-notation keys', () => {

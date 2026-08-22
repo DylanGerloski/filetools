@@ -71,6 +71,7 @@ if (toolSection) {
     xlsxToCsv: () => import('./xlsxToCsv.client.js'),
     xlsxToJson: () => import('./xlsxToJson.client.js'),
     yamlToJson: () => import('./yamlToJson.client.js'),
+    xmlToJson: () => import('./xmlToJson.client.js'),
     jsonToCsv: () => import('./jsonToCsv.client.js'),
     csvMerge: () => import('./csvMerge.client.js'),
     csvDiff: () => import('./csvDiff.client.js'),
@@ -102,6 +103,7 @@ if (toolSection) {
     xlsxToCsv: 25 * 1024 * 1024, // unzipped + held in memory as parsed XML for preview
     xlsxToJson: 20 * 1024 * 1024, // a compressed .xlsx unzips into verbose XML -- ExcelJS holds the whole parsed workbook in memory
     yamlToJson: 20 * 1024 * 1024, // parsed YAML, held in memory for preview
+    xmlToJson: 20 * 1024 * 1024, // parsed as a DOM tree, held in memory for preview
     jsonToCsv: 20 * 1024 * 1024, // parsed JSON, held in memory for preview
     csvMerge: 20 * 1024 * 1024, // multiple CSVs, all held in memory to merge
     csvDiff: 20 * 1024 * 1024, // two CSVs, both held in memory to diff
@@ -130,6 +132,7 @@ if (toolSection) {
     flattenJson: { name: 'pasted-input.json', type: 'application/json' },
     jsonToCsv: { name: 'pasted-input.json', type: 'application/json' },
     yamlToJson: { name: 'pasted-input.yaml', type: 'application/yaml' },
+    xmlToJson: { name: 'pasted-input.xml', type: 'application/xml' },
     splitCsv: { name: 'pasted-input.csv', type: 'text/csv' },
     transposeCsv: { name: 'pasted-input.csv', type: 'text/csv' },
     wordFrequency: { name: 'pasted-text.txt', type: 'text/plain' },

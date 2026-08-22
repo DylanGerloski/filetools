@@ -61,5 +61,6 @@ test('the taxonomy is exactly the spec\'s 5-family, 18-slug assignment', () => {
     'remove-duplicate-lines': 'text',
     'sort-lines': 'text',
     'word-frequency-counter': 'text',
+    'url-encode-decode': 'text',
   });
 });

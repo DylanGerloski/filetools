@@ -164,6 +164,7 @@ const MARKS = {
   'remove-duplicate-lines': { plate: 'text', verb: 'dedupe', ink: 'text' },
   'sort-lines': { plate: 'text', verb: 'sort', ink: 'text' },
   'word-frequency-counter': { plate: 'text', verb: 'count', ink: 'text' },
+  'url-encode-decode': { plate: 'text', verb: 'convert', ink: 'text' },
 };
 
 // Never hit for a real registry slug (test/icons.test.mjs asserts that) --

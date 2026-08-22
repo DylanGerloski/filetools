@@ -77,6 +77,7 @@ if (toolSection) {
     splitCsv: () => import('./splitCsv.client.js'),
     transposeCsv: () => import('./transposeCsv.client.js'),
     wordFrequency: () => import('./wordFrequency.client.js'),
+    urlEncode: () => import('./urlEncode.client.js'),
   };
 
   // Per-tool file-size cap, checked before a file ever reaches its
@@ -105,6 +106,7 @@ if (toolSection) {
     splitCsv: 20 * 1024 * 1024, // whole CSV held in memory to chunk and zip
     transposeCsv: 20 * 1024 * 1024, // whole CSV held in memory to flip
     wordFrequency: 20 * 1024 * 1024, // plain text, tokenized and held in memory as a Map of counts
+    urlEncode: 20 * 1024 * 1024, // plain text, encoded/decoded and held in memory for both panels
   };
   const DEFAULT_MAX_BYTES = 20 * 1024 * 1024;
 
@@ -127,6 +129,7 @@ if (toolSection) {
     splitCsv: { name: 'pasted-input.csv', type: 'text/csv' },
     transposeCsv: { name: 'pasted-input.csv', type: 'text/csv' },
     wordFrequency: { name: 'pasted-text.txt', type: 'text/plain' },
+    urlEncode: { name: 'pasted-input.txt', type: 'text/plain' },
   };
 
   let processorPromise = null;

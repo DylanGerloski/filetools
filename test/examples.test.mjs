@@ -14,6 +14,7 @@ import { dedupeFixture } from '../src/examples/remove-duplicate-lines.mjs';
 import { convertFixture as jsonToCsvFixture } from '../src/examples/json-to-csv.mjs';
 import { convertFixture as htmlTableToCsvFixture } from '../src/examples/html-table-to-csv.mjs';
 import { convertFixture as yamlToJsonFixture } from '../src/examples/yaml-to-json.mjs';
+import { encodeFixture as urlEncodeFixture, FIXTURE_TEXT as URL_ENCODE_FIXTURE_TEXT } from '../src/examples/url-encode-decode.mjs';
 import { flattenFixture } from '../src/examples/flatten-json.mjs';
 import { convertFixture as xlsxToJsonFixture } from '../src/examples/xlsx-to-json.mjs';
 import { extractFixture as pdfToCsvFixture } from '../src/examples/pdf-to-csv.mjs';
@@ -293,6 +294,17 @@ test('yaml-to-json example: the rendered HTML shows the input YAML and the outpu
   const html = exampleFor('yaml-to-json');
   assert.ok(html.includes('name: Widget'));
   assert.ok(html.includes('&quot;price&quot;: 9.5'));
+});
+
+test('url-encode-decode example: the fixture encodes to exactly what the browser\'s own encodeURIComponent produces', () => {
+  assert.equal(urlEncodeFixture(), encodeURIComponent(URL_ENCODE_FIXTURE_TEXT));
+  assert.equal(urlEncodeFixture(), 'caf%C3%A9%20%26%20code');
+});
+
+test('url-encode-decode example: the rendered HTML shows the raw input and the percent-encoded output', () => {
+  const html = exampleFor('url-encode-decode');
+  assert.ok(html.includes('café &amp; code'), 'expected the raw fixture text (with & escaped) in the Input block');
+  assert.ok(html.includes('caf%C3%A9%20%26%20code'));
 });
 
 test('flatten-json example: the fixture flattens nested customer objects into dot-notation keys', () => {
